@@ -1,0 +1,23 @@
+{
+  "name": "mtscanner",
+  "version": "0.0.1",
+  "description": "Scans Cached Users",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@mobitracker.co:JDusky/mobi-Scanner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bottleneck": "^2.19.5",
+    "dotenv": "^8.6.0",
+    "https": "^1.0.0",
+    "mysql": "^2.18.1",
+    "node-schedule": "^2.0.0",
+    "timediff": "^1.1.1"
+  }
+}
