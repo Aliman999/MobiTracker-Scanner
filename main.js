@@ -123,7 +123,8 @@ const queryApi = function(username, key){
       body += d;
     })
     res.on('error', error => {
-      console.error(error)
+      console.error(error);
+      queryApi(username, key);
     })
     res.on('end', function(){
       count++;
@@ -136,7 +137,7 @@ const queryApi = function(username, key){
         return;
       };
       if(Object.size(user.data) > 0){
-        //cachePlayer(user.data);
+        cachePlayer(user.data);
       }
       if(count == max){
         console.log(count+" of "+max+" scanned");
