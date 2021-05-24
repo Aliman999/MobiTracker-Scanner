@@ -4,7 +4,16 @@ const https = require('https');
 const mysql = require('mysql');
 const Bottleneck = require('bottleneck');
 const schedule = require('node-schedule');
-var timediff = require('timediff');
+const countdown = require('countdown');
+const log = require('single-line-log').stdout;
+
+var day;
+
+var max;
+var count;
+var list = [], queries = {}, sql;
+var keyType = "Main";
+var scanStart, scanEnd;
 
 var con = mysql.createPool({
   host: config.MysqlHost,
@@ -15,12 +24,58 @@ var con = mysql.createPool({
 
 con.getConnection(function(err, connection) {
   if (err) throw err;
+  console.log("Connected to database");
+  timeToJob.start();
 });
-var max;
-var count;
-var list = [], queries = {}, sql;
-var keyType = "main";
-var scanStart, scanEnd;
+
+
+function timeToComplete(){
+  sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+    var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
+    persist(1).then((param) =>{
+      remaining = max - param;
+      time = Math.ceil(remaining/available);
+      console.log("Approximately "+time+" days to completion");
+    });
+  })
+}
+
+function Timer(fn, t) {
+    var timerObj = setInterval(fn, t);
+
+    this.stop = function() {
+        if (timerObj) {
+            clearInterval(timerObj);
+            timerObj = null;
+            log.clear();
+            console.log("");
+        }
+        return this;
+    }
+    this.start = function() {
+        persist(2).then((param) => {
+          day = parseInt(param);
+          if (!timerObj) {
+              this.stop();
+              timerObj = setInterval(fn, t);
+          }
+          return this;
+        });
+    }
+    this.reset = function(newT = t) {
+        t = newT;
+        return this.stop().start();
+    }
+}
+
+function calcTime(){
+  const timeLeft = countdown(Date.now(), day);
+  log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
+}
+
+const timeToJob = new Timer(calcTime, 500);
 
 function getKey(){
   return new Promise(callback =>{
@@ -39,9 +94,9 @@ function getKey(){
   })
 }
 
-function persist(){
+function persist(id){
   return new Promise(callback => {
-    sql = "SELECT param FROM persist WHERE id = 1";
+    sql = "SELECT param FROM persist WHERE id = "+id;
     con.query(sql, function(err, result, fields){
       if(err) throw err;
 
@@ -56,12 +111,9 @@ function updateQueries(){
     con.query(sql, function(err, result, fields){
       if(err) throw err;
       queries.data = result;
-      queries.available = function(){
-        var temp = 0;
-        for(var i = 0; i < this.data.length; i++){
-          temp =+ this.data[i].count;
-        }
-        return temp*this.data.length;
+      queries.available = 0;
+      for(var x = 0; x < queries.data.length; x++){
+        queries.available += queries.data[x].count;
       }
       callback();
     })
@@ -70,9 +122,10 @@ function updateQueries(){
 
 function init(){
   scanStart = Date.now();
-  persist().then((param) => {
+  persist(1).then((param) => {
     updateQueries().then(() => {
-      console.log(queries.available()+" Searches available today.");
+      console.log(queries.available+" Searches available today.");
+      timeToComplete();
       count = 0;
       users(parseInt(param));
     });
@@ -87,7 +140,6 @@ const limiter = new Bottleneck({
 
 function users(param){
   sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-  console.log(sql);
   con.query(sql, function(err, result, fields){
     if(err) throw err;
     list = result;
@@ -123,20 +175,15 @@ const queryApi = function(username, key){
       count++;
       try{
         var user = JSON.parse(body);
-        console.log("Found "+username+" using Key: "+key);
       }catch(err){
         console.log("Failed to parse "+username);
-        console.log("");
         return;
       };
       if(Object.size(user.data) > 0){
         cachePlayer(user.data);
       }
       if(count == max){
-        console.log(count+" of "+max+" scanned");
-        scanEnd = Date.now();
-        var runtime = timediff(scanStart, scanEnd);
-        console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
+        finish();
       }else{
         console.log(count+" of "+max+" scanned");
       }
@@ -150,7 +197,7 @@ var saved = 0;
 function today(){
   var weeks = 1;
   var temp = Math.round(list.length/(7*weeks));
-  while(temp > (queries.available()/2)){
+  while(temp > (queries.available/2)){
     temp = Math.round(list.length/(7*++weeks));
   }
   return parseInt(temp);
@@ -167,18 +214,20 @@ async function update(param = 0){
     });
     saved = i;
   }
-  saveParam(end);
+  saveParam(end, 1);
 }
 
-function saveParam(val){
-  sql = "UPDATE persist SET param = '"+val+"' WHERE id = 1;";
+function saveParam(val, id){
+  sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
   })
 }
 
-
 schedule.scheduleJob('1 22 * * *', function(){
+  timeToJob.stop();
+  saveParam(Date.now(), 2);
+  console.log("--- RUNNING JOB ---");
   init();
 });
 
@@ -274,4 +323,12 @@ function cachePlayer(user){
       });
     }
   });
+}
+
+function finish(){
+  console.log(count+" of "+max+" scanned");
+  scanEnd = Date.now();
+  var runtime = timediff(scanStart, scanEnd);
+  console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
+  timeToJob.start();
 }
