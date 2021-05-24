@@ -16,12 +16,9 @@ var con = mysql.createPool({
 con.getConnection(function(err, connection) {
   if (err) throw err;
 });
-
 var max;
 var count;
-
 var list = [], queries = {}, sql;
-
 var keyType = "main";
 var scanStart, scanEnd;
 
