@@ -15,7 +15,6 @@ var con = mysql.createPool({
 
 con.getConnection(function(err, connection) {
   if (err) throw err;
-  console.log("Connected to Database");
 });
 
 
@@ -83,8 +82,6 @@ function init(){
     });
   })
 }
-
-init();
 
 
 const limiter = new Bottleneck({
