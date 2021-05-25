@@ -125,7 +125,6 @@ function init(){
   persist(1).then((param) => {
     updateQueries().then(() => {
       console.log(queries.available+" Searches available today.");
-      timeToComplete();
       count = 0;
       users(parseInt(param));
     });
@@ -330,5 +329,6 @@ function finish(){
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
   console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
+  timeToComplete();
   timeToJob.start();
 }
