@@ -30,15 +30,18 @@ con.getConnection(function(err, connection) {
 
 
 function timeToComplete(){
-  sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-  con.query(sql, function(err, result, fields){
-    if(err) throw err;
-    var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
-    persist(1).then((param) =>{
-      remaining = max - param;
-      time = Math.ceil(remaining/available);
-      console.log("Approximately "+time+" days to completion");
-    });
+  return new Promise(callback =>{
+    sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
+      persist(1).then((param) =>{
+        remaining = max - param;
+        time = Math.ceil(remaining/available);
+        console.log("Approximately "+time+" days to completion");
+        callback();
+      });
+    })
   })
 }
 
@@ -329,6 +332,7 @@ function finish(){
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
   console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
-  timeToComplete();
-  timeToJob.start();
+  timeToComplete().then(()=>{
+    timeToJob.start();
+  });
 }
