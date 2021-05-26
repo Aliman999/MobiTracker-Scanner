@@ -14,6 +14,10 @@ var count;
 var list = [], queries = {}, sql;
 var keyType = "Main";
 var scanStart, scanEnd;
+const limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 333
+});
 
 var con = mysql.createPool({
   host: config.MysqlHost,
@@ -28,58 +32,6 @@ con.getConnection(function(err, connection) {
   timeToJob.start();
 });
 
-
-function timeToComplete(){
-  return new Promise(callback =>{
-    sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
-      persist(1).then((param) =>{
-        remaining = max - param;
-        time = Math.ceil(remaining/available);
-        console.log("Approximately "+time+" days to completion");
-        callback();
-      });
-    })
-  })
-}
-
-function Timer(fn, t) {
-    var timerObj = setInterval(fn, t);
-
-    this.stop = function() {
-        if (timerObj) {
-            clearInterval(timerObj);
-            timerObj = null;
-            log.clear();
-            console.log("");
-        }
-        return this;
-    }
-    this.start = function() {
-        persist(2).then((param) => {
-          day = parseInt(param);
-          if (!timerObj) {
-              this.stop();
-              timerObj = setInterval(fn, t);
-          }
-          return this;
-        });
-    }
-    this.reset = function(newT = t) {
-        t = newT;
-        return this.stop().start();
-    }
-}
-
-function calcTime(){
-  const timeLeft = countdown(Date.now(), day);
-  log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
-}
-
-const timeToJob = new Timer(calcTime, 500);
-
 function getKey(){
   return new Promise(callback =>{
     var apiKey;
@@ -93,6 +45,30 @@ function getKey(){
         if(err) throw err;
         callback(apiKey);
       })
+    });
+  })
+}
+schedule.scheduleJob('1 22 * * *', function(){
+  timeToJob.stop();
+  saveParam((Date.now()+86400000), 2);
+  console.log("--- RUNNING JOB ---");
+  init();
+});
+
+function saveParam(val, id){
+  sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+  })
+}
+
+function init(){
+  scanStart = Date.now();
+  persist(1).then((param) => {
+    updateQueries().then(() => {
+      console.log(queries.available+" Searches available today.");
+      count = 0;
+      users(parseInt(param));
     });
   })
 }
@@ -123,23 +99,6 @@ function updateQueries(){
   })
 }
 
-function init(){
-  scanStart = Date.now();
-  persist(1).then((param) => {
-    updateQueries().then(() => {
-      console.log(queries.available+" Searches available today.");
-      count = 0;
-      users(parseInt(param));
-    });
-  })
-}
-
-
-const limiter = new Bottleneck({
-  maxConcurrent: 1,
-  minTime: 333
-});
-
 function users(param){
   sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
   con.query(sql, function(err, result, fields){
@@ -149,13 +108,19 @@ function users(param){
   })
 }
 
-Object.size = function(obj) {
-  var size = 0, key;
-  for (key in obj) {
-      if (obj.hasOwnProperty(key)) size++;
+async function update(param = 0){
+  max = today();
+  var end = param + today();
+  console.log(today());
+  console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
+  for(var i = param; i < end; i++){
+    await getKey().then((key) => {
+      limiter.schedule(queryApi, list[i].username, key);
+    });
+    saved = i;
   }
-  return size;
-};
+  saveParam(end, 1);
+}
 
 const queryApi = function(username, key){
   var options = {
@@ -204,34 +169,6 @@ function today(){
   }
   return parseInt(temp);
 }
-
-async function update(param = 0){
-  max = today();
-  var end = param + today();
-  console.log(today());
-  console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
-  for(var i = param; i < end; i++){
-    await getKey().then((key) => {
-      limiter.schedule(queryApi, list[i].username, key);
-    });
-    saved = i;
-  }
-  saveParam(end, 1);
-}
-
-function saveParam(val, id){
-  sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
-  con.query(sql, function(err, result, fields){
-    if(err) throw err;
-  })
-}
-
-schedule.scheduleJob('1 22 * * *', function(){
-  timeToJob.stop();
-  saveParam(Date.now(), 2);
-  console.log("--- RUNNING JOB ---");
-  init();
-});
 
 function cachePlayer(user){
   //console.log(con.escape(user.profile.bio));
@@ -326,6 +263,65 @@ function cachePlayer(user){
     }
   });
 }
+
+function timeToComplete(){
+  return new Promise(callback =>{
+    sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
+      persist(1).then((param) =>{
+        remaining = max - param;
+        time = Math.ceil(remaining/available);
+        console.log("Approximately "+time+" days to completion");
+        callback();
+      });
+    })
+  })
+}
+
+function Timer(fn, t) {
+    var timerObj = setInterval(fn, t);
+
+    this.stop = function() {
+        if (timerObj) {
+            clearInterval(timerObj);
+            timerObj = null;
+            log.clear();
+            console.log("");
+        }
+        return this;
+    }
+    this.start = function() {
+        persist(2).then((param) => {
+          day = parseInt(param);
+          if (!timerObj) {
+              this.stop();
+              timerObj = setInterval(fn, t);
+          }
+          return this;
+        });
+    }
+    this.reset = function(newT = t) {
+        t = newT;
+        return this.stop().start();
+    }
+}
+
+function calcTime(){
+  const timeLeft = countdown(Date.now(), day);
+  log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
+}
+
+const timeToJob = new Timer(calcTime, 500);
+
+Object.size = function(obj) {
+  var size = 0, key;
+  for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+};
 
 function finish(){
   console.log(count+" of "+max+" scanned");
