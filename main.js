@@ -18,7 +18,7 @@ const limiter = new Bottleneck({
   maxConcurrent: 1,
   minTime: 333
 });
-
+throw new Error(" Failed!");
 var con = mysql.createPool({
   host: config.MysqlHost,
   user: config.MysqlUsername,
