@@ -1,8 +1,8 @@
 'use strict';
 const config  = require('./config');
+const Bottleneck = require('bottleneck');
 const https = require('https');
 const mysql = require('mysql');
-const Bottleneck = require('bottleneck');
 const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
@@ -148,11 +148,11 @@ const queryApi = function(username, key){
       };
       if(Object.size(user.data) > 0){
         cachePlayer(user.data);
+      }else{
+        throw new Error(username+" Failed!");
       }
       if(count == max){
         finish();
-      }else{
-        console.log(count+" of "+max+" scanned");
       }
     })
   });
