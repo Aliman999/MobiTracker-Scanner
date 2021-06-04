@@ -324,7 +324,6 @@ Object.size = function(obj) {
 };
 
 function finish(){
-  console.log(count+" of "+max+" scanned");
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
   console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
