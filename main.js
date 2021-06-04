@@ -18,7 +18,19 @@ const limiter = new Bottleneck({
   maxConcurrent: 1,
   minTime: 333
 });
-throw new Error(" Failed!");
+
+limiter.on("failed", async (error, jobInfo) => {
+  const id = jobInfo.options.id;
+  console.warn(`Job ${id} failed: ${error}`);
+
+  if (jobInfo.retryCount === 0) {
+    console.log(`Retrying job ${id} in 25ms!`);
+    return 25;
+  }
+});
+
+limiter.on("retry", (error, jobInfo) => console.log(`Now retrying ${jobInfo.options.id}`));
+
 var con = mysql.createPool({
   host: config.MysqlHost,
   user: config.MysqlUsername,
@@ -136,7 +148,6 @@ const queryApi = function(username, key){
     })
     res.on('error', error => {
       console.error(error);
-      queryApi(username, key);
     })
     res.on('end', function(){
       count++;
@@ -144,7 +155,6 @@ const queryApi = function(username, key){
         var user = JSON.parse(body);
       }catch(err){
         console.log("Failed to parse "+username);
-        return;
       };
       if(Object.size(user.data) > 0){
         cachePlayer(user.data);
