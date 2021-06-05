@@ -128,8 +128,9 @@ async function update(param = 0){
   for(var i = param; i < end; i++){
     await getKey().then((key) => {
       limiter.schedule(queryApi, list[i].username, key).then(async (result)=>{
-        if(result){
-
+        console.log(result);
+        if(count == max){
+          finish();
         }
       });
     });
@@ -139,38 +140,40 @@ async function update(param = 0){
 }
 
 const queryApi = function(username, key){
-  var options = {
-    hostname: 'api.starcitizen-api.com',
-    port: 443,
-    path: '/'+key+'/v1/live/user/'+escape(username),
-    method: 'GET'
-  }
-  const req = https.request(options, res =>{
-    var body = "";
-    res.on('data', d => {
-      body += d;
-    })
-    res.on('error', error => {
-      console.error(error);
-    })
-    res.on('end', function(){
-      count++;
-      try{
-        var user = JSON.parse(body);
-      }catch(err){
-        console.log("Failed to parse "+username);
-      };
-      if(Object.size(user.data) > 0){
-        cachePlayer(user.data);
-      }else{
-        throw new Error(username+" Failed!");
-      }
-      if(count == max){
-        finish();
-      }
-    })
+  return new Promise(callback => {
+    var options = {
+      hostname: 'api.starcitizen-api.com',
+      port: 443,
+      path: '/'+key+'/v1/live/user/'+escape(username),
+      method: 'GET'
+    }
+    const req = https.request(options, res =>{
+      var body = "";
+      res.on('data', d => {
+        body += d;
+      })
+      res.on('error', error => {
+        console.error(error);
+      })
+      res.on('end', function(){
+        count++;
+        try{
+          var user = JSON.parse(body);
+          if(user.data == null){
+            throw new Error(username+" Failed!");
+          }
+        }catch(err){
+          console.log("Failed to parse "+username);
+        };
+        if(Object.size(user.data) > 0){
+          cachePlayer(user.data);
+        }else{
+          console.log("Error: "+username);
+        }
+      })
+    });
+    req.end()
   });
-  req.end()
 }
 
 var saved = 0;
