@@ -127,7 +127,11 @@ async function update(param = 0){
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   for(var i = param; i < end; i++){
     await getKey().then((key) => {
-      limiter.schedule(queryApi, list[i].username, key);
+      limiter.schedule(queryApi, list[i].username, key).then(async (result)=>{
+        if(result){
+
+        }
+      });
     });
     saved = i;
   }
