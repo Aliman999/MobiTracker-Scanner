@@ -45,7 +45,7 @@ var con = mysql.createPool({
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  //timeToJob.start();
+  timeToJob.start();
 });
 
 function getKey(){
@@ -68,8 +68,8 @@ schedule.scheduleJob('1 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
   console.log("--- RUNNING JOB ---");
+  init();
 });
-init();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
@@ -132,17 +132,13 @@ async function update(param = 0){
   //end
   for(var i = param; i < end; i++){
     await getKey().then((key) => {
-      /*
-      limiter.schedule(queryApi, list[i].username, key).then(()=>{
-        if(count == max){
-          finish();
-        }
-      });
-      */
       limiter.schedule(async ()=>{
         await queryApi(list[i].username, key).then((result)=>{
           if(result == null){
             throw new Error("Returned Null!");
+          }
+          if(count == max){
+            finish();
           }
         });
       });
