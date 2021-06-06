@@ -48,7 +48,7 @@ con.getConnection(function(err, connection) {
   timeToJob.start();
 });
 
-function getKey(){
+function getKey(i){
   return new Promise(callback =>{
     var apiKey;
     const sql = "SELECT id, apiKey, count FROM apiKeys WHERE note like '%"+keyType+"%' GROUP BY id, apiKey, count ORDER BY count desc LIMIT 1";
@@ -59,7 +59,7 @@ function getKey(){
       const sql = "UPDATE apiKeys SET count = count-1 WHERE id = "+id;
       con.query(sql, function (err, result, fields){
         if(err) throw err;
-        callback(apiKey);
+        callback(apiKey, i);
       })
     });
   })
@@ -133,7 +133,7 @@ async function update(param = 0){
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
   for(var i = param; i < end; i++){
-    await getKey().then((key) => {
+    await getKey(i).then((key, i) => {
       limiter.schedule( {id:list[i].username}, async ()=>{
         saveParam(i, 1);
         await queryApi(list[i].username, key)
