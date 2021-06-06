@@ -64,6 +64,7 @@ function getKey(){
     });
   })
 }
+
 schedule.scheduleJob('1 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
@@ -142,7 +143,11 @@ async function update(param = 0){
             finish();
           }
         });
-      }).catch();
+      }).catch((error) => {
+        if (error instanceof Bottleneck.BottleneckError) {
+
+        }
+      });
     });
     saved = i;
   }
