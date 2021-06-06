@@ -19,6 +19,11 @@ const limiter = new Bottleneck({
   minTime: 333
 });
 
+limiter.on("debug", function (message, data) {
+  console.log(message);
+  console.log(data);
+});
+
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
