@@ -19,14 +19,6 @@ const limiter = new Bottleneck({
   minTime: 333
 });
 
-limiter.once("queued", function(info){
-  console.log(limiter.jobs("QUEUED").join(", ")+" in Queue");
-});
-
-limiter.on("error", function(info){
-  console.log(info);
-});
-
 limiter.on("executing", function(){
   console.log(limiter.jobs("EXECUTING").join(", ")+" Executing");
 })
@@ -156,7 +148,7 @@ const queryApi = function(username, key){
     var options = {
       hostname: 'api.starcitizen-api.com',
       port: 443,
-      path: '/'+key+'/v1/auto/user/'+escape(username),
+      path: '/'+key+'/v1/live/user/'+escape(username),
       method: 'GET'
     }
     const req = https.request(options, res =>{
