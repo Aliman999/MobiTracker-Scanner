@@ -129,8 +129,8 @@ async function update(param = 0){
   var end = param + today();
   console.log(today());
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
-  //param
-  for(var i = 20; i < end; i++){
+  //end
+  for(var i = param; i < end; i++){
     await getKey().then((key) => {
       /*
       limiter.schedule(queryApi, list[i].username, key).then(()=>{
@@ -139,10 +139,12 @@ async function update(param = 0){
         }
       });
       */
-      limiter.schedule(queryApi, list[i].username, key).then(()=>{
-        if(count == max){
-          finish();
-        }
+      limiter.schedule(async ()=>{
+        await queryApi(list[i].username, key).then((result)=>{
+          if(result == null){
+            throw new Error("Returned Null!");
+          }
+        });
       });
     });
     saved = i;
@@ -167,7 +169,6 @@ const queryApi = function(username, key){
         console.error(error);
       })
       res.on('end', function(){
-        console.log(options);
         count++;
         try{
           var user = JSON.parse(body);
@@ -176,11 +177,11 @@ const queryApi = function(username, key){
           }
         }catch(err){
           console.log("Failed to parse "+username);
-          callback();
+          callback({data:"notnull"});
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
-          callback();
+          callback(user);
         }else{
           console.log("Error: "+username);
         }
