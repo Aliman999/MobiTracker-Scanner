@@ -133,9 +133,10 @@ async function update(param = 0){
   for(var i = param; i < end; i++){
     await getKey().then((key) => {
       limiter.schedule(async ()=>{
-        await queryApi(list[i].username, key).then((result)=>{
-          if(result == null){
-            throw new Error("Returned Null!");
+        await queryApi(list[i].username, key)
+        .then((result)=>{
+          if(result.status == 0){
+            throw new Error(result.data);
           }
           if(count == max){
             finish();
@@ -169,17 +170,18 @@ const queryApi = function(username, key){
         try{
           var user = JSON.parse(body);
           if(user.data == null){
-            throw new Error(username+" Failed!");
+            callback({status:0, data:args+" returned null, retrying"});
           }
         }catch(err){
-          console.log("Failed to parse "+username);
-          callback({data:"notnull"});
+          var result = "Encountered an error, User: "+args;
+          promiseSearch({ status:0, data:result });
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
-          callback(user);
+          callback({ status:1 });
         }else{
           console.log("Error: "+username);
+          callback({ status:0, data:"Error: "+username });
         }
       })
     });
