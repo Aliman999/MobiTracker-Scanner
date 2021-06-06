@@ -133,7 +133,7 @@ async function update(param = 0){
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
   async function query(username, key){
-    await queryApi(username, key).then(() => {
+    await queryApi(username, key).then((result) => {
       saveParam(i, 1);
       if(result.status == 0){
         throw new Error(result.data);
