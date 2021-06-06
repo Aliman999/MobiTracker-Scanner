@@ -141,7 +141,7 @@ async function update(param = 0){
             finish();
           }
         });
-      });
+      }).catch();
     });
     saved = i;
   }
