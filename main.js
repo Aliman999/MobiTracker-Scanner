@@ -21,7 +21,6 @@ const limiter = new Bottleneck({
 
 limiter.on("debug", function (message, data) {
   console.log(message);
-  console.log(data);
 });
 
 limiter.on("failed", async (error, jobInfo) => {
