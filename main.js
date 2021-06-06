@@ -150,8 +150,8 @@ async function update(param = 0){
       });
     });
     saved = i;
+    saveParam(param, 1);
   }
-  saveParam(end, 1);
 }
 
 const queryApi = function(username, key){
