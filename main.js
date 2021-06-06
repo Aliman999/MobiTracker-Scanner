@@ -135,7 +135,7 @@ async function update(param = 0){
   for(var i = param; i < end; i++){
     await getKey().then((key) => {
       limiter.schedule( {id:list[i].username}, async ()=>{
-        saveParam(param, 1);
+        saveParam(i, 1);
         await queryApi(list[i].username, key)
         .then((result)=>{
           if(result.status == 0){
