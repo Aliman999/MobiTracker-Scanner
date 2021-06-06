@@ -71,6 +71,7 @@ schedule.scheduleJob('1 22 * * *', function(){
   init();
 });
 
+init();
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
   con.query(sql, function(err, result, fields){
