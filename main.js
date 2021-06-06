@@ -147,6 +147,7 @@ const queryApi = function(username, key){
       path: '/'+key+'/v1/cache/user/'+escape(username),
       method: 'GET'
     }
+    console.log("Test");
     const req = https.request(options, res =>{
       var body = "";
       res.on('data', d => {
