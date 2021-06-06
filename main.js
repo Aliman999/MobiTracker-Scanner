@@ -173,7 +173,7 @@ const queryApi = function(username, key){
             callback({status:0, data:args+" returned null, retrying"});
           }
         }catch(err){
-          var result = "Encountered an error, User: "+args;
+          var result = "Encountered an error, User: "+username;
           promiseSearch({ status:0, data:result });
         };
         if(Object.size(user.data) > 0){
