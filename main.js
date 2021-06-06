@@ -132,7 +132,7 @@ async function update(param = 0){
   console.log(today());
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
-  async function query(username, key){
+  async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
       if(result.status == 0){
@@ -145,7 +145,7 @@ async function update(param = 0){
   }
   for(var i = param; i < end; i++){
     const key = await getKey();
-    limiter.schedule( {id:list[i].username}, query, list[i].username, key)
+    limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
     .catch((error) => {
       if (error instanceof Bottleneck.BottleneckError) {
 
