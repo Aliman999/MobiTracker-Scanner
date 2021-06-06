@@ -19,9 +19,17 @@ const limiter = new Bottleneck({
   minTime: 333
 });
 
-limiter.on("debug", function (message, data) {
-  console.log(message);
+limiter.once("queued", function(info){
+  console.log(limiter.jobs("QUEUED").join(", ")+" in Queue");
 });
+
+limiter.on("error", function(info){
+  console.log(info);
+});
+
+limiter.on("executing", function(){
+  console.log(limiter.jobs("EXECUTING").join(", ")+" Executing");
+})
 
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
@@ -129,10 +137,10 @@ async function update(param = 0){
   var end = param + today();
   console.log(today());
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
-  for(var i = param; i < end; i++){
+  //param
+  for(var i = 20; i < end; i++){
     await getKey().then((key) => {
-      limiter.schedule(queryApi, list[i].username, key).then(async (result)=>{
-        console.log(result);
+      limiter.schedule(queryApi, list[i].username, key).then(()=>{
         if(count == max){
           finish();
         }
@@ -148,10 +156,9 @@ const queryApi = function(username, key){
     var options = {
       hostname: 'api.starcitizen-api.com',
       port: 443,
-      path: '/'+key+'/v1/cache/user/'+escape(username),
+      path: '/'+key+'/v1/auto/user/'+escape(username),
       method: 'GET'
     }
-    console.log("Test");
     const req = https.request(options, res =>{
       var body = "";
       res.on('data', d => {
@@ -161,6 +168,7 @@ const queryApi = function(username, key){
         console.error(error);
       })
       res.on('end', function(){
+        console.log(options);
         count++;
         try{
           var user = JSON.parse(body);
@@ -169,9 +177,11 @@ const queryApi = function(username, key){
           }
         }catch(err){
           console.log("Failed to parse "+username);
+          callback();
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
+          callback();
         }else{
           console.log("Error: "+username);
         }
