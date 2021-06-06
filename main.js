@@ -179,7 +179,7 @@ const queryApi = function(username, key){
           }
         }catch(err){
           var result = "Encountered an error, User: "+username;
-          promiseSearch({ status:0, data:result });
+          callback({ status:0, data:result });
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
