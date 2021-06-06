@@ -132,6 +132,13 @@ async function update(param = 0){
   //param
   for(var i = 20; i < end; i++){
     await getKey().then((key) => {
+      /*
+      limiter.schedule(queryApi, list[i].username, key).then(()=>{
+        if(count == max){
+          finish();
+        }
+      });
+      */
       limiter.schedule(queryApi, list[i].username, key).then(()=>{
         if(count == max){
           finish();
