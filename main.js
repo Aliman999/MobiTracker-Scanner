@@ -133,23 +133,22 @@ async function update(param = 0){
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
   for(var i = param; i < end; i++){
-    await getKey(i).then((key, i) => {
-      limiter.schedule( {id:list[i].username}, async ()=>{
-        saveParam(i, 1);
-        await queryApi(list[i].username, key)
-        .then((result)=>{
-          if(result.status == 0){
-            throw new Error(result.data);
-          }
-          if(count == max){
-            finish();
-          }
-        });
-      }).catch((error) => {
-        if (error instanceof Bottleneck.BottleneckError) {
-
+    const key = await getKey();
+    limiter.schedule( {id:list[i].username}, async ()=>{
+      saveParam(i, 1);
+      await queryApi(list[i].username, key)
+      .then((result)=>{
+        if(result.status == 0){
+          throw new Error(result.data);
+        }
+        if(count == max){
+          finish();
         }
       });
+    }).catch((error) => {
+      if (error instanceof Bottleneck.BottleneckError) {
+
+      }
     });
     saved = i;
   }
