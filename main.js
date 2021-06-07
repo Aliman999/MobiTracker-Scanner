@@ -220,101 +220,102 @@ function cachePlayer(user){
         if(err) throw err;
       });
     });
-  }
-  var update = false;
-  var eventUpdate = new Array();
-  var check = { cID:0,
-                username:'',
-                badge: { src:'', title:'' },
-                organization: [],
-                avatar: ''
-              };
-  check.cID = parseInt(user.profile.id.substring(1));
-  check.username = user.profile.handle;
-  check.badge.title = user.profile.badge;
-  check.badge.src = user.profile.badge_image;
-  check.avatar = user.profile.image;
-  if(Object.size(user.affiliation) > 0){
-    user.orgLength = Object.size(user.affiliation) + 1;
-  }
-  if(user.organization.sid){
-    check.organization.push({ sid: user.organization.sid, rank: user.organization.stars });
   }else{
-    check.organization.push({ sid: "N/A", rank: 0 });
-  }
-  for(var i = 0; i < Object.size(user.affiliation); i++){
-    if(user.affiliation[i].sid){
-      check.organization.push({ sid: user.affiliation[i].sid, rank: user.affiliation[i].stars });
+    var update = false;
+    var eventUpdate = new Array();
+    var check = { cID:0,
+                  username:'',
+                  badge: { src:'', title:'' },
+                  organization: [],
+                  avatar: ''
+                };
+    check.cID = parseInt(user.profile.id.substring(1));
+    check.username = user.profile.handle;
+    check.badge.title = user.profile.badge;
+    check.badge.src = user.profile.badge_image;
+    check.avatar = user.profile.image;
+    if(Object.size(user.affiliation) > 0){
+      user.orgLength = Object.size(user.affiliation) + 1;
+    }
+    if(user.organization.sid){
+      check.organization.push({ sid: user.organization.sid, rank: user.organization.stars });
     }else{
       check.organization.push({ sid: "N/A", rank: 0 });
     }
-  }
-  var sql = "";
-  if(check.cID){
-    sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE cID = "+user.profile.id.substring(1)+";";
-  }else{
-    check.cID = 0;
-    sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
-  }
-  con.query(sql, function (err, result, fields) {
-    if(err) throw err;
+    for(var i = 0; i < Object.size(user.affiliation); i++){
+      if(user.affiliation[i].sid){
+        check.organization.push({ sid: user.affiliation[i].sid, rank: user.affiliation[i].stars });
+      }else{
+        check.organization.push({ sid: "N/A", rank: 0 });
+      }
+    }
+    var sql = "";
+    if(check.cID){
+      sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE cID = "+user.profile.id.substring(1)+";";
+    }else{
+      check.cID = 0;
+      sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
+    }
+    con.query(sql, function (err, result, fields) {
+      if(err) throw err;
 
-    if(Object.size(result) > 0){
-      var data = result[result.length-1];
-      data.organization = JSON.parse(data.organization);
-      data.organization = Object.values(data.organization);
-      data.badge = JSON.parse(data.badge);
-      for(var i = 0; i < Object.size(data); i++){
-        if(i == 3){
-          for(var x = 0; x < Object.size(data.organization) && x < Object.size(check.organization); x++){
-            if(data.organization[x].sid != check.organization[x].sid){
-              update = true;
-              eventUpdate.push("Org Change");
-            }else if(data.organization[x].rank != check.organization[x].rank){
-              update = true;
-              eventUpdate.push("Org Promotion/Demotion");
+      if(Object.size(result) > 0){
+        var data = result[result.length-1];
+        data.organization = JSON.parse(data.organization);
+        data.organization = Object.values(data.organization);
+        data.badge = JSON.parse(data.badge);
+        for(var i = 0; i < Object.size(data); i++){
+          if(i == 3){
+            for(var x = 0; x < Object.size(data.organization) && x < Object.size(check.organization); x++){
+              if(data.organization[x].sid != check.organization[x].sid){
+                update = true;
+                eventUpdate.push("Org Change");
+              }else if(data.organization[x].rank != check.organization[x].rank){
+                update = true;
+                eventUpdate.push("Org Promotion/Demotion");
+              }
             }
           }
         }
-      }
-      if(data.cID != check.cID){
-        update = true;
-        eventUpdate.push("Obtained ID");
-      }
-      if(data.username != check.username){
-        update = true;
-        eventUpdate.push("Username Changed");
-      }else if (data.badge.title != check.badge.title) {
-        update = true;
-        eventUpdate.push("Badge Changed");
-      }else if (data.avatar != check.avatar) {
-        update = true;
-        eventUpdate.push("Avatar Changed");
-      }
-      console.log(eventUpdate);
-      eventUpdate = eventUpdate.filter((c, index) => {
-          return eventUpdate.indexOf(c) === index;
-      });
-    }else{
-      check.badge = JSON.stringify(check.badge);
-      check.organization = JSON.stringify(Object.assign({}, check.organization));
-      const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-      con.query(sql, function (err, result, fields) {
-        if(err){
-          console.log(err);
+        if(data.cID != check.cID){
+          update = true;
+          eventUpdate.push("Obtained ID");
         }
-      });
-    }
-    if(update){
-      check.badge = JSON.stringify(check.badge);
-      check.organization = JSON.stringify(Object.assign({}, check.organization));
-      var eventString = eventUpdate.join(", ");
-      const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-      con.query(sql, function (err, result, fields) {
-        if(err) throw err;
-      });
-    }
-  });
+        if(data.username != check.username){
+          update = true;
+          eventUpdate.push("Username Changed");
+        }else if (data.badge.title != check.badge.title) {
+          update = true;
+          eventUpdate.push("Badge Changed");
+        }else if (data.avatar != check.avatar) {
+          update = true;
+          eventUpdate.push("Avatar Changed");
+        }
+        console.log(eventUpdate);
+        eventUpdate = eventUpdate.filter((c, index) => {
+            return eventUpdate.indexOf(c) === index;
+        });
+      }else{
+        check.badge = JSON.stringify(check.badge);
+        check.organization = JSON.stringify(Object.assign({}, check.organization));
+        const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
+        con.query(sql, function (err, result, fields) {
+          if(err){
+            console.log(err);
+          }
+        });
+      }
+      if(update){
+        check.badge = JSON.stringify(check.badge);
+        check.organization = JSON.stringify(Object.assign({}, check.organization));
+        var eventString = eventUpdate.join(", ");
+        const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
+        con.query(sql, function (err, result, fields) {
+          if(err) throw err;
+        });
+      }
+    });
+  }
 }
 
 function timeToComplete(){
