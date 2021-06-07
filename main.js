@@ -27,7 +27,7 @@ limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
 
-  if (jobInfo.retryCount === 0) {
+  if (jobInfo.retryCount < 3) {
     console.log(`Retrying job ${id} in 25ms!`);
     return 25;
   }else{
