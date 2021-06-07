@@ -30,6 +30,8 @@ limiter.on("failed", async (error, jobInfo) => {
   if (jobInfo.retryCount === 0) {
     console.log(`Retrying job ${id} in 25ms!`);
     return 25;
+  }else{
+    console.log(jobInfo);
   }
 });
 
@@ -178,9 +180,8 @@ const queryApi = function(username, key){
             callback({status:0, data:args+" returned null, retrying"});
           }
         }catch(err){
-          var result = username+" changed name";
-          cachePlayer(username);
-          callback({ status:1, data:result });
+          var result = "Failed to parse "+username;
+          callback({ status:0, data:result });
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
