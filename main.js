@@ -292,9 +292,10 @@ function cachePlayer(user){
           eventUpdate.push("Avatar Changed");
         }
         console.log(eventUpdate);
-        eventUpdate = eventUpdate.filter((c, index) => {
-            return eventUpdate.indexOf(c) === index;
-        });
+        function removeDupe(data){
+          return data.filter((value, index) => data.indexOf(value) === index)
+        }
+        eventUpdate = removeDupe(eventUpdate);
       }else{
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
