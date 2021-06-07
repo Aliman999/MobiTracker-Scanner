@@ -212,6 +212,7 @@ function cachePlayer(user){
   //typeof user === 'string'
   if(true){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
+    console.log(sql);
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
       console.log(result[0]);
