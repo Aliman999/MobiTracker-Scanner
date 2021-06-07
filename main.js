@@ -290,7 +290,7 @@ function cachePlayer(user){
           update = true;
           eventUpdate.push("Avatar Changed");
         }
-        console.log(eventUpdate);
+        console.log(data);
         function removeDupe(data){
           return data.filter((value, index) => data.indexOf(value) === index)
         }
