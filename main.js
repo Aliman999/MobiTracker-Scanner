@@ -71,8 +71,8 @@ schedule.scheduleJob('1 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
   console.log("--- RUNNING JOB ---");
+  init();
 });
-init();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
