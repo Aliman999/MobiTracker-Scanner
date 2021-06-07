@@ -211,7 +211,7 @@ function cachePlayer(user){
   //console.log(con.escape(user.profile.bio));
   //typeof user === 'string'
   if(true){
-    const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user.profile.id+"'";
+    const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user.profile.handle+"'";
     console.log(sql);
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
