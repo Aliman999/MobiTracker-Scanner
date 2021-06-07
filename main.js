@@ -262,7 +262,7 @@ function cachePlayer(user){
         var data = result[result.length-1];
         data.organization = JSON.parse(data.organization);
         data.organization = Object.values(data.organization);
-        data.badge = JSON.parse(data.badge);
+        data.badge = [JSON.parse(data.badge)];
         for(var i = 0; i < Object.size(data); i++){
           if(i == 3){
             for(var x = 0; x < Object.size(data.organization) && x < Object.size(check.organization); x++){
