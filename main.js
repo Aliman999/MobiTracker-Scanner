@@ -31,7 +31,7 @@ limiter.on("failed", async (error, jobInfo) => {
     console.log(`Retrying job ${id} in 25ms!`);
     return 25;
   }else{
-    console.log(jobInfo);
+    cachePlayer(jobInfo.options.id);
   }
 });
 
