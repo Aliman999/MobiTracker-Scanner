@@ -277,20 +277,23 @@ function cachePlayer(user){
           }
         }
         if(data.cID != check.cID){
+          console.log(0);
           update = true;
           eventUpdate.push("Obtained ID");
         }
         if(data.username != check.username){
+          console.log(1);
           update = true;
           eventUpdate.push("Username Changed");
         }else if (data.badge.title != check.badge.title) {
+          console.log(2);
           update = true;
           eventUpdate.push("Badge Changed");
         }else if (data.avatar != check.avatar) {
+          console.log(3);
           update = true;
           eventUpdate.push("Avatar Changed");
         }
-        console.log(data);
         function removeDupe(data){
           return data.filter((value, index) => data.indexOf(value) === index)
         }
