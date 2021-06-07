@@ -209,8 +209,8 @@ function today(){
 
 function cachePlayer(user){
   //console.log(con.escape(user.profile.bio));
-  //
-  if(typeof user === 'string'){
+  //typeof user === 'string'
+  if(true){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
