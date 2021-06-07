@@ -216,7 +216,6 @@ function cachePlayer(user){
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
       const last = result.length-1;
-      console.log(result[last]);
       if(result[last].event != "Changed Name"){
         const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ( 'Changed Name', "+result[0].cID+", '"+result[0].username+"', '"+result[0].badge+"', '"+result[0].organization+"', '"+result[0].avatar+"' );";
         console.log(sql);
