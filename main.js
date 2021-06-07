@@ -310,7 +310,6 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
         var eventString = eventUpdate.join(", ");
         const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        console.log(sql);
         con.query(sql, function (err, result, fields) {
           if(err) throw err;
         });
