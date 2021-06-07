@@ -258,7 +258,6 @@ function cachePlayer(user){
     }
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
-      console.log(result);
       if(Object.size(result) > 0){
         var data = result[result.length-1];
         data.organization = JSON.parse(data.organization);
