@@ -210,7 +210,6 @@ function cachePlayer(user){
   //console.log(con.escape(user.profile.bio));
   //
   if(typeof user === 'string'){
-    var eventString = eventUpdate.join(", ");
     const sql = "SELECT * FROM `CACHE players`";
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
