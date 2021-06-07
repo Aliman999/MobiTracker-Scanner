@@ -178,8 +178,9 @@ const queryApi = function(username, key){
             callback({status:0, data:args+" returned null, retrying"});
           }
         }catch(err){
-          var result = "Encountered an error, User: "+username;
-          callback({ status:0, data:result });
+          var result = username+" changed name";
+          cachePlayer(null);
+          callback({ status:1, data:result });
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
