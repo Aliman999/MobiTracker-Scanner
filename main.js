@@ -181,7 +181,7 @@ const queryApi = function(username, key){
         try{
           var user = JSON.parse(body);
           if(user.data == null){
-            callback({status:0, data:args+" returned null, retrying"});
+            callback({status:user.success, data:args+" returned null, retrying"});
           }
         }catch(err){
           var result = "Failed to parse "+username;
@@ -189,7 +189,7 @@ const queryApi = function(username, key){
         };
         if(Object.size(user.data) > 0){
           cachePlayer(user.data);
-          callback({ status:1 });
+          callback({ status:user.success });
         }else{
           console.log("Error: "+username);
           callback({ status:0, data:"Error: "+username });
