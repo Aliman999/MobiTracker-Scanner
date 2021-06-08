@@ -130,7 +130,6 @@ function users(param){
 async function update(param = 0){
   max = today();
   var end = param + today();
-  console.log(today());
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
   async function query(username, key, i){
@@ -210,7 +209,6 @@ function today(){
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
-    console.log(sql);
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(result.length > 0){
@@ -280,20 +278,16 @@ function cachePlayer(user){
           }
         }
         if(data.cID != check.cID){
-          console.log(0);
           update = true;
           eventUpdate.push("Obtained ID");
         }
         if(data.username != check.username){
-          console.log(1);
           update = true;
           eventUpdate.push("Changed Name");
         }else if (data.badge.title != check.badge.title) {
-          console.log(2);
           update = true;
           eventUpdate.push("Badge Changed");
         }else if (data.avatar != check.avatar) {
-          console.log(3);
           update = true;
           eventUpdate.push("Avatar Changed");
         }
@@ -306,9 +300,7 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
         const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
         con.query(sql, function (err, result, fields) {
-          if(err){
-            console.log(err);
-          }
+          if(err) throw err;
         });
       }
       if(update){
