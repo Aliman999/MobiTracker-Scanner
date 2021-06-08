@@ -191,8 +191,8 @@ const queryApi = function(username, key){
           cachePlayer(user.data);
           callback({ status:user.success });
         }else{
-          console.log("Error: "+username);
-          callback({ status:0, data:"Error: "+username });
+          console.log("User Not Found");
+          callback({ status:user.success, data:"User Not Found" });
         }
       })
     });
