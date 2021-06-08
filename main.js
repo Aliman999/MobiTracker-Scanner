@@ -35,6 +35,14 @@ limiter.on("failed", async (error, jobInfo) => {
   }
 });
 
+limiter.on("done", function(info){
+  var running = limiter.jobs("EXECUTING");
+  var queue = limiter.job("QUEUED");
+  if(running.length == 0 && queue.length == 0){
+    finish();
+  }
+});
+
 limiter.on("retry", (error, jobInfo) => console.log(`Now retrying ${jobInfo.options.id}`));
 
 var con = mysql.createPool({
@@ -137,9 +145,6 @@ async function update(param = 0){
       saveParam(i, 1);
       if(result.status == 0){
         throw new Error(result.data);
-      }
-      if(count == max){
-        finish();
       }
     })
   }
