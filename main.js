@@ -180,6 +180,7 @@ const queryApi = function(username, key){
         count++;
         try{
           var user = JSON.parse(body);
+          console.log(user.success);
           if(user.success == 0){
             callback({status:user.success, data:args+" returned null, retrying"});
           }
