@@ -7,8 +7,8 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 const timediff = require('timediff');
-var day;
 
+var day;
 var max;
 var count;
 var list = [], queries = {}, sql;
@@ -180,7 +180,7 @@ const queryApi = function(username, key){
         count++;
         try{
           var user = JSON.parse(body);
-          if(user.data == null){
+          if(user.success == 0){
             callback({status:user.success, data:args+" returned null, retrying"});
           }
         }catch(err){
@@ -192,7 +192,7 @@ const queryApi = function(username, key){
           callback({ status:user.success });
         }else{
           console.log("User Not Found");
-          callback({ status:user.success, data:"User Not Found" });
+          callback({ status:0, data:"User Not Found" });
         }
       })
     });
