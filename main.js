@@ -15,7 +15,7 @@ var list = [], queries = {}, sql;
 var keyType = "Main";
 var scanStart, scanEnd;
 const limiter = new Bottleneck({
-  maxConcurrent: 1,
+  maxConcurrent: 2,
   minTime: 333
 });
 
