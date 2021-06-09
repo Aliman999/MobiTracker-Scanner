@@ -181,7 +181,7 @@ const queryApi = function(username, key){
         try{
           var user = JSON.parse(body);
           if(user.data == null){
-            callback({status:user.success, data:args+" returned null, retrying"});
+            callback({status:0, data:args+" returned null, retrying"});
           }
         }catch(err){
           var result = "Failed to parse "+username;
