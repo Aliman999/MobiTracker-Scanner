@@ -19,8 +19,8 @@ const limiter = new Bottleneck({
   minTime: 333
 });
 
-limiter.on("executing", function(){
-  console.log(limiter.jobs("EXECUTING").join(", ")+" Executing");
+limiter.on("executing", function(info){
+  console.log(info);
 })
 
 limiter.on("failed", async (error, jobInfo) => {
