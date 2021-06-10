@@ -19,10 +19,6 @@ const limiter = new Bottleneck({
   minTime: 333
 });
 
-limiter.on("executing", function(info){
-  console.log(info);
-})
-
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
@@ -36,9 +32,9 @@ limiter.on("failed", async (error, jobInfo) => {
 });
 
 limiter.on("done", function(info){
-  var running = limiter.jobs("EXECUTING");
-  var queue = limiter.job("QUEUED");
-  if(running.length == 0 && queue.length == 0){
+  count++;
+  console.log(count+" | "+max);
+  if(count == max){
     finish();
   }
 });
@@ -177,7 +173,6 @@ const queryApi = function(username, key){
         console.error(error);
       })
       res.on('end', function(){
-        count++;
         try{
           var user = JSON.parse(body);
           if(user.data == null){
