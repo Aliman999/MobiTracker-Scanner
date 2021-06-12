@@ -190,8 +190,11 @@ const queryApi = function(username, key){
           callback({ status:0, data:"User Not Found" });
         }
       })
-    });
-    req.end()
+    })
+    req.on('error', (err) => {
+      console.log(err);
+    })
+    req.end();
   });
 }
 
