@@ -217,8 +217,8 @@ function cachePlayer(user){
       if(result.length > 0){
         const last = result.length-1;
         if(result[last].event != "Changed Name"){
-          const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ( 'Changed Name', "+result[0].cID+", '"+result[0].username+"', '"+result[0].badge+"', '"+result[0].organization+"', '"+result[0].avatar+"' );";
-          con.query(sql, function (err, result, fields) {
+          const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ( 'Changed Name', "+result[last].cID+", '"+result[last].username+"', ?, '"+result[last].badge+"', '"+result[last].organization+"', '"+result[last].avatar+"' );";
+          con.query(sql, [result[last].bio], function (err, result, fields) {
             if(err) throw err;
           });
         }
@@ -234,6 +234,10 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
+    check.bio = user.profile.bio;
+    if(!check.bio){
+      check.bio = "";
+    }
     check.username = user.profile.handle;
     check.badge.title = user.profile.badge;
     check.badge.src = user.profile.badge_image;
@@ -255,10 +259,10 @@ function cachePlayer(user){
     }
     var sql = "";
     if(check.cID){
-      sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE cID = "+user.profile.id.substring(1)+";";
+      sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE cID = "+user.profile.id.substring(1)+";";
     }else{
       check.cID = 0;
-      sql = "SELECT cID, username, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
+      sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
     }
     con.query(sql, function (err, result, fields) {
       if(err) throw err;
@@ -287,31 +291,39 @@ function cachePlayer(user){
         if(data.username != check.username){
           update = true;
           eventUpdate.push("Changed Name");
-        }else if (data.badge.title != check.badge.title) {
+        }
+        if(data.badge.title != check.badge.title){
           update = true;
           eventUpdate.push("Badge Changed");
-        }else if (data.avatar != check.avatar) {
+        }
+        if(data.avatar != check.avatar){
           update = true;
           eventUpdate.push("Avatar Changed");
+        }
+        if(data.bio != check.bio){
+          update = true;
+          eventUpdate.push("Bio Changed");
         }
         function removeDupe(data){
           return data.filter((value, index) => data.indexOf(value) === index)
         }
         eventUpdate = removeDupe(eventUpdate);
       }else{
+        check.bio = JSON.stringify(check.bio);
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
-        const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-        con.query(sql, function (err, result, fields) {
+        const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
+        con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
       if(update){
+        check.bio = JSON.stringify(check.bio);
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
         var eventString = eventUpdate.join(", ");
-        const sql = "INSERT INTO `CACHE players` (event, cID, username, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        con.query(sql, function (err, result, fields) {
+        const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
+        con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
