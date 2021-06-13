@@ -203,10 +203,10 @@ var saved = 0;
 function today(){
   var perc = 1.1;
   var temp = Math.round(list.length/perc);
+  console.log(temp);
   while(temp > (queries.available/perc)){
     temp = Math.round(list.length/perc);
   }
-  console.log(queries.available/perc);
   return parseInt(temp);
 }
 
