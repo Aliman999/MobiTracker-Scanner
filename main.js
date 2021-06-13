@@ -201,11 +201,11 @@ const queryApi = function(username, key){
 var saved = 0;
 
 function today(){
-  var perc = 1.1;
-  var temp = Math.round(list.length/perc);
-  console.log(temp);
-  while(temp > (queries.available/perc)){
-    temp = Math.round(list.length/perc);
+  var weeks = 1;
+  var percent = 1.1;
+  var temp = Math.round(list.length/(7*weeks));
+  while(temp > (queries.available/percent)){
+    temp = Math.round(list.length/(7*++weeks));
   }
   return parseInt(temp);
 }
