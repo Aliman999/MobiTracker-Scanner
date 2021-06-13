@@ -202,9 +202,9 @@ var saved = 0;
 
 function today(){
   var percent = 1.1;
-  var temp = Math.round(list.length/percent);
-  while(temp > (queries.available/percent)){
-    temp = Math.round(list.length/percent);
+  var temp = Math.round(list.length/(7*weeks));
+  while(temp > (queries.available/1.1)){
+    temp = Math.round(list.length/(7*++weeks));
   }
   return parseInt(temp);
 }
