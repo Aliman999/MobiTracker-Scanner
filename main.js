@@ -52,6 +52,7 @@ con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
   timeToJob.start();
+  coldInit();
 });
 
 function getKey(i){
@@ -78,7 +79,6 @@ schedule.scheduleJob('5 22 * * *', function(){
   init();
 });
 
-coldInit();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
