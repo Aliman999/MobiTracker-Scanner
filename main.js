@@ -135,8 +135,6 @@ async function update(param = 0){
   max = today();
   var end = param + today();
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
-  //end
-  /*
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -155,7 +153,6 @@ async function update(param = 0){
     });
     saved = i;
   }
-  */
 }
 
 const queryApi = function(username, key){
