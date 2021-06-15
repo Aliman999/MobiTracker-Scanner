@@ -51,8 +51,8 @@ var con = mysql.createPool({
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  //timeToJob.start();
-  coldInit();
+  timeToJob.start();
+  //coldInit();
 });
 
 function getKey(i){
