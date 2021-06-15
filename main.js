@@ -382,7 +382,7 @@ function calcTime(){
   log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
 }
 
-const timeToJob = new Timer(calcTime, 500);
+//const timeToJob = new Timer(calcTime, 500);
 
 function coldInit(){
   init();
