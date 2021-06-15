@@ -204,8 +204,10 @@ function today(){
   var weeks = 1;
   var percent = 1.1;
   var temp = Math.round(list.length/(7*weeks));
+  console.log(list.length+"/7*"+weeks);
   while(temp > (queries.available/percent)){
     temp = Math.round(list.length/(7*++weeks));
+    console.log(list.length+"/7*"+weeks);
   }
   return parseInt(temp);
 }
