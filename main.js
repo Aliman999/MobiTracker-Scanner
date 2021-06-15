@@ -77,6 +77,7 @@ schedule.scheduleJob('5 22 * * *', function(){
   console.log("--- RUNNING JOB ---");
 });
 init();
+timeToJob.stop();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
