@@ -75,8 +75,8 @@ schedule.scheduleJob('1 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
   console.log("--- RUNNING JOB ---");
-  init();
 });
+init();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
@@ -91,7 +91,7 @@ function init(){
     updateQueries().then(() => {
       console.log(queries.available+" Searches available today.");
       count = 0;
-      users(parseInt(param));
+      //users(parseInt(param));
     });
   })
 }
@@ -204,13 +204,12 @@ function today(){
   var weeks = 1;
   var percent = 1.1;
   var temp = Math.round(list.length/(7*weeks));
-  console.log(list.length+"/7*"+weeks);
   while(temp > (queries.available/percent)){
     temp = Math.round(list.length/(7*++weeks));
   }
   return parseInt(temp);
 }
-today();
+
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
