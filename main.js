@@ -75,9 +75,10 @@ schedule.scheduleJob('5 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
   console.log("--- RUNNING JOB ---");
+  init();
 });
-init();
-timeToJob.stop();
+
+coldInit();
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
@@ -382,6 +383,11 @@ function calcTime(){
 }
 
 const timeToJob = new Timer(calcTime, 500);
+
+function coldInit(){
+  init();
+  timeToJob.stop();
+}
 
 Object.size = function(obj) {
   var size = 0, key;
