@@ -209,7 +209,7 @@ function today(){
   }
   return parseInt(temp);
 }
-
+today();
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
