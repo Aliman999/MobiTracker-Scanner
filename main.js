@@ -71,7 +71,7 @@ function getKey(i){
   })
 }
 
-schedule.scheduleJob('1 22 * * *', function(){
+schedule.scheduleJob('5 22 * * *', function(){
   timeToJob.stop();
   saveParam((Date.now()+86400000), 2);
   console.log("--- RUNNING JOB ---");
