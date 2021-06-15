@@ -91,7 +91,7 @@ function init(){
     updateQueries().then(() => {
       console.log(queries.available+" Searches available today.");
       count = 0;
-      //users(parseInt(param));
+      users(parseInt(param));
     });
   })
 }
@@ -136,6 +136,7 @@ async function update(param = 0){
   var end = param + today();
   console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
   //end
+  /*
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -154,6 +155,7 @@ async function update(param = 0){
     });
     saved = i;
   }
+  */
 }
 
 const queryApi = function(username, key){
