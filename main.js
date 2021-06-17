@@ -51,7 +51,7 @@ var con = mysql.createPool({
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  timeToJob.start();
+  //timeToJob.start();
   //coldInit();
 });
 
@@ -381,7 +381,7 @@ function calcTime(){
   log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
 }
 
-const timeToJob = new Timer(calcTime, 500);
+//const timeToJob = new Timer(calcTime, 500);
 
 function coldInit(){
   init();
