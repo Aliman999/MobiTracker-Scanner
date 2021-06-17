@@ -16,7 +16,7 @@ var keyType = "Main";
 var scanStart, scanEnd;
 const limiter = new Bottleneck({
   maxConcurrent: 3,
-  minTime: 333
+  minTime: 3000
 });
 
 limiter.on("failed", async (error, jobInfo) => {
