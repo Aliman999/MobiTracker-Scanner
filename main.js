@@ -11,7 +11,7 @@ const timediff = require('timediff');
 var day;
 var max;
 var count;
-var list = [], queries = {}, sql;
+var list = [], queries = {}, sql, reset = false;
 var keyType = "Main";
 var scanStart, scanEnd;
 const limiter = new Bottleneck({
@@ -89,12 +89,12 @@ function saveParam(val, id){
 
 function init(){
   scanStart = Date.now();
-  persist(1).then((param) => {
-    updateQueries().then(() => {
-      console.log(queries.available+" Searches available today.");
-      count = 0;
-      users(parseInt(param));
-    });
+  persist(1).then(async (param) => {
+    await updateQueries();
+    await users(parseInt(param));
+    if(queries.available >= param){
+      reset = true;
+    }
   })
 }
 
@@ -134,9 +134,10 @@ function users(param){
 }
 
 async function update(param = 0){
+  count = 0;
   max = today();
   var end = param + today();
-  console.log("Updating "+today()+" users today \n#"+param+" to #"+end);
+  console.log(queries.available+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -398,7 +399,12 @@ Object.size = function(obj) {
 function finish(){
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
-  console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
+  if(reset){
+    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds+" \n\n Reached end of Cache, Starting next job at the beginning.");
+  }else{
+    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
+  }
+  saveParam(0, 1);
   timeToComplete().then(()=>{
     timeToJob.start();
   });
