@@ -48,11 +48,13 @@ var con = mysql.createPool({
   database: config.MysqlDatabase
 });
 
+//const timeToJob = new Timer(calcTime, 500);
+
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  timeToJob.start();
-  //coldInit();
+  //timeToJob.start();
+  coldInit();
 });
 
 function getKey(i){
@@ -92,7 +94,7 @@ function init(){
   persist(1).then(async (param) => {
     await updateQueries();
     await users(parseInt(param));
-    if(queries >= param){
+    if(queries.available >= param){
       reset = true;
     }
   })
@@ -114,7 +116,13 @@ function updateQueries(){
     sql = "SELECT id, count FROM apiKeys WHERE note like '%"+keyType+"%'";
     con.query(sql, function(err, result, fields){
       if(err) throw err;
-      queries = 15000;
+      queries.data = result;
+      queries.available = 15000;
+      /*
+      for(var x = 0; x < queries.data.length; x++){
+        queries.available += queries.data[x].count;
+      }
+      */
       callback();
     })
   })
@@ -133,7 +141,7 @@ async function update(param = 0){
   count = 0;
   max = today();
   var end = param + today();
-  console.log(queries+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
+  console.log(queries.available+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -200,7 +208,7 @@ var saved = 0;
 
 function today(){
   var percent = 1.1;
-  var temp = queries/percent;
+  var temp = queries.available/percent;
   if(temp > list.length){
     temp = list.length
   }
@@ -378,7 +386,6 @@ function calcTime(){
   log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
 }
 
-const timeToJob = new Timer(calcTime, 500);
 
 function coldInit(){
   init();
