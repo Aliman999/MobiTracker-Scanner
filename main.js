@@ -52,7 +52,7 @@ con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
   //timeToJob.start();
-  //coldInit();
+  coldInit();
 });
 
 function getKey(i){
