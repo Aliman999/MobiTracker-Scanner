@@ -49,13 +49,13 @@ var con = mysql.createPool({
   database: config.MysqlDatabase
 });
 
-const timeToJob = new Timer(calcTime, 500);
+//const timeToJob = new Timer(calcTime, 500);
 
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  timeToJob.start();
-  //coldInit();
+  //timeToJob.start();
+  coldInit();
 });
 
 function getKey(i){
@@ -208,7 +208,7 @@ const queryApi = function(username, key){
 var saved = 0;
 
 function today(){
-  var temp = queries.available/offset;
+  var temp = queries.available;
   if(temp > list.length){
     temp = list.length
   }
