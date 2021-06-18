@@ -14,9 +14,10 @@ var count;
 var list = [], queries = {}, sql, reset = false;
 var keyType = "Main";
 var scanStart, scanEnd;
+var offset = 2;
 const limiter = new Bottleneck({
-  maxConcurrent: 3,
-  minTime: 3000
+  maxConcurrent: offset,
+  minTime: (offset*1000)
 });
 
 limiter.on("failed", async (error, jobInfo) => {
@@ -25,7 +26,7 @@ limiter.on("failed", async (error, jobInfo) => {
 
   if (jobInfo.retryCount < 2) {
     console.log(`Retrying job ${id} in 1s!`);
-    return 1000;
+    return (offset*1000);
   }else{
     cachePlayer(jobInfo.options.id);
   }
@@ -117,7 +118,7 @@ function updateQueries(){
     con.query(sql, function(err, result, fields){
       if(err) throw err;
       queries.data = result;
-      queries.available = 15000;
+      queries.available = (82800/offset);
       /*
       for(var x = 0; x < queries.data.length; x++){
         queries.available += queries.data[x].count;
@@ -207,8 +208,7 @@ const queryApi = function(username, key){
 var saved = 0;
 
 function today(){
-  var percent = 1.1;
-  var temp = queries.available/percent;
+  var temp = queries.available/offset;
   if(temp > list.length){
     temp = list.length
   }
