@@ -144,6 +144,7 @@ async function update(param = 0){
   var running = await today();
   var end = param + running;
   max = end-param;
+  console.log(max);
   var temp = end;
   if(temp > list.length){
     temp = list.length;
@@ -158,7 +159,6 @@ async function update(param = 0){
     })
   }
   for(var i = param; i < end; i++){
-    console.log(max);
     if(i == temp){
       end = running - max;
       i = 0;
