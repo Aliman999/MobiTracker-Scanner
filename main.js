@@ -147,7 +147,7 @@ async function update(param = 0){
   if(temp > list.length){
     temp = list.length;
   }
-  console.log(queries.available+" Searches available. Updating "+max+" users today \n#"+param+" to #"+temp);
+  console.log(queries.available+" Searches available. Updating #"+param+" to #"+temp);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
