@@ -59,7 +59,7 @@ con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
   timeToJob.start();
-  //coldInit();
+  coldInit();
 });
 
 function getKey(i){
@@ -142,11 +142,8 @@ function users(param){
 async function update(param = 0){
   count = 0;
   var end = param + today();
-  if(end > list.length){
-    end = list.length;
-  }
   max = end-param;
-  console.log(queries.available+" Searches available. Updating "+max+" users today \n#"+param+" to #"+end);
+  console.log(queries.available+" Searches available. Updating "++" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -156,6 +153,10 @@ async function update(param = 0){
     })
   }
   for(var i = param; i < end; i++){
+    if((i+1) == end){
+      end = i;
+      i = 0;
+    }
     const key = await getKey();
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
