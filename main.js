@@ -213,6 +213,7 @@ function today(){
   if(temp > list.length-1){
     temp = (list.length-1)-queries.available;
   }
+  console.log(temp+" | "+list.length);
   return parseInt(temp);
 }
 
