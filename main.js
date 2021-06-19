@@ -35,7 +35,8 @@ limiter.on("failed", async (error, jobInfo) => {
 limiter.on("done", function(info){
   count++;
   console.log(count+" | "+max);
-  if(count == max || count == list.length){
+  console.log(info);
+  if(count == max){
     finish();
   }
 });
