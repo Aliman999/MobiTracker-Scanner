@@ -35,7 +35,7 @@ limiter.on("failed", async (error, jobInfo) => {
 limiter.on("done", function(info){
   count++;
   console.log(count+" | "+max);
-  if(count == max || (info.args[2]+1) == list.length){
+  if(count == max){
     if((info.args[2]+1) == list.length){
       finish(true);
     }else{
@@ -146,6 +146,9 @@ async function update(param = 0){
   count = 0;
   max = today();
   var end = param + today();
+  if(end > list.length){
+    end = list.length;
+  }
   console.log(queries.available+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
@@ -155,7 +158,7 @@ async function update(param = 0){
       }
     })
   }
-  for(var i = param; i < end && i < list.length; i++){
+  for(var i = param; i < end; i++){
     const key = await getKey();
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
