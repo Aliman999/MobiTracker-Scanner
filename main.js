@@ -159,7 +159,7 @@ async function update(param = 0){
   for(var i = param; i < end; i++){
     console.log(i+" | "+temp);
     if(i == temp){
-      end = i;
+      end = today() - max;
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
     }else{
