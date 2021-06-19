@@ -350,7 +350,7 @@ function timeToComplete(){
     sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
     con.query(sql, function(err, result, fields){
       if(err) throw err;
-      var max = result.length, remaining = 0, time = 0, available = queries.data.length*500;
+      var max = result.length, remaining = 0, time = 0, available = queries.available;
       persist(1).then((param) =>{
         remaining = max - param;
         time = Math.ceil(remaining/available);
