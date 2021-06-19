@@ -141,7 +141,7 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  var today = await today();
+  var running = await today();
   var end = param + today;
   max = end-param;
   var temp = end;
