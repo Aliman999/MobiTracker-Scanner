@@ -140,8 +140,8 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  max = today(param);
-  var end = today(param);
+  max = today();
+  var end = param + today();
   console.log(queries.available+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
@@ -151,7 +151,7 @@ async function update(param = 0){
       }
     })
   }
-  for(var i = param; i < end; i++){
+  for(var i = param; i < end && i < list.length; i++){
     const key = await getKey();
     console.log(list[i]+" | "+i+" | "+end);
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
