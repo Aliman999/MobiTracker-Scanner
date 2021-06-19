@@ -160,7 +160,7 @@ async function update(param = 0){
     if(i == temp){
       end = max-(temp - param);
       i = 0;
-      console.log("Reached end of list, scanning "+i+" to "+end);
+      console.log("Reached end of list, scanning #"+i+" to #"+end);
     }else{
       const key = await getKey();
       limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
