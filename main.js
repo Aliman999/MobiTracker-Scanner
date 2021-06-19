@@ -142,7 +142,7 @@ function users(param){
 async function update(param = 0){
   count = 0;
   var running = await today();
-  var end = param + today;
+  var end = param + running;
   max = end-param;
   var temp = end;
   if(temp > list.length){
