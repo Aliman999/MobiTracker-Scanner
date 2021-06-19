@@ -141,10 +141,8 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  var running = await today();
-  var end = param + running;
-  max = end-param;
-  console.log(max);
+  max = today();
+  var end = param + max;
   var temp = end;
   if(temp > list.length){
     temp = list.length;
@@ -160,7 +158,8 @@ async function update(param = 0){
   }
   for(var i = param; i < end; i++){
     if(i == temp){
-      end = running - max;
+      end = max-(param-temp);
+      console.log(end);
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
     }else{
