@@ -398,7 +398,6 @@ function calcTime(){
 
 
 function coldInit(){
-  timeToJob.stop();
   init();
 }
 
