@@ -408,7 +408,7 @@ function finish(reset = false){
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
   if(reset){
-    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds+" \n\n Reached end of Cache, Starting next job at the beginning.");
+    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds+" \n\nReached end of Cache, Starting next job at the beginning.");
     saveParam(0, 1);
   }else{
     console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
