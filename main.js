@@ -153,6 +153,7 @@ async function update(param = 0){
     })
   }
   for(var i = param; i < end; i++){
+    console.log(i+" | "+end);
     if((i+1) == end){
       end = i;
       i = 0;
