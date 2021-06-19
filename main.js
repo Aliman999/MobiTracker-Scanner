@@ -158,15 +158,16 @@ async function update(param = 0){
       end = i;
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
-    }
-    const key = await getKey();
-    limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
-    .catch((error) => {
-      if (error instanceof Bottleneck.BottleneckError) {
+    }else{
+      const key = await getKey();
+      limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
+      .catch((error) => {
+        if (error instanceof Bottleneck.BottleneckError) {
 
-      }
-    });
-    saved = i;
+        }
+      });
+      saved = i;
+    }
   }
 }
 
