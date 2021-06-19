@@ -144,12 +144,12 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  max = today();
   var end = param + today();
   if(end > list.length){
     end = list.length;
   }
-  console.log(queries.available+" Searches available. Updating "+today()+" users today \n#"+param+" to #"+end);
+  max = end-param;
+  console.log(queries.available+" Searches available. Updating "+max+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
