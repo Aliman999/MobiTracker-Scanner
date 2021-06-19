@@ -157,9 +157,8 @@ async function update(param = 0){
     })
   }
   for(var i = param; i < end; i++){
-    console.log(temp - param);
     if(i == temp){
-      end = max;
+      end = max-(temp - param);
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
     }else{
