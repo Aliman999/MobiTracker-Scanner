@@ -154,7 +154,7 @@ async function update(param = 0){
   }
   for(var i = param; i < end; i++){
     console.log(i+" | "+end);
-    if((i+1) == end){
+    if((i) == end){
       end = i;
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
