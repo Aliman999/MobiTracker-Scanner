@@ -11,7 +11,7 @@ const timediff = require('timediff');
 var day;
 var max;
 var count;
-var list = [], queries = {}, sql, reset = false;
+var list = [], queries = {}, sql;
 var keyType = "Main";
 var scanStart, scanEnd;
 var offset = 2;
@@ -36,7 +36,11 @@ limiter.on("done", function(info){
   count++;
   console.log(count+" | "+max);
   if(count == max || (info.args[2]+1) == list.length){
-    finish();
+    if((info.args[2]+1) == list.length){
+      finish(true);
+    }else{
+      finish();
+    }
   }
 });
 
@@ -401,7 +405,7 @@ Object.size = function(obj) {
   return size;
 };
 
-function finish(){
+function finish(reset = false){
   scanEnd = Date.now();
   var runtime = timediff(scanStart, scanEnd);
   if(reset){
