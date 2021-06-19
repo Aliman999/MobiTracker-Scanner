@@ -158,7 +158,7 @@ async function update(param = 0){
     })
   }
   for(var i = param; i < end; i++){
-    console.log(i+" | "+temp);
+    console.log(running - max);
     if(i == temp){
       end = running - max;
       i = 0;
