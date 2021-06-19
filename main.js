@@ -210,8 +210,8 @@ var saved = 0;
 
 function today(){
   var temp = queries.available;
-  if(temp > list.length){
-    temp = list.length
+  if(temp > list.length-1){
+    temp = list.length-1
   }
   return parseInt(temp);
 }
