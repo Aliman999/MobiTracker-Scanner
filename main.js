@@ -141,7 +141,7 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  var end = param + await today();
+  var end = param + today();
   max = end-param;
   console.log(queries.available+" Searches available. Updating "+max+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
