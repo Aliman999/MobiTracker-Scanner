@@ -141,7 +141,7 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  var end = param + today();
+  var end = param + await today();
   max = end-param;
   console.log(queries.available+" Searches available. Updating "+max+" users today \n#"+param+" to #"+end);
   async function query(username, key, i){
@@ -154,7 +154,7 @@ async function update(param = 0){
   }
   for(var i = param; i < end; i++){
     console.log(i+" | "+end);
-    if((i) == end){
+    if(i == end){
       end = i;
       i = 0;
       console.log("Reached end of list, scanning "+i+" to "+end);
