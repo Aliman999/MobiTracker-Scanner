@@ -199,9 +199,11 @@ const queryApi = function(username, key){
           var result = "Failed to parse "+username;
           callback({ status:0, data:result });
         };
-        if(Object.size(user.data) > 0){
-          cachePlayer(user.data);
-          callback({ status:1 });
+        if(user){
+          if(Object.size(user.data) > 0){
+            cachePlayer(user.data);
+            callback({ status:1 });
+          }
         }else{
           console.log("User Not Found");
           callback({ status:0, data:"User Not Found" });
