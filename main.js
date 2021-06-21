@@ -165,9 +165,7 @@ async function update(param = 0){
     const key = await getKey();
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
-      if (error instanceof Bottleneck.BottleneckError) {
-
-      }
+      console.log(error);
     });
     saved = i;
   }
