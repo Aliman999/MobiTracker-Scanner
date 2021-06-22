@@ -189,13 +189,13 @@ const queryApi = function(username, key){
         body += d;
       })
       res.on('error', error => {
-        console.error(error);
+        callback({ status:0, data:error});
       })
       res.on('end', function(){
         try{
           var user = JSON.parse(body);
           if(user.data == null){
-            callback({status:0, data:args+" returned null, retrying"});
+            callback({status:0, data:args+" returned null. Retrying."});
           }
         }catch(err){
           var result = "Failed to parse "+username;
@@ -213,7 +213,7 @@ const queryApi = function(username, key){
       })
     })
     req.on('error', (err) => {
-      console.log(err);
+      callback({ status:0, data:error});
     })
     req.end();
   });
