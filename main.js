@@ -300,23 +300,24 @@ function cachePlayer(user){
             }
           }
         }
-        if(data.cID != check.cID){
+        if(data.cID !== check.cID){
           update = true;
           eventUpdate.push("Obtained ID");
         }
-        if(data.username != check.username){
+        if(data.username !== check.username){
           update = true;
           eventUpdate.push("Changed Name");
         }
-        if(data.badge.title != check.badge.title){
+        if(data.badge.title !== check.badge.title){
           update = true;
           eventUpdate.push("Badge Changed");
         }
-        if(data.avatar != check.avatar){
+        if(data.avatar !== check.avatar){
           update = true;
           eventUpdate.push("Avatar Changed");
         }
-        if(data.bio != check.bio){
+        if(data.bio !== check.bio){
+          console.log();
           update = true;
           eventUpdate.push("Bio Changed");
           console.log("bio");
