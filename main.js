@@ -317,7 +317,7 @@ function cachePlayer(user){
           eventUpdate.push("Avatar Changed");
         }
         if(data.bio !== check.bio){
-          console.log(check.bio);
+          console.log(JSON.stringify(check.bio));
           update = true;
           eventUpdate.push("Bio Changed");
           console.log("bio");
