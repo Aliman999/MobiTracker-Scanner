@@ -250,7 +250,7 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
-    check.bio = user.profile.bio;
+    check.bio = JSON.stringify(user.profile.bio);
     if(!check.bio){
       check.bio = "";
     }
@@ -316,7 +316,7 @@ function cachePlayer(user){
           update = true;
           eventUpdate.push("Avatar Changed");
         }
-        if(data.bio !== JSON.stringify(check.bio)){
+        if(data.bio !== check.bio){
           update = true;
           eventUpdate.push("Bio Changed");
           console.log("bio");
