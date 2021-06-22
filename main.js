@@ -25,15 +25,10 @@ limiter.on("failed", async (error, jobInfo) => {
   console.warn(`Job ${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
-    console.log(`Retrying job ${id} in 1s!`);
     return (offset*1000);
   }else{
     cachePlayer(jobInfo.options.id);
   }
-});
-
-limiter.on("error", (error) => {
-  console.log(error);
 });
 
 limiter.on("done", function(info){
