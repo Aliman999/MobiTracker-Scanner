@@ -38,7 +38,7 @@ limiter.on("error", (error) => {
 
 limiter.on("done", function(info){
   count++;
-  console.log(info.args[0]+" | "+info.args[2]);
+  console.log(info.args[2]+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
       finish(true);
