@@ -53,13 +53,13 @@ var con = mysql.createPool({
   database: config.MysqlDatabase
 });
 
-//const timeToJob = new Timer(calcTime, 500);
+const timeToJob = new Timer(calcTime, 500);
 
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  //timeToJob.start();
-  coldInit();
+  timeToJob.start();
+  //coldInit();
 });
 
 function getKey(i){
@@ -319,7 +319,6 @@ function cachePlayer(user){
         if(data.bio !== check.bio){
           update = true;
           eventUpdate.push("Bio Changed");
-          console.log("bio");
         }
         function removeDupe(data){
           return data.filter((value, index) => data.indexOf(value) === index)
