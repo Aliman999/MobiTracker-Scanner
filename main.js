@@ -319,6 +319,7 @@ function cachePlayer(user){
         if(data.bio != check.bio){
           update = true;
           eventUpdate.push("Bio Changed");
+          console.log("bio");
         }
         function removeDupe(data){
           return data.filter((value, index) => data.indexOf(value) === index)
