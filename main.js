@@ -20,12 +20,9 @@ const limiter = new Bottleneck({
   minTime: (offset*1000)
 });
 
-limiter.on("executing", ()=>{
-  limiter.once("debug", (info) => {
-    console.log(info);
-  });
-})
-
+limiter.on("debug", (info) => {
+  console.log(info);
+});
 
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
