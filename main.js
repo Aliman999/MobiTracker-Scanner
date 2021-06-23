@@ -32,7 +32,7 @@ limiter.on("failed", async (error, jobInfo) => {
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
   }else{
-    console.log(info.args[2]+" | "+info.args[0]);
+    console.log(info.args[2]+" of "+max+" | "+info.args[0]);
     cachePlayer(info.args[0]);
   }
 });
