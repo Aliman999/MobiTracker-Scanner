@@ -33,13 +33,13 @@ limiter.on("failed", async (error, jobInfo) => {
     return (offset*1000);
   }else{
     console.log(info.args[2]+" | "+info.args[0]);
-    console.log(info);
     cachePlayer(jobInfo.options.id);
   }
 });
 
 limiter.on("done", function(info){
   count++;
+  console.log(info);
   console.log(info.args[2]+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
