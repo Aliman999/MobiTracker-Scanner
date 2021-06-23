@@ -33,6 +33,7 @@ limiter.on("failed", async (error, jobInfo) => {
     return (offset*1000);
   }else{
     console.log(info.args[2]+" | "+info.args[0]);
+    console.log(info);
     cachePlayer(jobInfo.options.id);
   }
 });
