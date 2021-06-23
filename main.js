@@ -20,23 +20,26 @@ const limiter = new Bottleneck({
   minTime: (offset*1000)
 });
 
+/*
 limiter.on("debug", (info) => {
   console.log(info);
 });
-
+*/
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
+  }else{
+    console.log(info.args[2]+" | "+info.args[0]);
+    cachePlayer(jobInfo.options.id);
   }
 });
 
 limiter.on("done", function(info){
   count++;
-  console.log(info);
-  //console.log(info.args[2]+" | "+info.args[0]);
+  console.log(info.args[2]+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
       finish(true);
