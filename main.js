@@ -20,7 +20,7 @@ const limiter = new Bottleneck({
   minTime: (offset*1000)
 });
 
-limiter.on("receive", ()=>{
+limiter.on("received", ()=>{
   limiter.once("debug", (info) => {
     console.log(info);
   });
