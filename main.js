@@ -191,9 +191,11 @@ const queryApi = function(username, key){
         body += d;
       })
       res.on('error', error => {
+        console.log("Test0");
         callback({ status:0, data:error});
       })
       res.on('end', function(){
+        console.log("Test1");
         try{
           var user = JSON.parse(body);
           if(user.data == null){
@@ -204,17 +206,20 @@ const queryApi = function(username, key){
           callback({ status:0, data:result });
         };
         if(user){
+          console.log("Test2");
           if(Object.size(user.data) > 0){
             cachePlayer(user.data);
             callback({ status:1 });
           }
         }else{
+          console.log("Test3");
           console.log("User Not Found");
           callback({ status:0, data:"User Not Found" });
         }
       })
     })
     req.on('error', (err) => {
+      console.log("Test4");
       callback({ status:0, data:error});
     })
     req.end();
