@@ -170,7 +170,6 @@ async function update(param = 0){
     const key = await getKey();
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
-      console.log(error);
     });
     saved = i;
   }
