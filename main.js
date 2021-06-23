@@ -17,8 +17,7 @@ var scanStart, scanEnd;
 var offset = 2;
 const limiter = new Bottleneck({
   maxConcurrent: offset,
-  minTime: (offset*1000),
-  expiration: (offset*1000)
+  minTime: (offset*1000)
 });
 
 limiter.on("failed", async (error, jobInfo) => {
