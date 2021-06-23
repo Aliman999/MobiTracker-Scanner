@@ -27,7 +27,7 @@ limiter.on("debug", (info) => {
 */
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
-  console.warn(`Job ${id} failed: ${error}`);
+  //console.warn(`Job ${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
@@ -49,7 +49,7 @@ limiter.on("done", function(info){
   }
 });
 
-limiter.on("retry", (error, jobInfo) => console.log(`Now retrying ${jobInfo.options.id}`));
+limiter.on("retry", (error, jobInfo) => console.log(`Retrying ${jobInfo.options.id}`));
 
 var con = mysql.createPool({
   host: config.MysqlHost,
