@@ -210,11 +210,13 @@ const queryApi = function(username, key){
             console.log("Test2");
             cachePlayer(user.data);
             callback({ status:1 });
+          }else{
+            callback({ status:0, data:username+" not found. user = true" });
           }
         }else{
           console.log("Test3");
           console.log("User Not Found");
-          callback({ status:0, data:"User Not Found" });
+          callback({ status:0, data:username+" not found. user = false" });
         }
       })
     })
