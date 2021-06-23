@@ -20,20 +20,16 @@ const limiter = new Bottleneck({
   minTime: (offset*1000)
 });
 
-/*
 limiter.on("debug", (info) => {
   console.log(info);
 });
-*/
+
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
-    console.log("Retrying");
-  }else{
-    cachePlayer(jobInfo.options.id);
   }
 });
 
