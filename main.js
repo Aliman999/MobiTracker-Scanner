@@ -156,6 +156,7 @@ async function update(param = 0){
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
+      console.log(i);
       if(result.status == 0){
         throw new Error(result.data);
       }
