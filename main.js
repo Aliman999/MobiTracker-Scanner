@@ -27,7 +27,7 @@ limiter.on("debug", (info) => {
 */
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
-  //console.warn(`Job ${id} failed: ${error}`);
+  console.warn(`Job ${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
@@ -207,11 +207,11 @@ const queryApi = function(username, key){
             cachePlayer(user.data);
             callback({ status:1 });
           }else{
-            callback({ status:0, data:username+" not found. user = true" });
+            callback({ status:0, data:username+" not found." });
           }
         }else{
           console.log("User Not Found");
-          callback({ status:0, data:username+" not found. user = false" });
+          callback({ status:0, data:username+" not found." });
         }
       })
     })
