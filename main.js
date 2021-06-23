@@ -16,14 +16,15 @@ var keyType = "Main";
 var scanStart, scanEnd;
 var offset = 2;
 const limiter = new Bottleneck({
-  maxConcurrent: 1,
+  maxConcurrent: offset,
   minTime: (offset*1000)
 });
 
+/*
 limiter.on("debug", (info) => {
   console.log(info);
 });
-
+*/
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
   console.warn(`Job ${id} failed: ${error}`);
