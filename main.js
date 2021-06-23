@@ -16,7 +16,7 @@ var keyType = "Main";
 var scanStart, scanEnd;
 var offset = 2;
 const limiter = new Bottleneck({
-  maxConcurrent: offset,
+  maxConcurrent: 1,
   minTime: (offset*1000)
 });
 
