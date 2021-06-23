@@ -206,8 +206,8 @@ const queryApi = function(username, key){
           callback({ status:0, data:result });
         };
         if(user){
-          console.log("Test2");
           if(Object.size(user.data) > 0){
+            console.log("Test2");
             cachePlayer(user.data);
             callback({ status:1 });
           }
