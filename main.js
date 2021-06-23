@@ -27,7 +27,7 @@ limiter.on("debug", (info) => {
 */
 limiter.on("failed", async (error, jobInfo) => {
   const id = jobInfo.options.id;
-  console.warn(`Job ${id} failed: ${error}`);
+  console.warn(`${id} failed: ${error}`);
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
