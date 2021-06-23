@@ -31,6 +31,7 @@ limiter.on("failed", async (error, jobInfo) => {
 
   if (jobInfo.retryCount < 2) {
     return (offset*1000);
+    console.log("Retrying");
   }else{
     cachePlayer(jobInfo.options.id);
   }
