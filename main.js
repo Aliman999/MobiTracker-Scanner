@@ -215,7 +215,7 @@ const queryApi = function(username, key){
       })
     })
     req.on('error', (err) => {
-      callback({ status:0, data:error});
+      callback({ status:0, data:err});
     })
     req.end();
   });
