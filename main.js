@@ -49,7 +49,7 @@ limiter.on("done", function(info){
   }
 });
 
-limiter.on("retry", (error, jobInfo) => console.log(`Retrying ${jobInfo.options.id}`));
+//limiter.on("retry", (error, jobInfo) => console.log(`Retrying ${jobInfo.options.id}`));
 
 var con = mysql.createPool({
   host: config.MysqlHost,
@@ -63,8 +63,8 @@ const timeToJob = new Timer(calcTime, 500);
 con.getConnection(function(err, connection) {
   if (err) throw err;
   console.log("Connected to database");
-  timeToJob.start();
-  //coldInit();
+  //timeToJob.start();
+  coldInit();
 });
 
 function getKey(i){
