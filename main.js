@@ -25,11 +25,11 @@ limiter.on("debug", (info) => {
   console.log(info);
 });
 */
-limiter.on("failed", async (error, jobInfo) => {
-  const id = jobInfo.options.id;
+limiter.on("failed", async (error, info) => {
+  const id = info.options.id;
   console.warn(`${id} failed: ${error}`);
 
-  if (jobInfo.retryCount < 2) {
+  if (info.retryCount < 2) {
     return (offset*1000);
   }else{
     console.log(info.args[2]+" of "+(info.args[2]+max)+" | "+info.args[0]);
@@ -49,7 +49,7 @@ limiter.on("done", function(info){
   }
 });
 
-//limiter.on("retry", (error, jobInfo) => console.log(`Retrying ${jobInfo.options.id}`));
+//limiter.on("retry", (error, info) => console.log(`Retrying ${info.options.id}`));
 
 var con = mysql.createPool({
   host: config.MysqlHost,
