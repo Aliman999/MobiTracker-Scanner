@@ -161,13 +161,13 @@ async function update(param = 0){
       }
     })
   }
+  const key = await getKey();
   for(var i = param; i < end; i++){
     if(i == temp){
       end = max-(temp - param);
       i = 0;
       console.log("Reached end of list, scanning #"+i+" to #"+end);
     }
-    const key = await getKey();
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
     });
