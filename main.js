@@ -256,7 +256,7 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
-    check.bio = user.profile.bio;
+    check.bio = JSON.stringify(user.profile.bio);
     check.username = user.profile.handle;
     check.badge.title = user.profile.badge;
     check.badge.src = user.profile.badge_image;
