@@ -295,7 +295,7 @@ function cachePlayer(user){
         data.badge = JSON.parse(data.badge);
         try{
           data.bio = JSON.parse(data.bio);
-        }catch(){
+        }catch{
 
         }
         for(var i = 0; i < Object.size(data); i++){
