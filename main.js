@@ -256,7 +256,7 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
-    check.bio = JSON.stringify(user.profile.bio);
+    check.bio = JSON.parse(user.profile.bio);
     check.username = user.profile.handle;
     check.badge.title = user.profile.badge;
     check.badge.src = user.profile.badge_image;
@@ -290,6 +290,7 @@ function cachePlayer(user){
         data.organization = JSON.parse(data.organization);
         data.organization = Object.values(data.organization);
         data.badge = JSON.parse(data.badge);
+        data.bio = JSON.parse(data.bio);
         for(var i = 0; i < Object.size(data); i++){
           if(i == 3){
             for(var x = 0; x < Object.size(data.organization) && x < Object.size(check.organization); x++){
