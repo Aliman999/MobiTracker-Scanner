@@ -329,10 +329,6 @@ function cachePlayer(user){
         }
         if(data.bio !== check.bio){
           update = true;
-          console.log({
-            new:check.bio,
-            old:data.bio
-          });
           eventUpdate.push("Bio Changed");
         }
         function removeDupe(data){
