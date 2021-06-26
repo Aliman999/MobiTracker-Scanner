@@ -322,8 +322,8 @@ function cachePlayer(user){
         if(data.bio !== check.bio){
           update = true;
           console.log({
-            new:data.bio,
-            old:check.bio
+            new:check.bio,
+            old:data.bio
           });
           eventUpdate.push("Bio Changed");
         }
