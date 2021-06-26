@@ -293,9 +293,10 @@ function cachePlayer(user){
         data.organization = JSON.parse(data.organization);
         data.organization = Object.values(data.organization);
         data.badge = JSON.parse(data.badge);
-        data.bio = JSON.parse(data.bio);
-        if(!data.bio){
-          data.bio = "";
+        try{
+          data.bio = JSON.parse(data.bio);
+        }catch(){
+
         }
         for(var i = 0; i < Object.size(data); i++){
           if(i == 3){
