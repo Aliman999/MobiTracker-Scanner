@@ -32,14 +32,16 @@ limiter.on("failed", async (error, info) => {
   if (info.retryCount < 2) {
     return (offset*1000);
   }else{
-    console.log(info.args[2]+" of "+(info.args[2]+(max-count))+" | "+info.args[0]);
+    max--;
+    console.log(info.args[2]+" of "+(info.args[2]+(max))+" | "+info.args[0]);
     cachePlayer(info.args[0]);
   }
 });
 
 limiter.on("done", function(info){
   count++;
-  console.log(info.args[2]+" of "+(info.args[2]+(max-count))+" | "+info.args[0]);
+  max--;
+  console.log(info.args[2]+" of "+(info.args[2]+(max))+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
       finish(true);
