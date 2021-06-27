@@ -32,7 +32,6 @@ limiter.on("failed", async (error, info) => {
   if (info.retryCount < 2) {
     return (offset*1000);
   }else{
-    max--;
     console.log(info.args[2]+" of "+(info.args[2]+(max))+" | "+info.args[0]);
     cachePlayer(info.args[0]);
   }
