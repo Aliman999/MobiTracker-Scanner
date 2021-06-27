@@ -4,7 +4,7 @@
   "description": "Scans Cached Users",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node scanner.js"
   },
   "repository": {
     "type": "git",
