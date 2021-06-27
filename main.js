@@ -39,7 +39,6 @@ limiter.on("failed", async (error, info) => {
 
 limiter.on("done", function(info){
   count++;
-  console.log(max);
   console.log(info.args[2]+" of "+(info.args[2]+(max-count))+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
