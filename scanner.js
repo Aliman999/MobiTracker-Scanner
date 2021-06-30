@@ -178,10 +178,18 @@ async function update(param = 0){
 
 const queryApi = function(username, key){
   return new Promise(callback => {
+    /*
     var options = {
       hostname: 'api.starcitizen-api.com',
       port: 443,
       path: '/'+key+'/v1/live/user/'+escape(username),
+      method: 'GET'
+    }
+    */
+    var options = {
+      hostname: '51.81.87.85',
+      port: 80,
+      path: 'user/'+escape(username),
       method: 'GET'
     }
     const req = https.request(options, res =>{
