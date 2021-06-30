@@ -190,7 +190,7 @@ const queryApi = function(username, key){
     var options = {
       hostname: 'api.mobitracker.co',
       port: 443,
-      path: 'user/'+escape(username),
+      path: '/user/'+escape(username),
       method: 'GET'
     }
     console.log(options);
