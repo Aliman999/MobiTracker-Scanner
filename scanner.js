@@ -192,7 +192,6 @@ const queryApi = function(username, key){
       path: '/user/'+escape(username),
       method: 'GET'
     }
-    console.log(options);
     const req = https.request(options, res =>{
       var body = "";
       res.on('data', d => {
