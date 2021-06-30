@@ -186,6 +186,7 @@ const queryApi = function(username, key){
       method: 'GET'
     }
     */
+    //testing
     var options = {
       hostname: '51.81.87.85',
       port: 80,
