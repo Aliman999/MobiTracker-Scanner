@@ -14,7 +14,7 @@ var count;
 var list = [], queries = {}, sql;
 var keyType = "Main";
 var scanStart, scanEnd;
-var offset = 2;
+var offset = 1;
 const limiter = new Bottleneck({
   maxConcurrent: offset,
   minTime: (offset*1000)
@@ -186,7 +186,6 @@ const queryApi = function(username, key){
       method: 'GET'
     }
     */
-    //testing
     var options = {
       hostname: 'api.mobitracker.co',
       port: 443,
