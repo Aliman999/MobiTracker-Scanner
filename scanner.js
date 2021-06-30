@@ -188,7 +188,7 @@ const queryApi = function(username, key){
     */
     //testing
     var options = {
-      hostname: '51.81.87.85',
+      hostname: 'api.mobitracker.co',
       port: 80,
       path: 'user/'+escape(username),
       method: 'GET'
