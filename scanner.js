@@ -243,9 +243,9 @@ function getOrgs(){
       }
       result.forEach((item, i) => {
         console.log(item);
-        orgs.append(item.org);
+        orgs.append(JSON.parse(item.org));
       });
-      
+
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       console.log(orgs);
