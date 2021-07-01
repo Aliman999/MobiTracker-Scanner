@@ -10,11 +10,10 @@ const log = require('single-line-log').stdout;
 var count;
 var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
-var offset = 1;
-var offsetMulti = 3;
+var offset = 2;
 
 const limiter = new Bottleneck({
-  maxConcurrent: offset*offsetMulti,
+  maxConcurrent: offset,
   minTime: (offset*1000)
 });
 
@@ -182,7 +181,7 @@ function init(){
       if(result.status === 0){
         throw new Error(sid);
       }else{
-        pages = result.data;
+        var pages = result.data;
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
           .catch((error)=>{
