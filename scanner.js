@@ -251,6 +251,7 @@ function getOrgs(){
 
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
+      orgs.sort();
       console.log(orgs);
       callback();
     })
