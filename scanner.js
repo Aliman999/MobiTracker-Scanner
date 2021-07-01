@@ -235,7 +235,7 @@ function users(param){
 
 function getOrgs(){
   return new Promise(callback => {
-    sql = "SELECT DISTINCT organization->'$**.*.sid' AS orgs FROM `CACHE players`;";
+    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
     con.query(sql, function(err, result, fields){
       if(err) throw err;
       function onlyUnique(value, index, self) {
@@ -243,9 +243,9 @@ function getOrgs(){
       }
       result.forEach((item, i) => {
         console.log(item);
+        orgs.append(item.org);
       });
-
-      orgs = result;
+      
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       console.log(orgs);
