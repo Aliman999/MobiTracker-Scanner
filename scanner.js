@@ -195,7 +195,7 @@ function init(){
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
-        orgScan.schedule( { id:orgs[i]+" - Get Members" }, scan, orgs[i])
+        orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[i])
         .catch((error) => {
           console.log(error.message);
         })
