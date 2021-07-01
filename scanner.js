@@ -241,6 +241,10 @@ function getOrgs(){
       function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
       }
+      result.forEach((item, i) => {
+        console.log(item);
+      });
+
       orgs = result;
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
