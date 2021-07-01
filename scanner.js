@@ -175,7 +175,7 @@ async function init(){
     await updateQueries();
     await users(parseInt(param));
   })
-  await orgs();
+  await getOrgs();
   async function scan(user){
     await orgScan(sid).then(async (result) => {
       if(result.status === 0){
@@ -232,7 +232,7 @@ function users(param){
   })
 }
 
-function orgs(){
+function getOrgs(){
   sql = "SELECT DISTINCT organization->'$**.*.sid' FROM `CACHE players`;";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
