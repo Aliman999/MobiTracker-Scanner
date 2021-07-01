@@ -170,7 +170,7 @@ function saveParam(val, id){
   })
 }
 
-function init(){
+async function init(){
   persist(1).then(async (param) => {
     await updateQueries();
     await users(parseInt(param));
