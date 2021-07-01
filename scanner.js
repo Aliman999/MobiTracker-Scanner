@@ -242,7 +242,6 @@ function getOrgs(){
         return self.indexOf(value) === index;
       }
       result.forEach((item, i) => {
-        console.log(item);
         orgs[i] = JSON.parse(item.org);
       });
 
