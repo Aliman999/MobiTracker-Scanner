@@ -372,6 +372,8 @@ function cachePlayer(user){
     check.bio = user.profile.bio;
     if(!check.bio){
       check.bio = "";
+    }else{
+      check.bio = JSON.stringify(check.bio);
     }
     check.username = user.profile.handle;
     check.badge.title = user.profile.badge;
