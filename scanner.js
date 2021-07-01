@@ -120,9 +120,9 @@ function getKey(i){
 function orgScanner(sid){
   return new Promise(callback => {
     var options = {
-      hostname: 'api.starcitizen-api.com',
+      hostname: 'api.mobitracker.co',
       port: 443,
-      path: '/'+key+'/v1/live/organization/'+escape(sid),
+      path: '/orgInfo/'+escape(username),
       method: 'GET'
     }
     const req = https.request(options, res =>{
@@ -177,8 +177,8 @@ function init(){
     })
   })
 
-  async function scan(user){
-    await orgScan(sid).then(async (result) => {
+  async function scan(sid){
+    await orgScanner(sid).then(async (result) => {
       if(result.status === 0){
         throw new Error(sid);
       }else{
@@ -194,18 +194,13 @@ function init(){
 
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
-      console.log("Test");
-    })
-    /*
-    getOrgs().then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
-        orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+        orgScan.schedule( { id:orgs[i]+" - Get Members" }, scan, orgs[i])
         .catch((error) => {
-          console.log(error.message+" in OrgLimiter");
+          console.log(error.message);
         })
       }
     })
-    */
   })
 }
 
