@@ -12,6 +12,7 @@ var list = [], queries = {}, sql;
 var keyType = "Main";
 var offset = 1;
 var offsetMulti = 3;
+
 const limiter = new Bottleneck({
   maxConcurrent: offset*offsetMulti,
   minTime: (offset*1000)
@@ -76,7 +77,6 @@ limiter.on("failed", async (error, info) => {
 
 limiter.on("done", function(info){
   count++;
-  max--;
   console.log("#"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(count == max){
     if((info.args[2]+1) == list.length){
