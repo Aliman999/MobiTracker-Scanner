@@ -259,7 +259,10 @@ function getOrgs(){
       orgs.splice( orgs.indexOf("N/A"), 1);
       console.log("Sorting Orgs");
       orgs.sort();
-      callback();
+      sql = "UPDATE parsist SET param = '"+JSON.stringify(orgs)+"' WHERE id = 4";
+      con.query(sql, function(err, result, fields){
+        callback();
+      });
     })
   });
 }
