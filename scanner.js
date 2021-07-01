@@ -122,7 +122,7 @@ function orgScanner(sid){
     var options = {
       hostname: 'api.dustytavern.com',
       port: 443,
-      path: '/orgInfo/'+escape(username),
+      path: '/orgInfo/'+escape(sid),
       method: 'GET'
     }
     const req = https.request(options, res =>{
