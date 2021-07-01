@@ -176,8 +176,36 @@ function init(){
       users(parseInt(param));
     })
   })
+
+  async function scan(user){
+    await orgScan(sid).then(async (result) => {
+      if(result.status === 0){
+        throw new Error(sid);
+      }else{
+        pages = result.data;
+        for(var xx = 0; xx < pages; xx++){
+          orgLimiter.schedule()
+          .catch((error)=>{
+          });
+        }
+      }
+    });
+  }
+
   persist(3).then((param) => {
-    getOrgs()
+    orgScan.schedule(getOrgs).then(()=>{
+      console.log("Test");
+    })
+    /*
+    getOrgs().then(()=>{
+      for(var xi = 0; xi < orgs.length; xi++){
+        orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+        .catch((error) => {
+          console.log(error.message+" in OrgLimiter");
+        })
+      }
+    })
+    */
   })
 }
 
@@ -214,51 +242,29 @@ function users(param){
 }
 
 function getOrgs(){
-  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-  con.query(sql, function(err, result, fields){
-    if(err) throw err;
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
-    var temp;
-    console.log("Extracting Orgs");
-    result.forEach((item, i) => {
-      temp = JSON.parse(item.org);
-      temp.forEach((item, i) => {
-        orgs.push(item);
+  return new Promise(callback => {
+    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+      var temp;
+      console.log("Extracting Orgs");
+      result.forEach((item, i) => {
+        temp = JSON.parse(item.org);
+        temp.forEach((item, i) => {
+          orgs.push(item);
+        });
       });
-    });
 
-    console.log("Filtering Orgs");
-    orgs = orgs.filter(onlyUnique);
-    orgs.splice( orgs.indexOf("N/A"), 1);
-    orgs.sort();
-    console.log("Sorting Orgs");
-
-    async function scan(user){
-      await orgScan(sid).then(async (result) => {
-        if(result.status === 0){
-          throw new Error(sid);
-        }else{
-          pages = result.data;
-          for(var xx = 0; xx < pages; xx++){
-            orgLimiter.schedule()
-            .catch((error)=>{
-            });
-          }
-        }
-      });
-    }
-
-    for(var xi = 0; xi < orgs.length; xi++){
-      /*
-      orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
-      .catch((error) => {
-        console.log(error.message+" in OrgLimiter");
-      })
-      */
-    }
-  })
+      console.log("Filtering Orgs");
+      orgs = orgs.filter(onlyUnique);
+      orgs.splice( orgs.indexOf("N/A"), 1);
+      orgs.sort();
+      console.log("Sorting Orgs");
+      callback();
+    })
 }
 
 async function update(param = 0){
