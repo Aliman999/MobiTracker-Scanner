@@ -174,6 +174,7 @@ async function init(){
   persist(1).then(async (param) => {
     await updateQueries();
     await users(parseInt(param));
+    await getOrgs();
   })
   async function scan(user){
     await orgScan(sid).then(async (result) => {
@@ -189,17 +190,15 @@ async function init(){
       }
     });
   }
-  getOrgs().then(()=>{
-    for(var xi = 0; xi < orgs.length; xi++){
-      console.log("dumdum");
-      /*
-      orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
-      .catch((error) => {
-        console.log(error.message+" in OrgLimiter");
-      })
-      */
-    }
-  });
+  for(var xi = 0; xi < orgs.length; xi++){
+    console.log("dumdum");
+    /*
+    orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+    .catch((error) => {
+      console.log(error.message+" in OrgLimiter");
+    })
+    */
+  }
 }
 
 function persist(id){
