@@ -372,8 +372,6 @@ function cachePlayer(user){
     check.bio = user.profile.bio;
     if(!check.bio){
       check.bio = "";
-    }else{
-      check.bio = JSON.stringify(check.bio);
     }
     check.username = user.profile.handle;
     check.badge.title = user.profile.badge;
@@ -455,24 +453,22 @@ function cachePlayer(user){
         check.bio = JSON.stringify(check.bio);
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
-        /*
+        
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
         con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
-        */
       }
       if(update){
         check.bio = JSON.stringify(check.bio);
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
         var eventString = eventUpdate.join(", ");
-        /*
+
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
         con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
-        */
       }
     });
   }
