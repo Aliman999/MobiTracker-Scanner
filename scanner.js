@@ -194,7 +194,6 @@ function init(){
   persist(4).then((saved) => {
     console.log(saved);
   })
-  /*
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
@@ -205,7 +204,6 @@ function init(){
       }
     })
   })
-  */
 }
 
 function persist(id){
