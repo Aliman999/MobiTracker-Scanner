@@ -175,6 +175,7 @@ function init(){
     await updateQueries();
     await users(parseInt(param));
   })
+  await orgs();
   async function scan(user){
     await orgScan(sid).then(async (result) => {
       if(result.status === 0){
