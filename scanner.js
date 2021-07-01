@@ -243,7 +243,7 @@ function getOrgs(){
       }
       result.forEach((item, i) => {
         console.log(item);
-        orgs.append(JSON.parse(item.org));
+        orgs[i] = JSON.parse(item.org);
       });
 
       orgs = orgs.filter(onlyUnique);
