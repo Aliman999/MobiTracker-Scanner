@@ -241,7 +241,14 @@ function getOrgs(){
       function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
       }
-      orgs.push(JSON.parse(result[0].org));
+      var temp;
+      result.forEach((item, i) => {
+        temp = JSON.parse(item.org);
+        temp.forEach((item, i) => {
+          orgs.push(item);
+        });
+      });
+
       console.log(orgs);
       /*
       orgs = orgs.filter(onlyUnique);
