@@ -117,7 +117,7 @@ function getKey(i){
 
 
 
-function orgScan(sid){
+function orgScanner(sid){
   return new Promise(callback => {
     var options = {
       hostname: 'api.starcitizen-api.com',
