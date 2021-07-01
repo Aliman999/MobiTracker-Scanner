@@ -181,7 +181,7 @@ function init(){
         throw new Error(sid);
       }else{
         pages = result.data;
-        for(var xx = 0; xx < ; xx++){
+        for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
           .catch((error)=>{
           });
@@ -189,11 +189,13 @@ function init(){
       }
     });
   }
-  for(var xi = 0; xii < list.length; xii++){
+  for(var xi = 0; xii < orgs.length; xii++){
+    /*
     orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
     .catch((error) => {
       console.log(error.message+" in OrgLimiter");
     })
+    */
   }
 }
 
