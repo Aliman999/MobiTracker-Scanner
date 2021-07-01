@@ -265,6 +265,7 @@ function getOrgs(){
       console.log("Sorting Orgs");
       callback();
     })
+  });
 }
 
 async function update(param = 0){
