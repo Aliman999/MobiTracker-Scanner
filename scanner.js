@@ -241,13 +241,12 @@ function getOrgs(){
       function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
       }
-      result.forEach((item, i) => {
-        orgs[i] = JSON.parse(item.org);
-      });
-
+      console.log(result[0]);
+      /*
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       console.log(orgs);
+      */
       callback();
     })
   })
