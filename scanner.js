@@ -175,7 +175,6 @@ async function init(){
     await updateQueries();
     await users(parseInt(param));
   })
-  await getOrgs();
   async function scan(user){
     await orgScan(sid).then(async (result) => {
       if(result.status === 0){
@@ -190,14 +189,16 @@ async function init(){
       }
     });
   }
-  for(var xi = 0; xi < orgs.length; xi++){
-    /*
-    orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
-    .catch((error) => {
-      console.log(error.message+" in OrgLimiter");
-    })
-    */
-  }
+  getOrgs().then(()=>{
+    for(var xi = 0; xi < orgs.length; xi++){
+      /*
+      orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+      .catch((error) => {
+        console.log(error.message+" in OrgLimiter");
+      })
+      */
+    }
+  })
 }
 
 function persist(id){
@@ -233,16 +234,19 @@ function users(param){
 }
 
 function getOrgs(){
-  sql = "SELECT DISTINCT organization->'$**.*.sid' FROM `CACHE players`;";
-  con.query(sql, function(err, result, fields){
-    if(err) throw err;
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
-    orgs = result;
-    orgs = orgs.filter(onlyUnique);
-    orgs.splice( orgs.indexOf("N/A"), 1);
-    console.log(orgs);
+  return new Promise(callback => {
+    sql = "SELECT DISTINCT organization->'$**.*.sid' AS orgs FROM `CACHE players`;";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+      orgs = result;
+      orgs = orgs.filter(onlyUnique);
+      orgs.splice( orgs.indexOf("N/A"), 1);
+      console.log(orgs);
+      callback();
+    })
   })
 }
 
