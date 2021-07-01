@@ -6,25 +6,63 @@ const mysql = require('mysql');
 const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
-const timediff = require('timediff');
 
 var day;
 var max;
 var count;
 var list = [], queries = {}, sql;
 var keyType = "Main";
-var scanStart, scanEnd;
 var offset = 1;
 const limiter = new Bottleneck({
   maxConcurrent: offset,
   minTime: (offset*1000)
 });
 
-/*
-limiter.on("debug", (info) => {
-  console.log(info);
+
+const orgScan = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 2000
 });
-*/
+
+const orgLimiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 2000
+});
+
+orgLimiter.on("failed", async (error, info) => {
+  const id = info.options.id;
+  console.warn(`${id} failed: ${error}`);
+
+  if (info.retryCount < 3) {
+    return 2000;
+  }
+});
+
+orgLimiter.on("done", function(info){
+  console.log("Returned data for "+info.options.id);
+});
+
+orgScan.on("failed", async (error, info) => {
+  const id = info.options.id;
+  console.warn(`${id} failed: ${error}`);
+
+  if (info.retryCount < 2) {
+    return 2000;
+  }else{
+    info.args[2].send(JSON.stringify({
+      type:"response",
+      data:info.args[0]+" not found.",
+      message:"Error",
+      status:0
+    }));
+    cachePlayer(info.args[0]);
+  }
+});
+
+orgScan.on("done", function(info){
+  console.log("Returned data for "+info.options.id);
+});
+
 limiter.on("failed", async (error, info) => {
   const id = info.options.id;
   console.warn(`${id} failed: ${error}`);
@@ -59,13 +97,10 @@ var con = mysql.createPool({
   database: config.MysqlDatabase
 });
 
-//const timeToJob = new Timer(calcTime, 500);
-
 con.getConnection(function(err, connection){
   if (err) throw err;
   console.log("Connected to database");
-  //timeToJob.start();
-  coldInit();
+  init();
 });
 
 function getKey(i){
@@ -85,13 +120,24 @@ function getKey(i){
   })
 }
 
-schedule.scheduleJob('5 22 * * *', function(){
-  timeToJob.stop();
-  saveParam((Date.now()+86400000), 2);
-  console.log("--- RUNNING JOB ---");
-  init();
-});
 
+function temp(){
+  for(var xx = 0; xx < result.data; xx++){
+    orgLimiter.schedule( { id:sid+" - "+(xx+1)+"/"+result.data } , getNames, sid, xx)
+    .catch((error)=>{
+      wss.clients.forEach((ws, i) => {
+        if(ws.user == "Scanner"){
+          ws.send(JSON.stringify({
+            type:"error",
+            data:error,
+            message:"There was an error getting org members, members may be missing so run "+sid+" to ensure you have every member.",
+            status:0
+          }));
+        }
+      });
+    });
+  }
+}
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
@@ -101,7 +147,6 @@ function saveParam(val, id){
 }
 
 function init(){
-  scanStart = Date.now();
   persist(1).then(async (param) => {
     await updateQueries();
     await users(parseInt(param));
@@ -125,12 +170,7 @@ function updateQueries(){
     con.query(sql, function(err, result, fields){
       if(err) throw err;
       queries.data = result;
-      queries.available = (82800/offset);
-      /*
-      for(var x = 0; x < queries.data.length; x++){
-        queries.available += queries.data[x].count;
-      }
-      */
+      queries.available = result.length;
       callback();
     })
   })
@@ -147,13 +187,7 @@ function users(param){
 
 async function update(param = 0){
   count = 0;
-  max = today();
-  var end = param + max;
-  var temp = end;
-  if(temp > list.length){
-    temp = list.length;
-  }
-  console.log(queries.available+" Searches available. Updating #"+param+" to #"+temp);
+  console.log("Starting at #"+param+" of #"+list.length);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
@@ -163,12 +197,7 @@ async function update(param = 0){
     })
   }
   const key = await getKey();
-  for(var i = param; i < end; i++){
-    if(i == temp){
-      end = max-(temp - param);
-      i = 0;
-      console.log("Reached end of list, scanning #"+i+" to #"+end);
-    }
+  for(var i = param; i < list.length; i++){
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i, end)
     .catch((error) => {
     });
@@ -231,14 +260,6 @@ const queryApi = function(username, key){
 }
 
 var saved = 0;
-
-function today(){
-  var temp = queries.available;
-  if(temp > list.length-1){
-    temp = (list.length-1)-queries.available;
-  }
-  return parseInt(temp);
-}
 
 function cachePlayer(user){
   if(typeof user === 'string'){
@@ -384,44 +405,6 @@ function timeToComplete(){
   })
 }
 
-function Timer(fn, t) {
-    var timerObj = setInterval(fn, t);
-
-    this.stop = function() {
-        if (timerObj) {
-            clearInterval(timerObj);
-            timerObj = null;
-            log.clear();
-            console.log("");
-        }
-        return this;
-    }
-    this.start = function() {
-        persist(2).then((param) => {
-          day = parseInt(param);
-          if (!timerObj) {
-              this.stop();
-              timerObj = setInterval(fn, t);
-          }
-          return this;
-        });
-    }
-    this.reset = function(newT = t) {
-        t = newT;
-        return this.stop().start();
-    }
-}
-
-function calcTime(){
-  const timeLeft = countdown(Date.now(), day);
-  log("Running job in "+timeLeft.hours+":"+timeLeft.minutes+":"+timeLeft.seconds);
-}
-
-
-function coldInit(){
-  init();
-}
-
 Object.size = function(obj) {
   var size = 0, key;
   for (key in obj) {
@@ -429,17 +412,3 @@ Object.size = function(obj) {
   }
   return size;
 };
-
-function finish(reset = false){
-  scanEnd = Date.now();
-  var runtime = timediff(scanStart, scanEnd);
-  if(reset){
-    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds+" \n\nReached end of Cache, Starting next job at the beginning.");
-    saveParam(0, 1);
-  }else{
-    console.log("Finished scanning "+max+" players \nRuntime: "+runtime.hours+":"+runtime.minutes+":"+runtime.seconds+"."+runtime.milliseconds);
-  }
-  timeToComplete().then(()=>{
-    timeToJob.start();
-  });
-}
