@@ -7,14 +7,13 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 
-var day;
-var max;
 var count;
 var list = [], queries = {}, sql;
 var keyType = "Main";
 var offset = 1;
+var offsetMulti = 3;
 const limiter = new Bottleneck({
-  maxConcurrent: offset,
+  maxConcurrent: offset*offsetMulti,
   minTime: (offset*1000)
 });
 
