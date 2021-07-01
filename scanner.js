@@ -189,7 +189,7 @@ function init(){
       }
     });
   }
-  for(var xi = 0; xii < orgs.length; xii++){
+  for(var xi = 0; xi < orgs.length; xi++){
     /*
     orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
     .catch((error) => {
