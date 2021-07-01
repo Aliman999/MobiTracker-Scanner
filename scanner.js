@@ -191,6 +191,9 @@ function init(){
       }
     });
   }
+  persist(4).then((saved) => {
+    console.log(saved);
+  })
   /*
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
