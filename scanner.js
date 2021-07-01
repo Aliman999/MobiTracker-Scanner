@@ -240,7 +240,7 @@ function orgs(){
     }
     orgs = result;
     orgs = orgs.filter(onlyUnique);
-    orgs.splice( orgs.indexOf("N/A");, 1);
+    orgs.splice( orgs.indexOf("N/A"), 1);
     console.log(orgs);
   })
 }
