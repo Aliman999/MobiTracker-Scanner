@@ -8,7 +8,7 @@ const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 
 var count;
-var list = [], queries = {}, sql;
+var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMulti = 3;
@@ -116,22 +116,51 @@ function getKey(i){
 }
 
 
-function temp(){
-  for(var xx = 0; xx < result.data; xx++){
-    orgLimiter.schedule( { id:sid+" - "+(xx+1)+"/"+result.data } , getNames, sid, xx)
-    .catch((error)=>{
-      wss.clients.forEach((ws, i) => {
-        if(ws.user == "Scanner"){
-          ws.send(JSON.stringify({
-            type:"error",
-            data:error,
-            message:"There was an error getting org members, members may be missing so run "+sid+" to ensure you have every member.",
-            status:0
-          }));
+
+function orgScan(sid){
+  return new Promise(callback => {
+    var options = {
+      hostname: 'api.starcitizen-api.com',
+      port: 443,
+      path: '/'+key+'/v1/live/organization/'+escape(sid),
+      method: 'GET'
+    }
+    const req = https.request(options, res =>{
+      var body = "";
+      res.on('data', d => {
+        body += d;
+      })
+      res.on('error', error => {
+        callback({ status:0, data:error});
+      })
+      res.on('end', function(){
+        try{
+          var org = JSON.parse(body);
+          if(org.data == null){
+            callback({status:0, data:sid+" returned null."});
+          }
+        }catch(err){
+          var result = "Failed to parse "+sid;
+          callback({ status:0, data:result });
+        };
+        if(org){
+          if(Object.size(org.data) > 0){
+            var grossPages = Math.ceil(org.data.members/32);
+            console.log(org.data.members+" / "+32);
+            callback({ status:1, data:grossPages });
+          }else{
+            callback({ status:0, data:sid+" not found." });
+          }
+        }else{
+          callback({ status:0, data:"Server Error." });
         }
-      });
-    });
-  }
+      })
+    })
+    req.on('error', (err) => {
+      callback({ status:0, data:err});
+    })
+    req.end();
+  });
 }
 
 function saveParam(val, id){
@@ -146,6 +175,26 @@ function init(){
     await updateQueries();
     await users(parseInt(param));
   })
+  async function scan(user){
+    await orgScan(sid).then(async (result) => {
+      if(result.status === 0){
+        throw new Error(sid);
+      }else{
+        pages = result.data;
+        for(var xx = 0; xx < ; xx++){
+          orgLimiter.schedule()
+          .catch((error)=>{
+          });
+        }
+      }
+    });
+  }
+  for(var xi = 0; xii < list.length; xii++){
+    orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+    .catch((error) => {
+      console.log(error.message+" in OrgLimiter");
+    })
+  }
 }
 
 function persist(id){
@@ -177,6 +226,20 @@ function users(param){
     if(err) throw err;
     list = result;
     update(param);
+  })
+}
+
+function orgs(){
+  sql = "SELECT DISTINCT organization->'$**.*.sid' FROM `CACHE players`;";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    orgs = result;
+    orgs = orgs.filter(onlyUnique);
+    orgs.splice( orgs.indexOf("N/A");, 1);
+    console.log(orgs);
   })
 }
 
