@@ -170,7 +170,7 @@ function saveParam(val, id){
   })
 }
 
-async function init(){
+function init(){
   persist(1).then((param) => {
     updateQueries().then(()=>{
       users(parseInt(param));
@@ -190,15 +190,17 @@ async function init(){
       }
     });
   }
-  getOrgs().then(()=>{
-    for(var xi = 0; xi < orgs.length; xi++){
-      /*
-      orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
-      .catch((error) => {
-        console.log(error.message+" in OrgLimiter");
-      })
-      */
-    }
+  persist(3).then((param) => {
+    getOrgs().then(()=>{
+      for(var xi = 0; xi < orgs.length; xi++){
+        /*
+        orgScan.schedule( { id:list[i]+" - Get Orgs and Members" }, scan, user)
+        .catch((error) => {
+          console.log(error.message+" in OrgLimiter");
+        })
+        */
+      }
+    })
   })
 }
 
@@ -243,6 +245,7 @@ function getOrgs(){
         return self.indexOf(value) === index;
       }
       var temp;
+      console.log("Extracting Orgs");
       result.forEach((item, i) => {
         temp = JSON.parse(item.org);
         temp.forEach((item, i) => {
@@ -250,9 +253,11 @@ function getOrgs(){
         });
       });
 
+      console.log("Filtering Orgs");
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
+      console.log("Sorting Orgs");
       callback();
     })
   })
