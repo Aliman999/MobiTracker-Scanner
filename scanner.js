@@ -120,7 +120,7 @@ function getKey(i){
 function orgScanner(sid){
   return new Promise(callback => {
     var options = {
-      hostname: 'api.mobitracker.co',
+      hostname: '51.81.87.85',
       port: 443,
       path: '/orgInfo/'+escape(username),
       method: 'GET'
@@ -295,7 +295,7 @@ const queryApi = function(username, key){
     }
     */
     var options = {
-      hostname: 'api.mobitracker.co',
+      hostname: '51.81.87.85',
       port: 443,
       path: '/user/'+escape(username),
       method: 'GET'
