@@ -369,7 +369,7 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
-    check.bio = JSON.stringify(user.profile.bio);
+    check.bio = user.profile.bio;
     if(!check.bio){
       check.bio = "";
     }
