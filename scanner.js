@@ -191,7 +191,7 @@ function init(){
       }
     });
   }
-
+  /*
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
@@ -202,6 +202,7 @@ function init(){
       }
     })
   })
+  */
 }
 
 function persist(id){
