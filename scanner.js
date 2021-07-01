@@ -191,9 +191,6 @@ function init(){
       }
     });
   }
-  persist(4).then((saved) => {
-    console.log(saved);
-  })
   persist(3).then((param) => {
     orgScan.schedule(getOrgs).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
@@ -260,10 +257,7 @@ function getOrgs(){
       orgs.splice( orgs.indexOf("N/A"), 1);
       console.log("Sorting Orgs");
       orgs.sort();
-      sql = "UPDATE parsist SET param = '"+JSON.stringify(orgs)+"' WHERE id = 4";
-      con.query(sql, function(err, result, fields){
-        callback();
-      });
+      callback();
     })
   });
 }
