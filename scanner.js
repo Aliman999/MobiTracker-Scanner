@@ -293,7 +293,7 @@ function updateOrgs(orgs, param){
         result = result.data;
         sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
         con.query(sql, [result.headline.plaintext, result.name], function(err, result, fields){
-          if(err) console.log(err.message);
+          if(err) console.log(err.message+" skipped");
           saveParam(x++, 3);
         })
       }
