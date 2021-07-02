@@ -125,6 +125,7 @@ async function init(){
   async function getNames(sid, page, i){
     async function query(username, key, i){
       await queryApi(username, key).then((result) => {
+        activeOrg = sid;
         if(result.status == 0){
           throw new Error(result.data);
         }else{
@@ -147,7 +148,6 @@ async function init(){
       if(result.status == 0){
         throw new Error(result.data);
       }else{
-        activeOrg = sid;
         result.data.forEach((item, x) => {
           orgLimiter.schedule( {id:item}, query, item, key, i)
           .catch((error) => {
