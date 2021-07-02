@@ -47,7 +47,7 @@ orgScan.on("failed", async (error, info) => {
   const id = info.options.id;
   console.warn(`${id} failed: ${error}`);
 
-  if (info.retryCount < 10) {
+  if (info.retryCount < 3) {
     return speed;
   }
 });
@@ -129,9 +129,9 @@ async function init(){
           throw new Error(result.data);
         }else{
           count++;
+          console.log("[PLAYER] - ORG:"+orgs[i].sid+" | "+orgs[i].members+"  | "+username);
           if(count == orgs[i].members){
             count = 0;
-            console.log("[PLAYER] - ORG:"+orgs[i].sid+" | "+orgs[i].members+" Members | "+username);
             saveParam(i, 3);
           }
           /*
