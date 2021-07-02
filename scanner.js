@@ -280,9 +280,8 @@ function users(param){
 
 function updateOrgs(orgs, param){
   var x = 0;
-  for(var i = param; i < orgs.length; i++){
-    orgScan.schedule({ id:orgs[i] }, orgInfo, orgs[i])
-    .then((result) => {
+  function getInfo(org){
+    orgInfo(org).then((result) => {
       if(result.status == 0){
         throw new Error(result.data);
       }else{
@@ -300,6 +299,9 @@ function updateOrgs(orgs, param){
         })
       }
     })
+  }
+  for(var i = param; i < orgs.length; i++){
+    orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
     .catch((error) => {
       console.log(error.message);
     })
@@ -325,6 +327,7 @@ function getOrgs(update, param){
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
+
       updateOrgs(orgs, param);
     })
   }else{
