@@ -281,9 +281,9 @@ function users(param){
 function updateOrgs(orgs, param){
   var x = 0;
   function getInfo(org){
-    sql = "SELECT sid FROM organizations WHERE sid = '"+result.sid+"';";
-    con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-    if(err) console.log(err.message+" skipped");
+    sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
+    con.query(sql, function(err, sqlResult, fields){
+      if(err) console.log(err.message+" skipped");
       if(sqlResult.length == 0){
         orgInfo(org).then((result) => {
           if(result.status == 0){
