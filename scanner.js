@@ -326,10 +326,9 @@ function getOrgs(update, param){
         .catch((error) => {
         })
         .then((result) => {
+          saveParam(result.i, 3);
           if(result.status == 0){
             throw new Error(result.data);
-          }else{
-            saveParam(result.i, 3);
           }
         })
       }
