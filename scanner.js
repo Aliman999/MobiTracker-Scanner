@@ -291,7 +291,7 @@ function getOrgs(update, param){
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
-      
+
       function getInfo(org, i){
         return new Promise(callback => {
           sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
@@ -316,7 +316,7 @@ function getOrgs(update, param){
           })
         });
       }
-      function scan(org, i){
+      async function scan(org, i){
         await getInfo(org, i).then((result) => {
           console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
           saveParam(result.i, 3);
