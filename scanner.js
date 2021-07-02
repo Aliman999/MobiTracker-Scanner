@@ -131,7 +131,7 @@ function init(){
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
         var pages = orgs[xi].members/32;
-        console.log(orgs);
+        console.log(pages);
         for(var xii = 0; xii < pages; xii++){
           orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, getNames, orgs[xi].sid, pages)
           .catch((error) => {
