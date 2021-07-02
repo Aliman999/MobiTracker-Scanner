@@ -228,6 +228,7 @@ function init(){
   }
   persist(3).then((param) => {
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
+      console.log(orgs);
       /*
       for(var xi = 0; xi < orgs.length; xi++){
         orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
@@ -338,7 +339,6 @@ function getOrgs(update, param){
       con.query(sql, function(err, result, fields){
         if(err) throw err;
         orgs = result;
-        console.log(orgs);
         callback();
       })
     });
