@@ -125,7 +125,6 @@ async function init(){
   async function getNames(sid, page, i){
     async function query(username, key, i){
       await queryApi(username, key).then((result) => {
-        activeOrg = sid;
         if(result.status == 0){
           throw new Error(result.data);
         }else{
@@ -138,9 +137,8 @@ async function init(){
           if(sid != activeOrg){
             console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
             saveParam(i, 3);
-          }else{
-
           }
+          activeOrg = sid;
         }
       })
     }
