@@ -320,7 +320,6 @@ function getOrgs(update, param){
         });
       }
 
-      var x = param;
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
         .catch((error) => {
