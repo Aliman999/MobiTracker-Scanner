@@ -319,12 +319,12 @@ function getOrgs(update, param){
           })
         });
       }
-
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
         .catch((error) => {
         })
         .then((result) => {
+          console.log("#"+result.i+" of "+orgs.length+" - "+orgs[result.i]);
           saveParam(result.i, 3);
           if(result.status == 0){
             throw new Error(result.data);
