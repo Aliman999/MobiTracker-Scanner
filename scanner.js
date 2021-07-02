@@ -281,13 +281,13 @@ function users(param){
 function updateOrgs(orgs, param){
   var x = 0;
   function getInfo(org){
-    orgInfo(org).then((result) => {
-      if(result.status == 0){
-        throw new Error(result.data);
-      }else{
-        result = result.data;
-        sql = "SELECT sid FROM organizations WHERE sid = '"+result.sid+"';";
-        con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+    sql = "SELECT sid FROM organizations WHERE sid = '"+result.sid+"';";
+    con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+      orgInfo(org).then((result) => {
+        if(result.status == 0){
+          throw new Error(result.data);
+        }else{
+          result = result.data;
           if(err) console.log(err.message+" skipped");
           if(sqlResult.length == 0){
             console.log("inserting "+result.sid);
@@ -297,8 +297,8 @@ function updateOrgs(orgs, param){
               saveParam(x++, 3);
             })
           }
-        })
-      }
+        }
+      })
     })
   }
   console.log(param+" of "+orgs.length);
