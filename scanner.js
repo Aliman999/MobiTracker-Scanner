@@ -128,7 +128,6 @@ async function init(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log(count+" | "+orgs[i].members+" / "+sid);
           count++;
           if(count == orgs[i].members){
             console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
