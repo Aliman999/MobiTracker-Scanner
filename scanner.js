@@ -126,7 +126,7 @@ async function init(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log("[PLAYER] - ORG:"+sid+" | "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" | "+info.args[0]);
+          console.log("[PLAYER] - ORG:"+sid+" | "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" | "+username);
           console.log("Org #"+i);
           saveParam(i, 3);
         }
