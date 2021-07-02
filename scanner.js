@@ -131,6 +131,7 @@ async function init(){
           count++;
           console.log("[PLAYER] - ORG:"+orgs[i].sid+" #"+count+" of #"+orgs[i].members+"  | "+username);
           if(count == orgs[i].members){
+            console.log("END OF ORG");
             count = 0;
             saveParam(i, 3);
           }
