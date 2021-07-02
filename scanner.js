@@ -143,7 +143,7 @@ async function init(){
         throw new Error(result.data);
       }else{
         result.data.forEach((item, x) => {
-          orgLimiter.schedule( {id:item}, query, item, key, i)
+          orgLimiter.schedule( {id:"[CRAWLER] - "+item}, query, item, key, i)
           .catch((error) => {
           });
         });
