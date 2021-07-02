@@ -128,7 +128,6 @@ async function init(){
         console.log("[ORG] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
         saveParam(i, 3);
         result.data.forEach((item, i) => {
-          console.log(item);
           cachePlayer(item);
         });
       }
