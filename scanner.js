@@ -36,7 +36,7 @@ orgLimiter.on("failed", async (error, info) => {
   console.warn(`${id} failed: ${error}`);
 
   if (info.retryCount < 3) {
-    return 2000;
+    return speed;
   }
 });
 
@@ -47,8 +47,8 @@ orgScan.on("failed", async (error, info) => {
   const id = info.options.id;
   console.warn(`${id} failed: ${error}`);
 
-  if (info.retryCount < 2) {
-    return 2000;
+  if (info.retryCount < 3) {
+    return speed;
   }
 });
 
