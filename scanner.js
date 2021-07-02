@@ -284,8 +284,8 @@ function updateOrgs(orgs, param){
     sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
     con.query(sql, function(err, sqlResult, fields){
       if(err) console.log(err.message+" skipped");
-      console.log(sqlResult.length);
       if(sqlResult.length == 0){
+        console.log(sqlResult.length);
         orgInfo(org).then((result) => {
           if(result.status == 0){
             throw new Error(result.data);
