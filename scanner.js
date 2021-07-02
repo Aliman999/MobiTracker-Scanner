@@ -321,7 +321,7 @@ function getOrgs(update, param){
                 }
               })
             }else{
-              callback(i);
+              throw new Error("Skipped "+org);
             }
           })
         });
@@ -331,7 +331,6 @@ function getOrgs(update, param){
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
         .catch((error) => {
-          console.log(error.message);
         })
         .then((x) => {
           saveParam(x++, 3);
