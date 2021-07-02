@@ -132,7 +132,7 @@ async function init(){
       if(result.status == 0){
         throw new Error(result.data);
       }else{
-        console.log("[ORG] - "+page+" of "+(orgs[i].members/32)+" Pages | "+orgs[i].sid);
+        console.log("[ORG] - "+page+" of "+(Math.ceil(orgs[xi].members/32))+" Pages | "+orgs[i].sid);
         saveParam(i, 3);
         result.data.forEach((item, i) => {
           limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
