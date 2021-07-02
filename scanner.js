@@ -297,7 +297,7 @@ function getOrgs(update, param){
           return new Promise(callback => {
             sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
             con.query(sql, function(err, sqlResult, fields){
-              if(err) callback({ status:0, data:err.message, i:i });
+              if(err) console.log(err);
               if(sqlResult.length == 0){
                 orgInfo(org).then((result) => {
                   if(result.status == 0){
