@@ -317,12 +317,11 @@ function getOrgs(update, param){
                   sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
                   con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                     if(err) console.log(err.message);
-                    callback(i);
                   })
                 }
               })
             }else{
-              throw new Error("Skipped "+org);
+              callback(i);
             }
           })
         });
