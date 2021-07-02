@@ -125,8 +125,11 @@ async function init(){
       if(result.status == 0){
         throw new Error(result.data);
       }else{
-        console.log("[ORGS] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
-        console.log(result);
+        console.log("[ORG] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
+        result.data.forEach((item, i) => {
+          console.log(item);
+          cachePlayer(item);
+        });
       }
     })
   }
