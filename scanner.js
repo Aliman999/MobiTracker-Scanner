@@ -127,22 +127,22 @@ function init(){
       }
     })
   }
-  orgCrawler();
-  function orgCrawler(){
-    persist(3).then((param) => {
-      orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
-        for(var xi = 0; xi < orgs.length; xi++){
-          var pages = orgs[xi].members/32;
-          for(var xii = 0; xii < pages; xii++){
-            orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, pages)
-            .catch((error) => {
-              console.log(error.message);
-            })
-          }
+  function orgCrawler(param){
+    orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
+      for(var xi = 0; xi < orgs.length; xi++){
+        var pages = orgs[xi].members/32;
+        for(var xii = 0; xii < pages; xii++){
+          orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, pages)
+          .catch((error) => {
+            console.log(error.message);
+          })
         }
-      })
+      }
     })
   }
+  persist(3).then((param) => {
+    orgCrawler(param);
+  })
 }
 
 function persist(id){
