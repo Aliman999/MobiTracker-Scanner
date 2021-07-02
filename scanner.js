@@ -121,24 +121,25 @@ async function init(){
     })
   })
 
-  var activeOrg = "";
+  var count = 0;
   async function getNames(sid, page, i){
     async function query(username, key, i){
       await queryApi(username, key).then((result) => {
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log(page+" | "+Math.ceil(orgs[i].members/32)+" / "+sid+" - "+activeOrg);
+          console.log(count+" | "+orgs[i].members+" / "+sid+" - "+activeOrg);
+          count++;
+          if(count == orgs[i].members){
+            console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
+            activeOrg = sid;
+            saveParam(i, 3);
+          }
           /*
           if(page == Math.ceil(orgs[i].members/32)){
 
           }
           */
-          if(sid != activeOrg){
-            console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
-            saveParam(i, 3);
-          }
-          activeOrg = sid;
         }
       })
     }
