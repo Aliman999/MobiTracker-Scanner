@@ -227,7 +227,7 @@ function init(){
     });
   }
   persist(3).then((param) => {
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs, true, param).then(()=>{
+    orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
       /*
       for(var xi = 0; xi < orgs.length; xi++){
         orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
@@ -337,6 +337,7 @@ function getOrgs(update, param){
       sql = "SELECT sid FROM `organizations`;";
       con.query(sql, function(err, result, fields){
         if(err) throw err;
+        console.log(orgs);
         orgs = result;
       })
     });
@@ -365,14 +366,6 @@ async function update(param = 0){
 
 const queryApi = function(username, key){
   return new Promise(callback => {
-    /*
-    var options = {
-      hostname: 'api.starcitizen-api.com',
-      port: 443,
-      path: '/'+key+'/v1/live/user/'+escape(username),
-      method: 'GET'
-    }
-    */
     var options = {
       hostname: 'api.dustytavern.com',
       port: 443,
