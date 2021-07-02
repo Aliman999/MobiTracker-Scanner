@@ -331,11 +331,11 @@ function getOrgs(update, param){
       var x = param;
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
-        .then((x) => {
-          saveParam(x++, 3);
-        })
         .catch((error) => {
           console.log(error.message);
+        })
+        .then((x) => {
+          saveParam(x++, 3);
         })
       }
     })
