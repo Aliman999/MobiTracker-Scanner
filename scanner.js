@@ -303,32 +303,35 @@ function getOrgs(update, param){
       orgs.sort();
 
 
-      function getInfo(org){
-        sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
-        con.query(sql, function(err, sqlResult, fields){
-          if(err) console.log(err.message+" skipped");
-          if(sqlResult.length == 0){
-            orgInfo(org).then((result) => {
-              if(result.status == 0){
-                throw new Error(result.data);
-              }else{
-                result = result.data;
-                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-                  if(err) console.log(err.message+" skipped");
-                })
-              }
-            })
-          }else{
-            throw new Error("Skipped "+org);
-          }
-        })
+      function getInfo(org, i){
+        return new Promise(callback => {
+          sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
+          con.query(sql, function(err, sqlResult, fields){
+            if(err) console.log(err.message+" skipped");
+            if(sqlResult.length == 0){
+              orgInfo(org).then((result) => {
+                if(result.status == 0){
+                  throw new Error(result.data);
+                }else{
+                  result = result.data;
+                  sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+                  con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                    if(err) console.log(err.message);
+                    callback(i);
+                  })
+                }
+              })
+            }else{
+              throw new Error("Skipped "+org);
+            }
+          })
+        });
       }
 
       var x = param;
       for(var i = param; i < orgs.length; i++){
-        orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
-        .then(() => {
+        orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
+        .then((x) => {
           saveParam(x++, 3);
         })
         .catch((error) => {
