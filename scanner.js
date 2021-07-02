@@ -282,7 +282,7 @@ function users(param){
 function updateOrgs(orgs, param){
   var x = 0;
   for(var i = param; i < orgs.length; i++){
-    orgScan.schedule({ id:item }, orgInfo, item)
+    orgScan.schedule({ id:orgs[i] }, orgInfo, orgs[i])
     .catch((error) => {
       console.log(error.message);
     })
