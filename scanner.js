@@ -40,8 +40,6 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
-  console.log(info);
-  //console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
 });
 
 orgScan.on("failed", async (error, info) => {
