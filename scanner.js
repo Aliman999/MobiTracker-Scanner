@@ -126,6 +126,7 @@ async function init(){
         throw new Error(result.data);
       }else{
         console.log("[ORG] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
+        saveParam(i, 3);
         result.data.forEach((item, i) => {
           console.log(item);
           cachePlayer(item);
