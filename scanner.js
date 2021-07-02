@@ -291,7 +291,7 @@ function updateOrgs(orgs){
         throw new Error(result.data);
       }else{
         result = result.data;
-        sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', '"+result.headline.plaintext+"', '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", '"+result.name+"', "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+        sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', '"+JSON.stringify(result.headline.plaintext)+"', '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", '"+result.name+"', "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
         con.query(sql, function(err, result, fields){
           if(err) throw err;
           saveParam(x++, 3);
