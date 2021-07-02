@@ -129,6 +129,7 @@ function init(){
   }
   function orgCrawler(param){
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
+      console.log("debug");
       for(var xi = 0; xi < orgs.length; xi++){
         var pages = orgs[xi].members/32;
         for(var xii = 0; xii < pages; xii++){
