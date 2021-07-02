@@ -216,6 +216,8 @@ function init(){
         throw new Error(sid);
       }else{
         var pages = result.data;
+        console.log(pages);
+        /*
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
           .then(()=>{
@@ -223,20 +225,19 @@ function init(){
           .catch((error)=>{
           });
         }
+        */
       }
     });
   }
   persist(3).then((param) => {
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
       console.log(orgs);
-      /*
       for(var xi = 0; xi < orgs.length; xi++){
         orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
         .catch((error) => {
           console.log(error.message);
         })
       }
-      */
     })
   })
 }
