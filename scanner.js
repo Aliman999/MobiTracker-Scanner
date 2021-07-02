@@ -117,6 +117,50 @@ function getKey(i){
 
 
 
+function orgInfo(sid){
+  return new Promise(callback => {
+    var options = {
+      hostname: 'api.dustytavern.com',
+      port: 443,
+      path: '/orgInfo/'+escape(sid),
+      method: 'GET'
+    }
+    const req = https.request(options, res =>{
+      var body = "";
+      res.on('data', d => {
+        body += d;
+      })
+      res.on('error', error => {
+        callback({ status:0, data:error});
+      })
+      res.on('end', function(){
+        try{
+          var org = JSON.parse(body);
+          if(org.data == null){
+            callback({status:0, data:sid+" returned null."});
+          }
+        }catch(err){
+          var result = "Failed to parse "+sid;
+          callback({ status:0, data:result });
+        };
+        if(org){
+          if(Object.size(org.data) > 0){
+            callback({ status:1, data:org.data });
+          }else{
+            callback({ status:0, data:sid+" not found." });
+          }
+        }else{
+          callback({ status:0, data:"Server Error." });
+        }
+      })
+    })
+    req.on('error', (err) => {
+      callback({ status:0, data:err});
+    })
+    req.end();
+  });
+}
+
 function orgScanner(sid){
   return new Promise(callback => {
     var options = {
