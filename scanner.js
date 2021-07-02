@@ -125,6 +125,9 @@ async function init(){
       await queryApi(username, key).then((result) => {
         if(result.status == 0){
           throw new Error(result.data);
+        }else{
+          console.log("Org #"+i);
+          saveParam(i, 3);
         }
       })
     }
@@ -133,9 +136,8 @@ async function init(){
         throw new Error(result.data);
       }else{
         console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
-        saveParam(i, 3);
-        result.data.forEach((item, i) => {
-          limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
+        result.data.forEach((item, x) => {
+          limiter.schedule( {id:item}, query, item, key, i)
           .catch((error) => {
           });
         });
