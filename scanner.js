@@ -120,11 +120,12 @@ async function init(){
     })
   })
 
-  async function getNames(sid, page){
+  async function getNames(sid, page, i){
     await orgPlayers(sid, page).then((result)=>{
       if(result.status == 0){
         throw new Error(result.data);
       }else{
+        console.log("[ORGS] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
         console.log(result);
       }
     })
@@ -134,7 +135,7 @@ async function init(){
       for(var xi = 0; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
-          orgLimiter.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, pages)
+          orgLimiter.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, pages, xi)
           .catch((error) => {
             console.log(error.message);
           })
