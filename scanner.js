@@ -319,6 +319,8 @@ function getOrgs(update, param){
                 })
               }
             })
+          }else{
+            throw new Error("Skipped "+org);
           }
         })
       }
