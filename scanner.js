@@ -231,15 +231,12 @@ function init(){
   }
   persist(3).then((param) => {
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
-      console.log(orgs);
-      /*
       for(var xi = 0; xi < orgs.length; xi++){
-        orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
+        orgScan.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid)
         .catch((error) => {
           console.log(error.message);
         })
       }
-      */
     })
   })
 }
