@@ -326,7 +326,6 @@ function getOrgs(update, param){
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
         .then(() => {
-          console.log("save param");
           saveParam(x++, 3);
         })
         .catch((error) => {
