@@ -129,7 +129,7 @@ async function init(){
           throw new Error(result.data);
         }else{
           count++;
-          console.log("[PLAYER] - ORG:"+orgs[i].sid+" #"+count+" of #"+orgs[i].members+"  | "+username);
+          console.log("[CRAWLER] - ORG:"+orgs[i].sid+" #"+count+" of #"+orgs[i].members+"  | "+username);
           if(count == orgs[i].members){
             console.log("END OF ORG");
             count = 0;
