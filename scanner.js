@@ -104,98 +104,6 @@ function getKey(i){
   })
 }
 
-
-
-function orgInfo(sid){
-  return new Promise(callback => {
-    var options = {
-      hostname: 'api.dustytavern.com',
-      port: 443,
-      path: '/orgInfo/'+escape(sid),
-      method: 'GET'
-    }
-    const req = https.request(options, res =>{
-      var body = "";
-      res.on('data', d => {
-        body += d;
-      })
-      res.on('error', error => {
-        callback({ status:0, data:error});
-      })
-      res.on('end', function(){
-        try{
-          var org = JSON.parse(body);
-          if(org.data == null){
-            callback({status:0, data:sid+" returned null."});
-          }
-        }catch(err){
-          var result = "Failed to parse "+sid;
-          callback({ status:0, data:result });
-        };
-        if(org){
-          if(Object.size(org.data) > 0){
-            callback({ status:1, data:org.data });
-          }else{
-            callback({ status:0, data:sid+" not found." });
-          }
-        }else{
-          callback({ status:0, data:"Server Error." });
-        }
-      })
-    })
-    req.on('error', (err) => {
-      callback({ status:0, data:err});
-    })
-    req.end();
-  });
-}
-
-function orgScanner(sid){
-  return new Promise(callback => {
-    var options = {
-      hostname: 'api.dustytavern.com',
-      port: 443,
-      path: '/orgInfo/'+escape(sid),
-      method: 'GET'
-    }
-    const req = https.request(options, res =>{
-      var body = "";
-      res.on('data', d => {
-        body += d;
-      })
-      res.on('error', error => {
-        callback({ status:0, data:error});
-      })
-      res.on('end', function(){
-        try{
-          var org = JSON.parse(body);
-          if(org.data == null){
-            callback({status:0, data:sid+" returned null."});
-          }
-        }catch(err){
-          var result = "Failed to parse "+sid;
-          callback({ status:0, data:result });
-        };
-        if(org){
-          if(Object.size(org.data) > 0){
-            var grossPages = Math.ceil(org.data.members/32);
-            console.log(org.data.members+" / "+32);
-            callback({ status:1, data:grossPages });
-          }else{
-            callback({ status:0, data:sid+" not found." });
-          }
-        }else{
-          callback({ status:0, data:"Server Error." });
-        }
-      })
-    })
-    req.on('error', (err) => {
-      callback({ status:0, data:err});
-    })
-    req.end();
-  });
-}
-
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
   con.query(sql, function(err, result, fields){
@@ -216,7 +124,6 @@ function init(){
         throw new Error(sid);
       }else{
         var pages = result.data;
-        console.log(pages);
         /*
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
@@ -343,6 +250,143 @@ function getOrgs(update, param){
       })
     });
   }
+}
+
+function orgInfo(sid){
+  return new Promise(callback => {
+    var options = {
+      hostname: 'api.dustytavern.com',
+      port: 443,
+      path: '/orgInfo/'+escape(sid),
+      method: 'GET'
+    }
+    const req = https.request(options, res =>{
+      var body = "";
+      res.on('data', d => {
+        body += d;
+      })
+      res.on('error', error => {
+        callback({ status:0, data:error});
+      })
+      res.on('end', function(){
+        try{
+          var org = JSON.parse(body);
+          if(org.data == null){
+            callback({status:0, data:sid+" returned null."});
+          }
+        }catch(err){
+          var result = "Failed to parse "+sid;
+          callback({ status:0, data:result });
+        };
+        if(org){
+          if(Object.size(org.data) > 0){
+            callback({ status:1, data:org.data });
+          }else{
+            callback({ status:0, data:sid+" not found." });
+          }
+        }else{
+          callback({ status:0, data:"Server Error." });
+        }
+      })
+    })
+    req.on('error', (err) => {
+      callback({ status:0, data:err});
+    })
+    req.end();
+  });
+}
+
+async function getNames(sid, page){
+  await orgPlayers(sid, page).then((result)=>{
+    if(result.status == 1){
+      result.data.forEach((item, i) => {
+        orgResponse.push(item);
+      });
+      if(Array.isArray(org)){
+        org = org.filter(function(item, pos, self) {
+          return self.indexOf(item) == pos;
+        })
+        console.log(orgResponse);
+        console.log(org[org.length-1]+" | "+sid);
+        if(org[org.length-1] === sid){
+          console.log((page+1)+" | "+pages);
+          if((page+1) == pages){
+            wss.clients.forEach((ws, i) => {
+              if(ws.user == "Scanner"){
+                ws.send(JSON.stringify({
+                  type:"finished",
+                  data:orgResponse,
+                  message:"Finished "+org.length+" organizations and found "+orgResponse.length+" players.",
+                  status:1
+                }));
+              }
+            });
+          }
+        }
+      }else{
+        if((page+1) == pages){
+          wss.clients.forEach((ws, i) => {
+            if(ws.user == "Scanner"){
+              ws.send(JSON.stringify({
+                type:"finished",
+                data:orgResponse,
+                message:"Finished "+sid,
+                status:1
+              }));
+            }
+          });
+        }
+      }
+    }
+  })
+}
+
+function orgPlayers(sid, page){
+  return new Promise(callback => {
+    var options = {
+      hostname: 'api.starcitizen-api.com',
+      port: 443,
+      path: '/'+key+'/v1/live/organization_members/'+escape(sid)+"?page="+page,
+      method: 'GET'
+    }
+    const req = https.request(options, res =>{
+      var body = "";
+      res.on('data', d => {
+        body += d;
+      })
+      res.on('error', error => {
+        callback({ status:0, data:error});
+      })
+      res.on('end', function(){
+        try{
+          var user = JSON.parse(body);
+          if(user.data == null){
+            callback({status:0, data:sid+" returned null."});
+          }
+        }catch(err){
+          var result = "Failed to parse "+sid;
+          callback({ status:0, data:result });
+        };
+        if(user){
+          if(Object.size(user.data) > 0){
+            var result = [];
+            user.data.forEach((item, i) => {
+              result.push(item.handle);
+            });
+            callback({ status:1, data:result });
+          }else{
+            callback({ status:0, data:sid+" not found." });
+          }
+        }else{
+          callback({ status:0, data:"Server Error." });
+        }
+      })
+    })
+    req.on('error', (err) => {
+      callback({ status:0, data:err});
+    })
+    req.end();
+  });
 }
 
 async function update(param = 0){
