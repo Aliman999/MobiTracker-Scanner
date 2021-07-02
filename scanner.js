@@ -128,18 +128,13 @@ async function init(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          count++;
           console.log("[CRAWLER] - ORG:"+orgs[i].sid+" #"+count+" of #"+orgs[i].members+"  | "+username);
           if(count == orgs[i].members){
             console.log("END OF ORG");
             count = 0;
             saveParam(i, 3);
           }
-          /*
-          if(page == Math.ceil(orgs[i].members/32)){
-
-          }
-          */
+          count++;
         }
       })
     }
