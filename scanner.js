@@ -121,14 +121,19 @@ async function init(){
     })
   })
 
+  var activeOrg = "";
   async function getNames(sid, page, i){
     async function query(username, key, i){
       await queryApi(username, key).then((result) => {
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log("[PLAYER] - ORG:"+sid+" | Page: "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" | "+username);
-          saveParam(i, 3);
+          if(sid != activeOrg){
+            console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
+            saveParam(i, 3);
+          }else{
+
+          }
         }
       })
     }
@@ -149,6 +154,7 @@ async function init(){
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
+        activeOrg = orgs[xi].sid;
         for(var xii = 0; xii < pages; xii++){
           orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
           .catch((error) => {
