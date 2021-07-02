@@ -337,9 +337,7 @@ function getOrgs(update, param){
       sql = "SELECT sid FROM `organizations`;";
       con.query(sql, function(err, result, fields){
         if(err) throw err;
-        function onlyUnique(value, index, self) {
-          return self.indexOf(value) === index;
-        }
+        orgs = result;
       })
     });
   }
