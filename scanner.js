@@ -337,8 +337,9 @@ function getOrgs(update, param){
       sql = "SELECT sid FROM `organizations`;";
       con.query(sql, function(err, result, fields){
         if(err) throw err;
-        console.log(orgs);
         orgs = result;
+        console.log(orgs);
+        callback();
       })
     });
   }
