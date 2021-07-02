@@ -221,7 +221,6 @@ function init(){
   })
 
   async function scan(sid){
-    var x = 0;
     await orgScanner(sid).then(async (result) => {
       if(result.status === 0){
         throw new Error(sid);
@@ -323,13 +322,12 @@ function getOrgs(update, param){
           }
         })
       }
-
+      var x = 0;
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
         .then(() => {
-
-            console.log("save param");
-            saveParam(x++, 3);
+          console.log("save param");
+          saveParam(x++, 3);
         })
         .catch((error) => {
           console.log(error.message);
