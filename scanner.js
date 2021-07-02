@@ -20,13 +20,13 @@ const limiter = new Bottleneck({
 
 
 const orgScan = new Bottleneck({
-  maxConcurrent: 1,
-  minTime: 2000
+  maxConcurrent: offset*offsetMul,
+  minTime: (offset*1000)
 });
 
 const orgLimiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: 2000
+  minTime: (offset*1000)
 });
 
 orgLimiter.on("failed", async (error, info) => {
