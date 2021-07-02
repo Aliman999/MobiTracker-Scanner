@@ -281,7 +281,7 @@ function users(param){
 
 function updateOrgs(orgs){
   orgs.forEach((item, i) => {
-    orgScan.schedule(orgInfo, item)
+    orgScan.schedule({ id:item }, orgInfo, item)
     .catch((error) => {
       console.log(error.message);
     })
