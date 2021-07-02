@@ -136,7 +136,7 @@ async function init(){
       if(result.status == 0){
         throw new Error(result.data);
       }else{
-        console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
+        //console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
         result.data.forEach((item, x) => {
           orgLimiter.schedule( {id:item}, query, item, key, i)
           .catch((error) => {
