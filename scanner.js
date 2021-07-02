@@ -236,7 +236,7 @@ function init(){
     });
   }
   persist(3).then((param) => {
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs, true).then(()=>{
+    orgScan.schedule({ id:"Get Orgs" }, getOrgs, true, param).then(()=>{
       for(var xi = 0; xi < orgs.length; xi++){
         orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
         .catch((error) => {
@@ -279,9 +279,9 @@ function users(param){
   })
 }
 
-function updateOrgs(orgs){
+function updateOrgs(orgs, param){
   var x = 0;
-  orgs.forEach((item, i) => {
+  for(var i = param; i < orgs.length; i++){
     orgScan.schedule({ id:item }, orgInfo, item)
     .catch((error) => {
       console.log(error.message);
@@ -298,10 +298,10 @@ function updateOrgs(orgs){
         })
       }
     })
-  });
+  }
 }
 
-function getOrgs(update){
+function getOrgs(update, param){
   if(update){
     sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
     con.query(sql, function(err, result, fields){
@@ -320,7 +320,7 @@ function getOrgs(update){
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
-      updateOrgs(orgs);
+      updateOrgs(orgs, param);
     })
   }else{
     /*
