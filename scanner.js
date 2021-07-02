@@ -70,7 +70,6 @@ limiter.on("failed", async (error, info) => {
   if (info.retryCount < 2) {
     return (offset*1000);
   }else{
-    console.log("#"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
     cachePlayer(info.args[0]);
   }
 });
