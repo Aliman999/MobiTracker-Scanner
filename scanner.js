@@ -312,7 +312,7 @@ function getOrgs(update, param){
                 }
               })
             }else{
-              callback({ status:0, data:"Skipped "+org, i:i });
+              callback({ status:0, data:"-----Skipped "+org, i:i });
             }
           })
         });
