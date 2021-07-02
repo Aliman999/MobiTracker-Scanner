@@ -135,7 +135,6 @@ async function init(){
         console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
         saveParam(i, 3);
         result.data.forEach((item, i) => {
-          console.log("");
           limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
           .catch((error) => {
           });
