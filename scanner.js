@@ -221,6 +221,7 @@ function init(){
   })
 
   async function scan(sid){
+    var x = 0;
     await orgScanner(sid).then(async (result) => {
       if(result.status === 0){
         throw new Error(sid);
@@ -228,6 +229,10 @@ function init(){
         var pages = result.data;
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
+          .then(()=>{
+            console.log("save param");
+            saveParam(x++, 3);
+          })
           .catch((error)=>{
           });
         }
@@ -279,7 +284,6 @@ function users(param){
 }
 
 function updateOrgs(orgs, param){
-  var x = 0;
   function getInfo(org){
     sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
     con.query(sql, function(err, sqlResult, fields){
@@ -295,7 +299,6 @@ function updateOrgs(orgs, param){
             sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
             con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
               if(err) console.log(err.message+" skipped");
-              saveParam(x++, 3);
             })
           }
         })
