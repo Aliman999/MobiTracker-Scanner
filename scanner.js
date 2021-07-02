@@ -236,8 +236,25 @@ function users(param){
   })
 }
 
-function getOrgs(){
-  return new Promise(callback => {
+function updateOrgs(orgs){
+  orgs.forEach((item, i) => {
+    console.log(item);
+    orgScan.schedule(orgScanner, item)
+    .catch((error) => {
+      console.log(error.message);
+    })
+    .then((result) => {
+      /*
+      sql = "INSERT INTO organizations ";
+      con.query(sql, function(err, result, fields){
+      })
+      */
+    })
+  });
+}
+
+function getOrgs(update){
+  if(update){
     sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
     con.query(sql, function(err, result, fields){
       if(err) throw err;
@@ -245,7 +262,6 @@ function getOrgs(){
         return self.indexOf(value) === index;
       }
       var temp;
-      console.log("Extracting Orgs");
       result.forEach((item, i) => {
         temp = JSON.parse(item.org);
         temp.forEach((item, i) => {
@@ -253,14 +269,37 @@ function getOrgs(){
         });
       });
 
-      console.log("Filtering Orgs");
       orgs = orgs.filter(onlyUnique);
       orgs.splice( orgs.indexOf("N/A"), 1);
-      console.log("Sorting Orgs");
       orgs.sort();
-      callback();
+      updateOrgs(orgs);
     })
-  });
+  }else{
+    return new Promise(callback => {
+      sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+      con.query(sql, function(err, result, fields){
+        if(err) throw err;
+        function onlyUnique(value, index, self) {
+          return self.indexOf(value) === index;
+        }
+        var temp;
+        console.log("Extracting Orgs");
+        result.forEach((item, i) => {
+          temp = JSON.parse(item.org);
+          temp.forEach((item, i) => {
+            orgs.push(item);
+          });
+        });
+
+        console.log("Filtering Orgs");
+        orgs = orgs.filter(onlyUnique);
+        orgs.splice( orgs.indexOf("N/A"), 1);
+        console.log("Sorting Orgs");
+        orgs.sort();
+        callback();
+      })
+    });
+  }
 }
 
 async function update(param = 0){
