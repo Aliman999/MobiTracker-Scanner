@@ -127,7 +127,7 @@ function init(){
       }
     })
   }
-
+  orgCrawler();
   function orgCrawler(){
     persist(3).then((param) => {
       orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
