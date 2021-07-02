@@ -132,9 +132,9 @@ function init(){
     persist(3).then((param) => {
       orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
         for(var xi = 0; xi < orgs.length; xi++){
-          var page = orgs[xi].members/32;
+          var pages = orgs[xi].members/32;
           for(var xii = 0; xii < pages; xii++){
-            orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, page)
+            orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, pages)
             .catch((error) => {
               console.log(error.message);
             })
