@@ -128,7 +128,6 @@ async function init(){
           throw new Error(result.data);
         }else{
           console.log("[PLAYER] - ORG:"+sid+" | Page: "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" | "+username);
-          console.log("Org #"+i);
           saveParam(i, 3);
         }
       })
