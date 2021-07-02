@@ -240,7 +240,7 @@ function getOrgs(update, param){
     })
   }else{
     return new Promise(callback => {
-      sql = "SELECT sid FROM `organizations`;";
+      sql = "SELECT sid, members FROM `organizations`;";
       con.query(sql, function(err, result, fields){
         if(err) throw err;
         orgs = result;
