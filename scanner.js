@@ -303,18 +303,18 @@ function getOrgs(update, param){
             if(sqlResult.length == 0){
               orgInfo(org).then((result) => {
                 if(result.status == 0){
-                  callback({ status:0, data:result.data });
+                  callback({ status:0, data:result.data, i:i });
                 }else{
                   result = result.data;
                   sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
                   con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                     if(err) console.log(err.message);
-                    callback( { status:1, data:i } );
+                    callback( { status:1, data:"", i:i } );
                   })
                 }
               })
             }else{
-              callback({ status:0, data:"Skipped "+org });
+              callback({ status:0, data:"Skipped "+org, i:i });
             }
           })
         });
