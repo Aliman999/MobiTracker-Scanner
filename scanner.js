@@ -132,7 +132,6 @@ async function init(){
           count++;
           if(count == orgs[i].members){
             console.log("[PLAYER] - ORG:"+sid+" | "+orgs[i].members+" Members | "+username);
-            activeOrg = sid;
             saveParam(i, 3);
           }
           /*
