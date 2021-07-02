@@ -237,12 +237,12 @@ function users(param){
 
 function updateOrgs(orgs){
   orgs.forEach((item, i) => {
-    console.log(item);
     orgScan.schedule(orgScanner, item)
     .catch((error) => {
       console.log(error.message);
     })
     .then((result) => {
+      console.log(result);
       /*
       sql = "INSERT INTO organizations ";
       con.query(sql, function(err, result, fields){
