@@ -12,7 +12,7 @@ var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMul = 3;
-var speed = 2000;
+var speed = 1000;
 var key;
 
 const limiter = new Bottleneck({
