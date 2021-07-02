@@ -292,7 +292,7 @@ function getOrgs(update, param){
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
 
-      function scan(){
+      function scan(org, i){
         function getInfo(org, i){
           return new Promise(callback => {
             sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
@@ -317,7 +317,7 @@ function getOrgs(update, param){
             })
           });
         }
-        getInfo().then((result) => {
+        getInfo(org, i).then((result) => {
           console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
           saveParam(result.i, 3);
           if(result.status == 0){
