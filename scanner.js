@@ -291,7 +291,7 @@ function updateOrgs(orgs){
         throw new Error(result.data);
       }else{
         result = result.data;
-        sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        sql = "INSERT INTO `organizations`(`id`, `archetype`, `banner`, `commitment`, `focus`, `headline`, `href`, `language`, `logo`, `members`, `name`, `recruiting`, `roleplay`, `sid`, `url`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         con.query(sql, [result.archetype, result.banner, result.commitment, result.focus, result.headline.plaintext, result.href, result.language, result.logo, result.members, result.name, result.recruiting, result.roleplay, result.sid, result.url], function(err, result, fields){
           if (err) throw err;
           console.log(++x);
