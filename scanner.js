@@ -303,17 +303,18 @@ function getOrgs(update, param){
             if(sqlResult.length == 0){
               orgInfo(org).then((result) => {
                 if(result.status == 0){
-                  throw new Error(result.data);
+                  callback({ status:0, data:result.data });
                 }else{
                   result = result.data;
                   sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
                   con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                     if(err) console.log(err.message);
+                    callback( { status:1, data:i } );
                   })
                 }
               })
             }else{
-              throw new Error("Skipped "+org);
+              callback({ status:0, data:"Skipped "+org });
             }
           })
         });
@@ -324,8 +325,12 @@ function getOrgs(update, param){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
         .catch((error) => {
         })
-        .then((x) => {
-          saveParam(x++, 3);
+        .then((result) => {
+          if(result.status == 0){
+            throw new Error(result.data);
+          }else{
+            saveParam(result.data, 3);
+          }
         })
       }
     })
