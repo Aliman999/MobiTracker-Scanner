@@ -10,10 +10,11 @@ const log = require('single-line-log').stdout;
 var count;
 var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
-var offset = 2;
+var offset = 1;
+var offsetMul = 3;
 
 const limiter = new Bottleneck({
-  maxConcurrent: offset,
+  maxConcurrent: offset*offsetMul,
   minTime: (offset*1000)
 });
 
