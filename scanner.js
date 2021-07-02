@@ -12,22 +12,23 @@ var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMul = 3;
+var speed = 2000;
 var key;
 
 const limiter = new Bottleneck({
   maxConcurrent: offset*offsetMul,
-  minTime: (offset*1000)
+  minTime: (speed)
 });
 
 
 const orgScan = new Bottleneck({
   maxConcurrent: offset*offsetMul,
-  minTime: (offset*1000)
+  minTime: (speed)
 });
 
 const orgLimiter = new Bottleneck({
   maxConcurrent: 1,
-  minTime: (offset*1000)
+  minTime: (speed)
 });
 
 orgLimiter.on("failed", async (error, info) => {
