@@ -226,12 +226,12 @@ function init(){
       if(result.status === 0){
         throw new Error(sid);
       }else{
+        console.log("save param");
+        saveParam(x++, 3);
         var pages = result.data;
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
           .then(()=>{
-            console.log("save param");
-            saveParam(x++, 3);
           })
           .catch((error)=>{
           });
