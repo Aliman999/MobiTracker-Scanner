@@ -322,7 +322,7 @@ function getOrgs(update, param){
         .catch((error) => {
         })
         .then((result) => {
-          console.log("#"+result.i+" of #"+orgs.length+" - "+orgs[result.i]);
+          console.log("#"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
           saveParam(result.i, 3);
           if(result.status == 0){
             throw new Error(result.data);
