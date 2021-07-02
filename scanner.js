@@ -333,32 +333,15 @@ function getOrgs(update, param){
       }
     })
   }else{
-    /*
     return new Promise(callback => {
-      sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+      sql = "SELECT sid FROM `organizations`;";
       con.query(sql, function(err, result, fields){
         if(err) throw err;
         function onlyUnique(value, index, self) {
           return self.indexOf(value) === index;
         }
-        var temp;
-        console.log("Extracting Orgs");
-        result.forEach((item, i) => {
-          temp = JSON.parse(item.org);
-          temp.forEach((item, i) => {
-            orgs.push(item);
-          });
-        });
-
-        console.log("Filtering Orgs");
-        orgs = orgs.filter(onlyUnique);
-        orgs.splice( orgs.indexOf("N/A"), 1);
-        console.log("Sorting Orgs");
-        orgs.sort();
-        callback();
       })
     });
-    */
   }
 }
 
