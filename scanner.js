@@ -329,7 +329,7 @@ function getOrgs(update, param){
           if(result.status == 0){
             throw new Error(result.data);
           }else{
-            saveParam(result.data, 3);
+            saveParam(result.i, 3);
           }
         })
       }
