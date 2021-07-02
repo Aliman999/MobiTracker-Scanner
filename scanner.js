@@ -292,9 +292,8 @@ function getOrgs(update, param){
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
 
-
-      function getInfo(org, i){
-        function infoContainer(){
+      function scan(){
+        function getInfo(org, i){
           return new Promise(callback => {
             sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
             con.query(sql, function(err, sqlResult, fields){
@@ -318,7 +317,8 @@ function getOrgs(update, param){
             })
           });
         }
-        infoContainer().then((result) => {
+        getInfo().then((result) => {
+          console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
           saveParam(result.i, 3);
           if(result.status == 0){
             throw new Error(result.data);
@@ -327,11 +327,8 @@ function getOrgs(update, param){
       }
 
       for(var i = param; i < orgs.length; i++){
-        orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i], i)
+        orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
         .catch((error) => {
-        })
-        .then((result) => {
-          console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
         })
       }
     })
