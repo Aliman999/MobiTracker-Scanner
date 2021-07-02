@@ -112,6 +112,7 @@ function saveParam(val, id){
 }
 
 function init(){
+  const key = await getKey();
   persist(1).then((param) => {
     updateQueries().then(()=>{
       users(parseInt(param));
@@ -352,7 +353,6 @@ async function update(param = 0){
       }
     })
   }
-  const key = await getKey();
   for(var i = param; i < list.length; i++){
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
     .catch((error) => {
