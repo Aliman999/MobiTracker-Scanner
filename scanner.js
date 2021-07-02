@@ -118,34 +118,31 @@ function init(){
     })
   })
 
-  async function scan(sid){
-    await orgScanner(sid).then(async (result) => {
-      if(result.status === 0){
-        throw new Error(sid);
+  async function getNames(sid, page){
+    await orgPlayers(sid, page).then((result)=>{
+      if(result.status == 0){
+        throw new Error(result.data);
       }else{
-        var pages = result.data;
-        /*
-        for(var xx = 0; xx < pages; xx++){
-          orgLimiter.schedule()
-          .then(()=>{
-          })
-          .catch((error)=>{
-          });
-        }
-        */
-      }
-    });
-  }
-  persist(3).then((param) => {
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
-      for(var xi = 0; xi < orgs.length; xi++){
-        orgScan.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid)
-        .catch((error) => {
-          console.log(error.message);
-        })
+        console.log(result);
       }
     })
-  })
+  }
+
+  function orgCrawler(){
+    persist(3).then((param) => {
+      orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
+        for(var xi = 0; xi < orgs.length; xi++){
+          var page = orgs[xi].members/32;
+          for(var xii = 0; xii < pages; xii++){
+            orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, page)
+            .catch((error) => {
+              console.log(error.message);
+            })
+          }
+        }
+      })
+    })
+  }
 }
 
 function persist(id){
@@ -294,51 +291,6 @@ function orgInfo(sid){
     })
     req.end();
   });
-}
-
-async function getNames(sid, page){
-  await orgPlayers(sid, page).then((result)=>{
-    if(result.status == 1){
-      result.data.forEach((item, i) => {
-        orgResponse.push(item);
-      });
-      if(Array.isArray(org)){
-        org = org.filter(function(item, pos, self) {
-          return self.indexOf(item) == pos;
-        })
-        console.log(orgResponse);
-        console.log(org[org.length-1]+" | "+sid);
-        if(org[org.length-1] === sid){
-          console.log((page+1)+" | "+pages);
-          if((page+1) == pages){
-            wss.clients.forEach((ws, i) => {
-              if(ws.user == "Scanner"){
-                ws.send(JSON.stringify({
-                  type:"finished",
-                  data:orgResponse,
-                  message:"Finished "+org.length+" organizations and found "+orgResponse.length+" players.",
-                  status:1
-                }));
-              }
-            });
-          }
-        }
-      }else{
-        if((page+1) == pages){
-          wss.clients.forEach((ws, i) => {
-            if(ws.user == "Scanner"){
-              ws.send(JSON.stringify({
-                type:"finished",
-                data:orgResponse,
-                message:"Finished "+sid,
-                status:1
-              }));
-            }
-          });
-        }
-      }
-    }
-  })
 }
 
 function orgPlayers(sid, page){
