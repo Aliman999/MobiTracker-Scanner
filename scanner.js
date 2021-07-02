@@ -121,6 +121,13 @@ async function init(){
   })
 
   async function getNames(sid, page, i){
+    async function query(username, key, i){
+      await queryApi(username, key).then((result) => {
+        if(result.status == 0){
+          throw new Error(result.data);
+        }
+      })
+    }
     await orgPlayers(sid, page).then((result)=>{
       if(result.status == 0){
         throw new Error(result.data);
@@ -128,7 +135,9 @@ async function init(){
         console.log("[ORG] - #"+i+" of #"+orgs.length+" | "+orgs[i].sid);
         saveParam(i, 3);
         result.data.forEach((item, i) => {
-          cachePlayer(item);
+          limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
+          .catch((error) => {
+          });
         });
       }
     })
