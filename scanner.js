@@ -39,7 +39,6 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
-  console.log("Returned data for "+info.options.id);
 });
 
 orgScan.on("failed", async (error, info) => {
