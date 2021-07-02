@@ -123,13 +123,12 @@ async function init(){
 
   var activeOrg = "";
   async function getNames(sid, page, i){
-    activeOrg = sid;
     async function query(username, key, i){
       await queryApi(username, key).then((result) => {
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log(page+" | "+Math.ceil(orgs[i].members/32));
+          console.log(page+" | "+Math.ceil(orgs[i].members/32)+" / "+sid+" - "+activeOrg);
           /*
           if(page == Math.ceil(orgs[i].members/32)){
 
@@ -148,7 +147,7 @@ async function init(){
       if(result.status == 0){
         throw new Error(result.data);
       }else{
-        //console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
+        activeOrg = sid;
         result.data.forEach((item, x) => {
           orgLimiter.schedule( {id:item}, query, item, key, i)
           .catch((error) => {
