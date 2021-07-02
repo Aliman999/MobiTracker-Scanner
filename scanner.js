@@ -226,8 +226,6 @@ function init(){
       if(result.status === 0){
         throw new Error(sid);
       }else{
-        console.log("save param");
-        saveParam(x++, 3);
         var pages = result.data;
         for(var xx = 0; xx < pages; xx++){
           orgLimiter.schedule()
@@ -325,9 +323,14 @@ function getOrgs(update, param){
           }
         })
       }
-      
+
       for(var i = param; i < orgs.length; i++){
         orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
+        .then(() => {
+
+            console.log("save param");
+            saveParam(x++, 3);
+        })
         .catch((error) => {
           console.log(error.message);
         })
