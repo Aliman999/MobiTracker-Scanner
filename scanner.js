@@ -133,7 +133,7 @@ function init(){
         var pages = orgs[xi].members/32;
         console.log(orgs);
         for(var xii = 0; xii < pages; xii++){
-          orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, scan, orgs[xi].sid, pages)
+          orgLimiter.schedule( { id:orgs[xi].sid+" - Get Members" }, getNames, orgs[xi].sid, pages)
           .catch((error) => {
             console.log(error.message);
           })
