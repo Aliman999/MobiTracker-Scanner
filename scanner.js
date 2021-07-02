@@ -287,11 +287,12 @@ function updateOrgs(orgs, param){
       }else{
         result = result.data;
         sql = "SELECT sid FROM organizations WHERE sid = '"+result.sid+"';";
-        con.query(sql, [result.headline.plaintext, result.name], function(err, result, fields){
+        con.query(sql, [result.headline.plaintext, result.name], function(err, return, fields){
           if(err) console.log(err.message+" skipped");
-          if(result.length == 0){
+          if(return.length == 0){
+            console.log("inserting "+result.sid);
             sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-            con.query(sql, [result.headline.plaintext, result.name], function(err, result, fields){
+            con.query(sql, [result.headline.plaintext, result.name], function(err, return, fields){
               if(err) console.log(err.message+" skipped");
               saveParam(x++, 3);
             })
@@ -300,6 +301,7 @@ function updateOrgs(orgs, param){
       }
     })
   }
+  console.log(param+" of "+orgs.length);
   for(var i = param; i < orgs.length; i++){
     orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
     .catch((error) => {
