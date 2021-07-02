@@ -111,7 +111,7 @@ function saveParam(val, id){
   })
 }
 
-function init(){
+async function init(){
   const key = await getKey();
   persist(1).then((param) => {
     updateQueries().then(()=>{
