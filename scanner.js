@@ -283,9 +283,6 @@ function updateOrgs(orgs, param){
   var x = 0;
   for(var i = param; i < orgs.length; i++){
     orgScan.schedule({ id:orgs[i] }, orgInfo, orgs[i])
-    .catch((error) => {
-      console.log(error.message);
-    })
     .then((result) => {
       if(result.status == 0){
         throw new Error(result.data);
@@ -297,6 +294,9 @@ function updateOrgs(orgs, param){
           saveParam(x++, 3);
         })
       }
+    })
+    .catch((error) => {
+      console.log(error.message);
     })
   }
 }
