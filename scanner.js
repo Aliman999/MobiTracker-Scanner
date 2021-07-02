@@ -126,6 +126,7 @@ async function init(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
+          console.log("[PLAYER] - ORG:"+sid+" | "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" | "+info.args[0]);
           console.log("Org #"+i);
           saveParam(i, 3);
         }
@@ -137,7 +138,7 @@ async function init(){
       }else{
         console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
         result.data.forEach((item, x) => {
-          limiter.schedule( {id:item}, query, item, key, i)
+          orgLimiter.schedule( {id:item}, query, item, key, i)
           .catch((error) => {
           });
         });
