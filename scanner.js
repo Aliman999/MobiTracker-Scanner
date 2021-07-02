@@ -40,6 +40,8 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
+  console.log(info);
+  //console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -135,6 +137,7 @@ async function init(){
         console.log("[ORG] - "+(page+1)+" of "+Math.ceil(orgs[i].members/32)+" Pages | "+orgs[i].sid);
         saveParam(i, 3);
         result.data.forEach((item, i) => {
+          console.log("");
           limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
           .catch((error) => {
           });
