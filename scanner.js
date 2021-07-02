@@ -241,12 +241,14 @@ function init(){
   }
   persist(3).then((param) => {
     orgScan.schedule({ id:"Get Orgs" }, getOrgs, true, param).then(()=>{
+      /*
       for(var xi = 0; xi < orgs.length; xi++){
         orgScan.schedule( { id:orgs[xi]+" - Get Members" }, scan, orgs[xi])
         .catch((error) => {
           console.log(error.message);
         })
       }
+      */
     })
   })
 }
@@ -283,34 +285,6 @@ function users(param){
   })
 }
 
-function updateOrgs(orgs, param){
-  function getInfo(org){
-    sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
-    con.query(sql, function(err, sqlResult, fields){
-      if(err) console.log(err.message+" skipped");
-      if(sqlResult.length == 0){
-        orgInfo(org).then((result) => {
-          if(result.status == 0){
-            throw new Error(result.data);
-          }else{
-            result = result.data;
-            sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-            con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-              if(err) console.log(err.message+" skipped");
-            })
-          }
-        })
-      }
-    })
-  }
-  for(var i = param; i < orgs.length; i++){
-    orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
-    .catch((error) => {
-      console.log(error.message);
-    })
-  }
-}
-
 function getOrgs(update, param){
   if(update){
     sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
@@ -331,7 +305,32 @@ function getOrgs(update, param){
       orgs.splice( orgs.indexOf("N/A"), 1);
       orgs.sort();
 
-      updateOrgs(orgs, param);
+
+      function getInfo(org){
+        sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
+        con.query(sql, function(err, sqlResult, fields){
+          if(err) console.log(err.message+" skipped");
+          if(sqlResult.length == 0){
+            orgInfo(org).then((result) => {
+              if(result.status == 0){
+                throw new Error(result.data);
+              }else{
+                result = result.data;
+                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                  if(err) console.log(err.message+" skipped");
+                })
+              }
+            })
+          }
+        })
+      }
+      for(var i = param; i < orgs.length; i++){
+        orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
+        .catch((error) => {
+          console.log(error.message);
+        })
+      }
     })
   }else{
     /*
