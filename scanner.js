@@ -66,7 +66,7 @@ limiter.on("failed", async (error, info) => {
 
 limiter.on("done", function(info){
   count++;
-  console.log("#"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
+  console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(count == list.length){
     finish();
   }
@@ -322,7 +322,7 @@ function getOrgs(update, param){
         .catch((error) => {
         })
         .then((result) => {
-          console.log("#"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
+          console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
           saveParam(result.i, 3);
           if(result.status == 0){
             throw new Error(result.data);
