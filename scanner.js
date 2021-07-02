@@ -302,7 +302,6 @@ function updateOrgs(orgs, param){
       }
     })
   }
-  console.log(param+" of "+orgs.length);
   for(var i = param; i < orgs.length; i++){
     orgScan.schedule({ id:orgs[i] }, getInfo, orgs[i])
     .catch((error) => {
