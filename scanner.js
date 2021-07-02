@@ -51,7 +51,6 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
-  console.log("Returned data for "+info.options.id);
 });
 
 limiter.on("failed", async (error, info) => {
