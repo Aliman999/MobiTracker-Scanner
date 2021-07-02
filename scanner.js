@@ -134,8 +134,9 @@ async function init(){
             console.log("END OF ORG");
             count = 0;
             saveParam(i, 3);
+          }else{
+            count++;
           }
-          count++;
         }
       })
     }
