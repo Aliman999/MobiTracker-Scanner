@@ -12,7 +12,7 @@ var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMul = 3;
-const key = await getKey();
+var key;
 
 const limiter = new Bottleneck({
   maxConcurrent: offset*offsetMul,
@@ -112,7 +112,8 @@ function saveParam(val, id){
   })
 }
 
-function init(){
+async function init(){
+  key = await getKey();
   persist(1).then((param) => {
     updateQueries().then(()=>{
       users(parseInt(param));
