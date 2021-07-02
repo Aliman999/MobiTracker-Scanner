@@ -48,14 +48,6 @@ orgScan.on("failed", async (error, info) => {
 
   if (info.retryCount < 2) {
     return 2000;
-  }else{
-    info.args[2].send(JSON.stringify({
-      type:"response",
-      data:info.args[0]+" not found.",
-      message:"Error",
-      status:0
-    }));
-    cachePlayer(info.args[0]);
   }
 });
 
