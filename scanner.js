@@ -129,7 +129,7 @@ async function init(){
           throw new Error(result.data);
         }else{
           console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
-          console.log(page+" | "+Math.ceil(orgs[xi].members/32));
+          console.log(page+" | "+Math.ceil(orgs[i].members/32));
           saveParam(i, 3);
           if(count == (orgs[i].members-1)){
             count = 0;
