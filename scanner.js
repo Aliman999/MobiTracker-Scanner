@@ -129,13 +129,11 @@ async function init(){
           count++;
           throw new Error(result.data);
         }else{
-          console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
+          console.log("[CRAWLER] - #"+(count++)+" of #"+orgs[i].members+" | "+orgs[i].sid);
           saveParam(i, 3);
-          if(count == orgs[i].members){
+          if(count >= orgs[i].members){
             console.log("End of Org");
             count = 0;
-          }else{
-            count++;
           }
         }
       })
