@@ -121,19 +121,20 @@ async function init(){
     })
   })
 
-  var count = 0;
+  var active;
   async function getNames(sid, page, i){
     async function query(username, key, i){
+      active = orgs[i].sid;
+      console.log(active);
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
           count++;
           throw new Error(result.data);
         }else{
-          console.log("[CRAWLER] - #"+(++count)+" of #"+orgs[i].members+" | "+orgs[i].sid);
+          //console.log("[CRAWLER] - #"+(++count)+" of #"+orgs[i].members+" | "+orgs[i].sid);
           saveParam(i, 3);
-          if(count >= orgs[i].members){
-            console.log("End of Org");
-            count = 0;
+          if(active != orgs[i].sid){
+            console.log(active+" | "+orgs[i.sid]);
           }
         }
       })
