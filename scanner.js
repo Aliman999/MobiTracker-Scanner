@@ -126,7 +126,7 @@ async function init(){
     async function query(username, key, i){
       if(active != orgs[i].sid){
         active = orgs[i].sid;
-        console.log("[CRAWLER] - #"+(++count)+" of #"+orgs[i].members+" | "+orgs[i].sid);
+        console.log("[CRAWLER] - "+orgs[i].members+" | "+orgs[i].sid);
       }
       console.log(active);
       await queryApi(username, key).then(async (result) => {
