@@ -129,7 +129,7 @@ async function init(){
           throw new Error(result.data);
         }else{
           //console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
-          console.log(count+" | "+orgs[i].members);
+          console.log((count+1)+" | "+orgs[i].members);
           if((count+1) == orgs[i].members){
             saveParam(i, 3);
             count = 0;
