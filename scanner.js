@@ -126,8 +126,8 @@ async function init(){
     async function query(username, key, i){
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
-          throw new Error(result.data);
           count++;
+          throw new Error(result.data);
         }else{
           console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
           saveParam(i, 3);
