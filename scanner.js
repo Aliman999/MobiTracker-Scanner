@@ -127,11 +127,12 @@ async function init(){
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
           throw new Error(result.data);
+          count++;
         }else{
           console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
-          console.log(page+" | "+Math.ceil(orgs[i].members/32));
           saveParam(i, 3);
-          if(count == (orgs[i].members-1)){
+          if(count+" | "+orgs[i].members){
+            console.log("End of Org");
             count = 0;
           }else{
             count++;
