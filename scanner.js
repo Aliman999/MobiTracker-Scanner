@@ -128,7 +128,6 @@ async function init(){
         active = orgs[i].sid;
         console.log("[CRAWLER] - "+orgs[i].members+" Members | "+orgs[i].sid);
       }
-      console.log(active);
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
           count++;
