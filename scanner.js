@@ -124,14 +124,14 @@ async function init(){
   var count = 0;
   async function getNames(sid, page, i){
     async function query(username, key, i){
-      await queryApi(username, key).then((result) => {
+      await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
           throw new Error(result.data);
         }else{
           console.log("[CRAWLER] - #"+(count+1)+" of #"+orgs[i].members+" | "+orgs[i].sid);
           console.log(count+" | "+(orgs[i].members-1));
           if(count == (orgs[i].members-1)){
-            saveParam(i, 3)
+            await saveParam(i, 3)
             .then(()=>{
               console.log(i+" saved");
             })
