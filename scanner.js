@@ -254,7 +254,6 @@ getOrgs.getNewOrgs = async function(param){
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
           if(err) console.log(err);
-          console.log("[ORG] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
           getOrgs.queryOrg(org).then((result) => {
             getOrgs.cacheOrg(result);
             if(sqlResult.length == 0){
