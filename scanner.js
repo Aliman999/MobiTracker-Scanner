@@ -261,7 +261,6 @@ getOrgs.getNewOrgs = async function(param){
         con.query(sql, function(err, sqlResult, fields){
           if(err) console.log(err);
           getOrgs.queryOrg(org).then((result) => {
-            getOrgs.cacheOrg(result);
             if(sqlResult.length == 0){
               if(result.status == 1){
                 result = result.data;
@@ -269,6 +268,7 @@ getOrgs.getNewOrgs = async function(param){
                 con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                   if(err) console.log(err.message);
                   callback( { status:1, data:"", i:i } );
+                  getOrgs.cacheOrg(result);
                 })
               }else{
                 callback({ status:0, data:result.data, i:i });
