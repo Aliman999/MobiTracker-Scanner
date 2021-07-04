@@ -260,6 +260,7 @@ getOrgs.getNewOrgs = async function(param){
     newOrgs.sort();
 
     for(var i = param; i < newOrgs.length; i++){
+      console.log(i);
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
       .catch((error) => {
       })
