@@ -169,11 +169,6 @@ init.orgScan = async function(){
   }
 }
 
-async function init(job){
-
-
-}
-
 function persist(id){
   return new Promise(callback => {
     sql = "SELECT param FROM persist WHERE id = "+id;
@@ -569,7 +564,8 @@ function cachePlayer(user){
 function finish(){
   saveParam(0, 1);
   console.log("[SYSTEM] - Reached end of player list, restarting.");
-  init();
+  init.playerScan();
+  init.orgScan();
 }
 
 Object.size = function(obj) {
