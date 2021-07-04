@@ -166,7 +166,7 @@ init.orgScan = async function(){
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
-          orgScan.schedule( { id:"[SCANNER] - "+orgs[xi].sid+" Failed" }, getNames, orgs[xi].sid, xii, xi)
+          orgScan.schedule( { id:"[SCANNER] - "+(xii+1)+" | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
           .catch((error) => {
             console.log(error.message);
           })
