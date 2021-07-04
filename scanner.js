@@ -112,12 +112,18 @@ function saveParam(val, id){
   })
 }
 
-async function init(){
+init.playerScan = async function(){
   key = await getKey();
   persist(1).then((param) => {
     updateQueries().then(()=>{
       users(parseInt(param));
     })
+  })
+}
+
+init.orgScan = async function(){
+  persist(3).then((param) => {
+    orgCrawler(param);
   })
 
   var active;
@@ -161,9 +167,11 @@ async function init(){
       }
     })
   }
-  persist(3).then((param) => {
-    orgCrawler(param);
-  })
+}
+
+async function init(job){
+
+
 }
 
 function persist(id){
