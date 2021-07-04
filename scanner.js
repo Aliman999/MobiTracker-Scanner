@@ -305,6 +305,7 @@ getOrgs.cacheOrg = function(orgInfo){
   }else{
     orgInfo.recruiting = 0;
   }
+  console.log(orgInfo);
 
   if(orgInfo.roleplay){
     orgInfo.roleplay = 1;
