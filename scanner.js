@@ -292,6 +292,10 @@ getOrgs.getNewOrgs = async function(param){
   });
 }
 
+getOrgs.cacheOrg = function(orgInfo){
+  console.log(orgInfo);
+}
+
 getOrgs.getOrgs = function(){
   return new Promise(callback => {
     sql = "SELECT sid, members FROM `organizations`;";
