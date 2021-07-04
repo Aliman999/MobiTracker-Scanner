@@ -168,7 +168,7 @@ init.orgScan = async function(){
         for(var xii = 0; xii < pages; xii++){
           orgScan.schedule( { id:"[SCANNER] - "+(xii+1)+" | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
           .catch((error) => {
-            console.log(error.message);
+            console.save(error.message);
           })
         }
       }
@@ -261,6 +261,7 @@ getOrgs.getNewOrgs = async function(param = 0){
     for(var i = param; i < newOrgs.length; i++){
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
       .catch((error) => {
+
       })
     }
 
@@ -693,6 +694,18 @@ function cachePlayer(user){
       }
     });
   }
+}
+
+var logSave = console.save;
+console.save = function(msg) {
+  const date = new Date();
+  const day = ("0" + date.getDate()).slice(-2);
+  const month = ("0" + (date.getMonth() + 1)).slice(-2);
+  const year = date.getFullYear();
+  fs.appendFile('/home/ubuntu/logs/scanner.log', "["+month+"/"+day+"/"+year+" "+date.toLocaleTimeString('en-US')+"]"+" - "+msg+'\n', function(err) { if(err) {
+      return trueLog(err);
+    }
+  });
 }
 
 Object.size = function(obj) {
