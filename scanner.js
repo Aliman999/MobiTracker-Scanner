@@ -295,6 +295,13 @@ getOrgs.getNewOrgs = async function(param){
 
 getOrgs.cacheOrg = function(orgInfo){
   console.log(orgInfo);
+
+  orgInfo = orgInfo.data;
+  sql = "INSERT INTO `CACHE organizations` (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
+  con.query(sql, [orgInfo.headline.plaintext, orgInfo.name], function(err, sqlorgInfo, fields){
+    if(err) console.log(err.message);
+    callback( { status:1, data:"", i:i } );
+  })
 }
 
 getOrgs.queryOrg = function(sid){
