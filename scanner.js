@@ -243,7 +243,7 @@ getOrgs.getNewOrgs = async function(param){
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
-
+    console.log(result);
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
