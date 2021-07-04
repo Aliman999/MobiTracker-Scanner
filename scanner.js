@@ -112,7 +112,7 @@ function saveParam(val, id){
   })
 }
 
-var init;
+var init = {};
 
 init.playerScan = async function(){
   key = await getKey();
