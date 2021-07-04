@@ -249,6 +249,12 @@ getOrgs.getNewOrgs = async function(param){
     newOrgs.splice( orgs.indexOf("N/A"), 1);
     newOrgs.sort();
 
+    for(var i = param; i < newOrgs.length; i++){
+      orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
+      .catch((error) => {
+      })
+    }
+
     function getInfo(org, i){
       return new Promise(callback => {
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
@@ -282,12 +288,6 @@ getOrgs.getNewOrgs = async function(param){
         if(result.status == 0){
           throw new Error(result.data);
         }
-      })
-    }
-
-    for(var i = param; i < newOrgs.length; i++){
-      orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
-      .catch((error) => {
       })
     }
   })
