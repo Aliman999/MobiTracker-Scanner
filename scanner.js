@@ -295,7 +295,6 @@ getOrgs.getNewOrgs = async function(param){
 
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
-  console.log(orgInfo);
   if(orgInfo.headline){
     orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
   }
@@ -317,6 +316,7 @@ getOrgs.cacheOrg = function(orgInfo){
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[0];
+    console.log({ old:result, new:orgInfo });
     if(result.headline){
       result.headline = JSON.stringify(result.headline);
     }
