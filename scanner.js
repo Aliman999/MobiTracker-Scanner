@@ -267,7 +267,7 @@ getOrgs.getNewOrgs = async function(param){
                 }
               })
             }else{
-              getOrgs.cacheOrg(result);
+              getOrgs.cacheOrg(org);
               callback({ status:1, data:sqlResult, i:i });
             }
           })
