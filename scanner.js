@@ -254,7 +254,7 @@ getOrgs.getNewOrgs = async function(param){
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
           if(err) console.log(err);
-
+          console.log("[ORG] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
           getOrgs.queryOrg(org).then((result) => {
             getOrgs.cacheOrg(result);
             if(sqlResult.length == 0){
@@ -278,7 +278,7 @@ getOrgs.getNewOrgs = async function(param){
 
     async function scan(org, i){
       await getInfo(org, i).then((result) => {
-        console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
+        console.log("[ORG] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
         saveParam(result.i, 4);
         if(result.status == 0){
           throw new Error(result.data);
@@ -286,8 +286,8 @@ getOrgs.getNewOrgs = async function(param){
       })
     }
 
-    for(var i = param; i < orgs.length; i++){
-      orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
+    for(var i = param; i < newOrgs.length; i++){
+      orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
       .catch((error) => {
       })
     }
