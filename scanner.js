@@ -295,10 +295,23 @@ getOrgs.getNewOrgs = async function(param){
 
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
+  var events = [];
   sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
-    console.log(result);
+    console.log( { old:result, new:orgInfo });
+    /*
+    if(result.archetype != orgInfo.archetype){
+      events.push("Archetype Changed");
+    }
+    if(result.){
+
+    }
+    function removeDupe(data){
+      return data.filter((value, index) => data.indexOf(value) === index)
+    }
+    events = removeDupe(events);
+    */
   })
   /*
   sql = "INSERT INTO `CACHE organizations` (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
