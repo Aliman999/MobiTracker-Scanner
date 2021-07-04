@@ -244,13 +244,13 @@ getOrgs.getNewOrgs = async function(param){
         newOrgs.push(item);
       });
     });
+    console.log("Finished");
 
     newOrgs = newOrgs.filter(onlyUnique);
     newOrgs.splice( orgs.indexOf("N/A"), 1);
     newOrgs.sort();
 
     function getInfo(org, i){
-      console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
       return new Promise(callback => {
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
