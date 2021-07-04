@@ -561,20 +561,9 @@ function cachePlayer(user){
   }
 }
 
-function timeToComplete(){
-  return new Promise(callback =>{
-    sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      var max = result.length, remaining = 0, time = 0, available = queries.available;
-      persist(1).then((param) =>{
-        remaining = max - param;
-        time = Math.ceil(remaining/available);
-        console.log("Approximately "+time+" days to completion");
-        callback();
-      });
-    })
-  })
+finish(){
+  saveParam(0, 1);
+  console.log("[SYSTEM] - Reached end of player list, restarting.");
 }
 
 Object.size = function(obj) {
