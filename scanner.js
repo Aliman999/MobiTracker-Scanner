@@ -40,6 +40,7 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
+  console.log(info);
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -69,7 +70,9 @@ limiter.on("done", function(info){
 
   console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(info.args[2] == (list.length-1)){
-    finish();
+    console.log("[SYSTEM] - Reached end of player list, restarting.");
+    saveParam(0, 1);
+    init.playerScan();
   }
 });
 
@@ -562,11 +565,6 @@ function cachePlayer(user){
       }
     });
   }
-}
-
-function finish(){
-  saveParam(0, 1);
-  console.log("[SYSTEM] - Reached end of player list, restarting.");
 }
 
 Object.size = function(obj) {
