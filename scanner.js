@@ -151,8 +151,8 @@ init.orgCrawl = async function(){
 
 init.orgScan = async function(){
   persist(3).then((param) => {
-    console.log("[CRAWLER] - SCAN EXISTING ORGS");
-    orgScan.schedule({ id:"[CRAWLER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
+    console.log("[SCANNER] - SCAN EXISTING ORGS");
+    orgScan.schedule({ id:"[SCANNER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
@@ -170,7 +170,7 @@ init.orgScan = async function(){
     async function query(username, key, i){
       if(active != orgs[i].sid){
         active = orgs[i].sid;
-        console.log("[CRAWLER] - "+orgs[i].members+" Members | "+orgs[i].sid);
+        console.log("[SCANNER] - "+orgs[i].members+" Members | "+orgs[i].sid);
       }
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
@@ -186,7 +186,7 @@ init.orgScan = async function(){
         throw new Error(result.data);
       }else{
         result.data.forEach((item, x) => {
-          orgLimiter.schedule( {id:"[CRAWLER] - "+item}, query, item, key, i)
+          orgLimiter.schedule( {id:"[SCANNER] - "+item}, query, item, key, i)
           .catch((error) => {
           });
         });
