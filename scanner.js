@@ -135,7 +135,7 @@ init.playerScan = async function(){
 init.orgCrawl = async function(){
   persist(4).then((param) => {
     console.log("[CRAWLER] - SCAN FOR NEW ORGS");
-    orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param).then((result)=>{
+    getOrgs.getNewOrgs(param).then((result) => {
       for(var xi = param; xi < newOrgs.length; xi++){
         var pages = Math.ceil(newOrgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
