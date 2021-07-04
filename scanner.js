@@ -229,67 +229,67 @@ function users(param){
 var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param){
-  return new Promise(callback => {
-    orgs = [];
-    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-      }
-      var temp;
-      result.forEach((item, i) => {
-        temp = JSON.parse(item.org);
-        temp.forEach((item, i) => {
-          orgs.push(item);
-        });
+  orgs = [];
+  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var temp;
+    result.forEach((item, i) => {
+      temp = JSON.parse(item.org);
+      temp.forEach((item, i) => {
+        orgs.push(item);
       });
+    });
 
-      orgs = orgs.filter(onlyUnique);
-      orgs.splice( orgs.indexOf("N/A"), 1);
-      orgs.sort();
+    orgs = orgs.filter(onlyUnique);
+    orgs.splice( orgs.indexOf("N/A"), 1);
+    orgs.sort();
 
-      function getInfo(org, i){
-          sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
-          con.query(sql, function(err, sqlResult, fields){
-            if(err) console.log(err);
-            if(sqlResult.length == 0){
-              getOrgs.queryOrg(org).then((result) => {
-                if(result.status == 0){
-                  callback({ status:0, data:result.data, i:i });
-                }else{
-                  result = result.data;
-                  sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-                  con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-                    if(err) console.log(err.message);
-                    callback( { status:1, data:"", i:i } );
-                  })
-                }
-              })
-            }else{
-              getOrgs.cacheOrg(org);
-              callback({ status:1, data:sqlResult, i:i });
-            }
-          })
-      }
-
-      async function scan(org, i){
-        await getInfo(org, i).then((result) => {
-          console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
-          saveParam(result.i, 3);
-          if(result.status == 0){
-            throw new Error(result.data);
+    function getInfo(org, i){
+      return new Promise(callback => {
+        sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
+        con.query(sql, function(err, sqlResult, fields){
+          if(err) console.log(err);
+          if(sqlResult.length == 0){
+            getOrgs.queryOrg(org).then((result) => {
+              if(result.status == 0){
+                callback({ status:0, data:result.data, i:i });
+              }else{
+                result = result.data;
+                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                  if(err) console.log(err.message);
+                  callback( { status:1, data:"", i:i } );
+                })
+              }
+            })
+          }else{
+            getOrgs.cacheOrg(org);
+            callback({ status:1, data:sqlResult, i:i });
           }
         })
-      }
+      });
+    }
 
-      for(var i = param; i < orgs.length; i++){
-        orgScan.schedule({ id:orgs[i]+"test" }, scan, orgs[i], i)
-        .catch((error) => {
-        })
-      }
-    })
-  });
+    async function scan(org, i){
+      await getInfo(org, i).then((result) => {
+        console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
+        saveParam(result.i, 3);
+        if(result.status == 0){
+          throw new Error(result.data);
+        }
+      })
+    }
+
+    for(var i = param; i < orgs.length; i++){
+      orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
+      .catch((error) => {
+      })
+    }
+  })
 }
 
 getOrgs.cacheOrg = function(orgInfo){
