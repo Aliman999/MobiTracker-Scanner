@@ -256,32 +256,6 @@ getOrgs.getNewOrgs = async function(param){
       })
     }
 
-    function getInfo(org, i){
-      return new Promise(callback => {
-        sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
-        con.query(sql, function(err, sqlResult, fields){
-          if(err) console.log(err);
-          getOrgs.queryOrg(org).then((result) => {
-            if(sqlResult.length == 0){
-              if(result.status == 1){
-                result = result.data;
-                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-                  if(err) console.log(err.message);
-                  callback( { status:1, data:"", i:i } );
-                })
-              }else{
-                callback({ status:0, data:result.data, i:i });
-              }
-            }else{
-              getOrgs.cacheOrg(result);
-              callback({ status:1, data:sqlResult, i:i });
-            }
-          })
-        })
-      });
-    }
-
     async function scan(org, i){
       await getInfo(org, i).then((result) => {
         console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
@@ -291,6 +265,31 @@ getOrgs.getNewOrgs = async function(param){
         }
       })
     }
+
+    function getInfo(org, i){
+      sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
+      con.query(sql, function(err, sqlResult, fields){
+        if(err) console.log(err);
+        getOrgs.queryOrg(org).then((result) => {
+          if(sqlResult.length == 0){
+            if(result.status == 1){
+              result = result.data;
+              sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+              con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                if(err) console.log(err.message);
+                callback( { status:1, data:"", i:i } );
+              })
+            }else{
+              callback({ status:0, data:result.data, i:i });
+            }
+          }else{
+            getOrgs.cacheOrg(result);
+            callback({ status:1, data:sqlResult, i:i });
+          }
+        })
+      })
+    }
+
   })
 }
 
