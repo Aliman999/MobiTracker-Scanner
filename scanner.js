@@ -7,7 +7,7 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 
-var list = [], queries = {}, sql, orgs = [];
+var list = [], queries = {}, sql, orgs = [], newOrgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMul = 3;
@@ -136,10 +136,10 @@ init.orgCrawl = async function(){
   persist(4).then((param) => {
     console.log("[CRAWLER] - SCAN FOR NEW ORGS");
     orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param).then((result)=>{
-      for(var xi = param; xi < orgs.length; xi++){
-        var pages = Math.ceil(orgs[xi].members/32);
+      for(var xi = param; xi < newOrgs.length; xi++){
+        var pages = Math.ceil(newOrgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
-          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
+          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid }, getNames, newOrgs[xi].sid, xii, xi)
           .catch((error) => {
             console.log(error.message);
           })
@@ -230,7 +230,7 @@ function users(param){
 var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param){
-  orgs = [];
+  newOrgs = [];
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
@@ -241,7 +241,7 @@ getOrgs.getNewOrgs = async function(param){
     result.forEach((item, i) => {
       temp = JSON.parse(item.org);
       temp.forEach((item, i) => {
-        orgs.push(item);
+        newOrgs.push(item);
       });
     });
 
