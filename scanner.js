@@ -392,7 +392,10 @@ getOrgs.cacheOrg = function(orgInfo){
       var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
       con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name], function(err, result, fields){
         if(err) console.log(err.message);
-        console.log(sql);
+        var sql = "UPDATE `organizations` SET archetype = '"+orgInfo.archetype+"', banner = '"+orgInfo.banner+"', commitment = '"+orgInfo.commitment+"', focus = '"+JSON.stringify(orgInfo.focus)+"', headline = ?, href = '"+orgInfo.href+"', language = '"+orgInfo.lang+"', logo = '"+orgInfo.logo+"', members = "+orgInfo.members+", name = ?, recruiting = "+orgInfo.recruiting+", roleplay = "+orgInfo.roleplay+", sid = '"+orgInfo.sid+"', url = '"+orgInfo.url+"';";
+        con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name], function(err, result, fields){
+          if(err) console.log(err.message);
+        });
       });
     }
   })
