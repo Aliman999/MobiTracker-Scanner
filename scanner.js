@@ -244,7 +244,6 @@ getOrgs.getNewOrgs = async function(param){
         newOrgs.push(item);
       });
     });
-    console.log("Finished");
 
     newOrgs = newOrgs.filter(onlyUnique);
     newOrgs.splice( orgs.indexOf("N/A"), 1);
@@ -278,7 +277,7 @@ getOrgs.getNewOrgs = async function(param){
 
     async function scan(org, i){
       await getInfo(org, i).then((result) => {
-        //console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
+        console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
         saveParam(result.i, 4);
         if(result.status == 0){
           throw new Error(result.data);
