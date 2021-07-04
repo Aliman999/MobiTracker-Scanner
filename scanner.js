@@ -296,9 +296,7 @@ getOrgs.getNewOrgs = async function(param){
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
   orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
-  orgInfo.focus = JSON.stringify(orgInfo.focus);
-  orgInfo.focus = JSON.parse(orgInfo.focus);
-  orgInfo.focus = JSON.stringify(orgInfo.focus);
+  
 
   if(orgInfo.recruiting){
     orgInfo.recruiting = 1;
@@ -317,7 +315,7 @@ getOrgs.cacheOrg = function(orgInfo){
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[0];
-    result.headline = JSON.stringify(result.headline);
+    result.headline = JSON.parse(result.headline);
     console.log( { old:result, new:orgInfo });
     if(result.archetype != orgInfo.archetype){
       console.log({ old:result.archetype, new:orgInfo.archetype });
@@ -339,8 +337,8 @@ getOrgs.cacheOrg = function(orgInfo){
       console.log({ old:result.headline, new:orgInfo.headline });
       events.push("Headline Changed");
     }
-    if(result.language != orgInfo.fluency){
-      console.log({ old:result.language, new:orgInfo.fluency });
+    if(result.language != orgInfo.lang){
+      console.log({ old:result.language, new:orgInfo.lang });
       events.push("Language Changed");
     }
     if(result.logo != orgInfo.logo){
