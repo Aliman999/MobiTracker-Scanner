@@ -316,6 +316,7 @@ getOrgs.cacheOrg = function(orgInfo){
     if(err) console.log(err.message);
     result = result[0];
     result.headline = JSON.stringify(result.headline);
+    result.focus = JSON.stringify(result.focus);
     console.log( { old:result, new:orgInfo });
     if(result.archetype != orgInfo.archetype){
       console.log({ old:result.archetype, new:orgInfo.archetype });
