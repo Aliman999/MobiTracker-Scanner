@@ -139,6 +139,7 @@ init.orgCrawl = async function(){
       for(var xi = param; xi < newOrgs.length; xi++){
         var pages = Math.ceil(newOrgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
+          console.log((xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid);
           orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid }, getNames, newOrgs[xi].sid, xii, xi)
           .catch((error) => {
             console.log(error.message);
