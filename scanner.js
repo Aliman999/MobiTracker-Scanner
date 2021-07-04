@@ -140,7 +140,7 @@ init.orgCrawl = async function(){
         var pages = Math.ceil(newOrgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
           console.log((xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid);
-          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid }, getNames, newOrgs[xi].sid, xii, xi)
+          orgLimiter.schedule( { id:(xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid }, getNames, newOrgs[xi].sid, xii, xi)
           .catch((error) => {
             console.log(error.message);
           })
@@ -231,59 +231,57 @@ function users(param){
 var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param){
-  return new Promise(callback => {
-    newOrgs = [];
-    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-      }
-      var temp;
-      result.forEach((item, i) => {
-        temp = JSON.parse(item.org);
-        temp.forEach((item, i) => {
-          newOrgs.push(item);
-        });
+  newOrgs = [];
+  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var temp;
+    result.forEach((item, i) => {
+      temp = JSON.parse(item.org);
+      temp.forEach((item, i) => {
+        newOrgs.push(item);
       });
+    });
 
-      newOrgs = newOrgs.filter(onlyUnique);
-      newOrgs.splice( newOrgs.indexOf("N/A"), 1);
-      newOrgs.sort();
+    newOrgs = newOrgs.filter(onlyUnique);
+    newOrgs.splice( newOrgs.indexOf("N/A"), 1);
+    newOrgs.sort();
 
-      for(var i = param; i < newOrgs.length; i++){
-        orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
-        .catch((error) => {
-        })
-      }
+    for(var i = param; i < newOrgs.length; i++){
+      orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
+      .catch((error) => {
+      })
+    }
 
-      async function scan(org, i){
-        sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
-        con.query(sql, function(err, sqlResult, fields){
-          if(err) console.log(err);
-          console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
-          saveParam(result.i, 4);
-          getOrgs.queryOrg(org).then((result) => {
-            if(sqlResult.length == 0){
-              if(result.status == 1){
-                result = result.data;
-                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-                  if(err) console.log(err.message);
-                  callback( { status:1, data:"", i:i } );
-                })
-              }else{
-                callback({ status:0, data:result.data, i:i });
-              }
+    async function scan(org, i){
+      sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
+      con.query(sql, function(err, sqlResult, fields){
+        if(err) console.log(err);
+        console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
+        saveParam(result.i, 4);
+        getOrgs.queryOrg(org).then((result) => {
+          if(sqlResult.length == 0){
+            if(result.status == 1){
+              result = result.data;
+              sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+              con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                if(err) console.log(err.message);
+                callback( { status:1, data:"", i:i } );
+              })
             }else{
-              getOrgs.cacheOrg(result);
-              callback({ status:1, data:sqlResult, i:i });
+              callback({ status:0, data:result.data, i:i });
             }
-          })
+          }else{
+            getOrgs.cacheOrg(result);
+            callback({ status:1, data:sqlResult, i:i });
+          }
         })
-      }
-    })
-  });
+      })
+    }
+  })
 }
 
 getOrgs.cacheOrg = function(orgInfo){
