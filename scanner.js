@@ -296,13 +296,6 @@ getOrgs.getNewOrgs = async function(param){
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
   orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
-  orgInfo.focus = Object.keys(orgInfo.focus).sort().reduce(
-    (obj, key) => {
-      obj[key] = orgInfo.focus[key];
-      return obj;
-    },
-    {}
-  );
   //orgInfo.focus = JSON.stringify(orgInfo.focus);
   //orgInfo.focus = JSON.parse(orgInfo.focus);
 
@@ -325,6 +318,14 @@ getOrgs.cacheOrg = function(orgInfo){
     result = result[0];
     result.headline = JSON.stringify(result.headline);
     result.focus = JSON.parse(result.focus);
+
+    result.focus = Object.keys(result.focus).sort().reduce(
+      (obj, key) => {
+        obj[key] = result.focus[key];
+        return obj;
+      },
+      {}
+    );
     console.log( { old:result, new:orgInfo });
     if(result.archetype != orgInfo.archetype){
       console.log({ old:result.archetype, new:orgInfo.archetype });
