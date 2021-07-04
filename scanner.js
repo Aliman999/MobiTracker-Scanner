@@ -258,19 +258,11 @@ getOrgs.getNewOrgs = async function(param){
       }
 
       async function scan(org, i){
-        await getInfo(org, i).then((result) => {
-          console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
-          saveParam(result.i, 4);
-          if(result.status == 0){
-            throw new Error(result.data);
-          }
-        })
-      }
-
-      function getInfo(org, i){
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
           if(err) console.log(err);
+          console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
+          saveParam(result.i, 4);
           getOrgs.queryOrg(org).then((result) => {
             if(sqlResult.length == 0){
               if(result.status == 1){
@@ -290,7 +282,6 @@ getOrgs.getNewOrgs = async function(param){
           })
         })
       }
-
     })
   });
 }
