@@ -250,7 +250,7 @@ getOrgs.getNewOrgs = async function(param){
     orgs.sort();
 
     function getInfo(org, i){
-      console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
+      console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
       return new Promise(callback => {
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
