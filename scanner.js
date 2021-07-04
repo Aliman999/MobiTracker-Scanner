@@ -161,7 +161,6 @@ init.orgCrawl = async function(){
 
 init.orgScan = async function(){
   persist(3).then((param) => {
-    console.log(param);
     console.log("[SCANNER] - SCAN EXISTING ORGS");
     orgScan.schedule({ id:"[SCANNER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
       for(var xi = param; xi < orgs.length; xi++){
