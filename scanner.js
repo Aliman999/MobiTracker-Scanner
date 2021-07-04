@@ -299,7 +299,6 @@ getOrgs.cacheOrg = function(orgInfo){
     orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
   }
 
-  console.log(orgInfo);
   if(orgInfo.recruiting){
     orgInfo.recruiting = 1;
   }else{
