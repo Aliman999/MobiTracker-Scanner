@@ -296,12 +296,12 @@ getOrgs.getNewOrgs = async function(param){
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
   orgInfo.headline = orgInfo.headline.plaintext;
-  console.log(orgInfo.focus);
+  orgInfo.focus = JSON.stringify(orgInfo.focus);
   var events = [];
   sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
-    //console.log( { old:result, new:orgInfo });
+    console.log( { old:result, new:orgInfo });
     /*
     if(result.archetype != orgInfo.archetype){
       events.push("Archetype Changed");
