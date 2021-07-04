@@ -317,8 +317,12 @@ getOrgs.cacheOrg = function(orgInfo){
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[0];
-    result.headline = JSON.stringify(result.headline);
-    result.focus = JSON.parse(result.focus);
+    if(result.headline){
+      result.headline = JSON.stringify(result.headline);
+    }
+    if(result.focus){
+      result.focus = JSON.parse(result.focus);
+    }
     if(result.archetype != orgInfo.archetype){
       console.log({ old:result.archetype, new:orgInfo.archetype });
       events.push("Archetype Changed");
