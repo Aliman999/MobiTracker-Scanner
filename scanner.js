@@ -42,7 +42,7 @@ orgLimiter.on("failed", async (error, info) => {
 orgLimiter.on("done", function(info){
   if(intval(info.args[2]) == (orgs.length-1)){
     console.log("[SYSTEM] - Reached end of org list, restarting.");
-    init.orgScan(true);
+    init.orgCrawl();
   }
 });
 
@@ -92,7 +92,8 @@ con.getConnection(function(err, connection){
   if (err) throw err;
   console.log("Connected to database");
   init.playerScan();
-  init.orgScan();
+  //init.orgScan();
+  init.getNewOrgs();
 });
 
 function getKey(i){
@@ -132,7 +133,8 @@ init.playerScan = async function(){
 
 init.orgCrawl = async function(){
   persist(4).then((param) => {
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs.getNewOrgs, param).then((result)=>{
+    console.log("[CRAWLER] - SCAN FOR NEW ORGS");
+    orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param).then((result)=>{
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
@@ -148,7 +150,8 @@ init.orgCrawl = async function(){
 
 init.orgScan = async function(){
   persist(3).then((param) => {
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs.getOrgs, param).then((result)=>{
+    console.log("[CRAWLER] - SCAN EXISTING ORGS");
+    orgScan.schedule({ id:"[CRAWLER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
@@ -264,6 +267,7 @@ getOrgs.getNewOrgs = async function(param){
               }
             })
           }else{
+            getOrgs.cacheOrg(result);
             callback({ status:1, data:sqlResult, i:i });
           }
         })
