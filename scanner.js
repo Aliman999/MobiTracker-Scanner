@@ -71,9 +71,11 @@ orgLimiter.on("done", function(info){
 orgScan.on("failed", async (error, info) => {
   const id = info.options.id;
   //console.warn(`${id} failed: ${error}`);
-
+  console.log(info);
   if (info.retryCount < 3) {
     return speed;
+  }else{
+    console.save(error.message);
   }
 });
 
@@ -169,7 +171,6 @@ init.orgScan = async function(){
         for(var xii = 0; xii < pages; xii++){
           orgScan.schedule( { id:"[SCANNER] - "+(xii+1)+" | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
           .catch((error) => {
-            console.save(error.message);
           })
         }
       }
