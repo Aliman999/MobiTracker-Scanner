@@ -71,11 +71,11 @@ orgLimiter.on("done", function(info){
 orgScan.on("failed", async (error, info) => {
   const id = info.options.id;
   //console.warn(`${id} failed: ${error}`);
-  console.log(info);
+  
   if (info.retryCount < 3) {
     return speed;
   }else{
-    console.save(error.message);
+    console.save(info.args[0]);
   }
 });
 
