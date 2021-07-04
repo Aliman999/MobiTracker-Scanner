@@ -255,6 +255,7 @@ getOrgs.getNewOrgs = async function(param){
           if(err) console.log(err);
 
           getOrgs.queryOrg(org).then((result) => {
+            getOrgs.cacheOrg(result);
             if(sqlResult.length == 0){
               if(result.status == 1){
                 result = result.data;
@@ -267,7 +268,6 @@ getOrgs.getNewOrgs = async function(param){
                 callback({ status:0, data:result.data, i:i });
               }
             }else{
-              getOrgs.cacheOrg(result);
               callback({ status:1, data:sqlResult, i:i });
             }
           })
@@ -294,14 +294,18 @@ getOrgs.getNewOrgs = async function(param){
 }
 
 getOrgs.cacheOrg = function(orgInfo){
-  console.log(orgInfo);
-
   orgInfo = orgInfo.data;
-  sql = "INSERT INTO `CACHE organizations` (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
-  con.query(sql, [orgInfo.headline.plaintext, orgInfo.name], function(err, sqlorgInfo, fields){
+  sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
+  con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
-    callback( { status:1, data:"", i:i } );
+    console.log(result);
   })
+  /*
+  sql = "INSERT INTO `CACHE organizations` (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
+  con.query(sql, [orgInfo.headline.plaintext, orgInfo.name], function(err, result, fields){
+    if(err) console.log(err.message);
+  })
+  */
 }
 
 getOrgs.queryOrg = function(sid){
