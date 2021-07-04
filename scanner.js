@@ -295,7 +295,7 @@ getOrgs.getNewOrgs = async function(param){
 
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
-  sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo+"';";
+  sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     console.log(result);
