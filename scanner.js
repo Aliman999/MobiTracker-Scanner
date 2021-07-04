@@ -53,7 +53,7 @@ const orgLimiter = new Bottleneck({
 
 orgLimiter.on("failed", async (error, info) => {
   const id = info.options.id;
-  console.warn(`${id} failed: ${error}`);
+  //console.warn(`${id} failed: ${error}`);
 
   if (info.retryCount < 3) {
     return speed;
@@ -270,7 +270,7 @@ getOrgs.getNewOrgs = async function(param = 0){
       sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
       con.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
-        console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
+        //console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
         saveParam(i, 4);
         getOrgs.queryOrg(org).then((result) => {
           if(sqlResult.length == 0){
