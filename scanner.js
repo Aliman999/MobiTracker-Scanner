@@ -300,9 +300,9 @@ getOrgs.cacheOrg = function(orgInfo){
   }
 
   if(orgInfo.recruiting){
-    orgInfo.recruiting = 1;
+    orgInfo.recruiting = new Number(1);
   }else{
-    orgInfo.recruiting = 0;
+    orgInfo.recruiting = new Number(0);
   }
 
   if(orgInfo.roleplay){
