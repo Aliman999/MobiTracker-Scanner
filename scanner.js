@@ -69,6 +69,7 @@ limiter.on("failed", async (error, info) => {
 limiter.on("done", function(info){
   count++;
   console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
+  console.log(count+" | "+list.length);
   if(count == list.length){
     finish();
   }
