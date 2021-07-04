@@ -239,34 +239,34 @@ function users(param){
 var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param){
-  return new Promise(callback => {
-    newOrgs = [];
-    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
+  newOrgs = [];
+  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
 
-      function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-      }
-      var temp;
-      result.forEach((item, i) => {
-        temp = JSON.parse(item.org);
-        temp.forEach((item, i) => {
-          newOrgs.push(item);
-        });
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var temp;
+    result.forEach((item, i) => {
+      temp = JSON.parse(item.org);
+      temp.forEach((item, i) => {
+        newOrgs.push(item);
       });
+    });
 
-      newOrgs = newOrgs.filter(onlyUnique);
-      newOrgs.splice( newOrgs.indexOf("N/A"), 1);
-      newOrgs.sort();
+    newOrgs = newOrgs.filter(onlyUnique);
+    newOrgs.splice( newOrgs.indexOf("N/A"), 1);
+    newOrgs.sort();
 
-      for(var i = param; i < newOrgs.length; i++){
-        orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
-        .catch((error) => {
-        })
-      }
+    for(var i = param; i < newOrgs.length; i++){
+      orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
+      .catch((error) => {
+      })
+    }
 
-      async function scan(org, i){
+    async function scan(org, i){
+      return new Promise(callback => {
         sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
         con.query(sql, function(err, sqlResult, fields){
           if(err) console.log(err);
@@ -290,8 +290,8 @@ getOrgs.getNewOrgs = async function(param){
             }
           })
         })
-      }
-    })
+      })
+    }
   })
 }
 
