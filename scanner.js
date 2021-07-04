@@ -296,6 +296,7 @@ getOrgs.getNewOrgs = async function(param){
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
   orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
+  orgInfo.focus = orgInfo.focus.sort();
   //orgInfo.focus = JSON.stringify(orgInfo.focus);
   //orgInfo.focus = JSON.parse(orgInfo.focus);
 
