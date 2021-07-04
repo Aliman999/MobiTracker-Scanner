@@ -93,7 +93,7 @@ con.getConnection(function(err, connection){
   console.log("Connected to database");
   init.playerScan();
   //init.orgScan();
-  init.getNewOrgs();
+  init.orgCrawl();
 });
 
 function getKey(i){
