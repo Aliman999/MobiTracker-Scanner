@@ -299,10 +299,11 @@ getOrgs.cacheOrg = function(orgInfo){
     orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
   }
 
+  console.log(orgInfo);
   if(orgInfo.recruiting){
-    orgInfo.recruiting = new Number(1);
+    orgInfo.recruiting = 1;
   }else{
-    orgInfo.recruiting = new Number(0);
+    orgInfo.recruiting = 0;
   }
 
   if(orgInfo.roleplay){
