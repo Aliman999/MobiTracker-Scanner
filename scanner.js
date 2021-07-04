@@ -3,6 +3,7 @@ const config  = require('./config');
 const Bottleneck = require('bottleneck');
 const https = require('https');
 const mysql = require('mysql');
+const fs = require('fs');
 const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;

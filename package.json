@@ -16,6 +16,7 @@
     "bottleneck": "^2.19.5",
     "countdown": "^2.6.0",
     "dotenv": "^8.6.0",
+    "fs": "0.0.1-security",
     "https": "^1.0.0",
     "mysql": "^2.18.1",
     "node-schedule": "^2.0.0",
