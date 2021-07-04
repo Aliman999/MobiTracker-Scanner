@@ -380,7 +380,7 @@ getOrgs.cacheOrg = function(orgInfo){
     events = removeDupe(events);
 
     var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
-    con.query(sql, [events.join(", "), orgInfo.headline.plaintext, orgInfo.name], function(err, result, fields){
+    con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name], function(err, result, fields){
       if(err) console.log(err.message);
       console.log(sql);
     })
