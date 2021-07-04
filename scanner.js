@@ -271,8 +271,8 @@ getOrgs.getNewOrgs = async function(param = 0){
       con.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
         //console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
-        saveParam(i, 4);
         getOrgs.queryOrg(org).then((result) => {
+          saveParam(i, 4);
           if(sqlResult.length == 0){
             if(result.status == 1){
               result = result.data;
