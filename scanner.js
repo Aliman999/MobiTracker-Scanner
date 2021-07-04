@@ -257,7 +257,7 @@ getOrgs.getNewOrgs = async function(param){
     newOrgs = newOrgs.filter(onlyUnique);
     newOrgs.splice( newOrgs.indexOf("N/A"), 1);
     newOrgs.sort();
-    console.log(newOrgs);
+
     for(var i = param; i < newOrgs.length; i++){
       console.log(i);
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
@@ -293,6 +293,9 @@ getOrgs.getNewOrgs = async function(param){
       })
     }
   })
+  .catch(error){
+    if (error) throw new Error;
+  }
 }
 
 getOrgs.cacheOrg = function(orgInfo){
