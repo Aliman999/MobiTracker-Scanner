@@ -245,9 +245,9 @@ getOrgs.getNewOrgs = async function(param){
       });
     });
 
-    orgs = orgs.filter(onlyUnique);
-    orgs.splice( orgs.indexOf("N/A"), 1);
-    orgs.sort();
+    newOrgs = newOrgs.filter(onlyUnique);
+    newOrgs.splice( orgs.indexOf("N/A"), 1);
+    newOrgs.sort();
 
     function getInfo(org, i){
       console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
