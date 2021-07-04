@@ -134,7 +134,17 @@ init.playerScan = async function(){
 init.orgCrawl = async function(){
   persist(4).then((param) => {
     console.log("[CRAWLER] - SCAN FOR NEW ORGS");
-    orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param);
+    orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param).then((result)=>{
+      for(var xi = param; xi < orgs.length; xi++){
+        var pages = Math.ceil(orgs[xi].members/32);
+        for(var xii = 0; xii < pages; xii++){
+          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
+          .catch((error) => {
+            console.log(error.message);
+          })
+        }
+      }
+    })
   })
 }
 
@@ -244,7 +254,7 @@ getOrgs.getNewOrgs = async function(param){
           con.query(sql, function(err, sqlResult, fields){
             if(err) console.log(err);
             if(sqlResult.length == 0){
-              orgInfo(org).then((result) => {
+              getOrgs.queryOrg(org).then((result) => {
                 if(result.status == 0){
                   callback({ status:0, data:result.data, i:i });
                 }else{
@@ -286,18 +296,7 @@ getOrgs.cacheOrg = function(orgInfo){
   console.log(orgInfo);
 }
 
-getOrgs.getOrgs = function(){
-  return new Promise(callback => {
-    sql = "SELECT sid, members FROM `organizations`;";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      orgs = result;
-      callback();
-    })
-  });
-}
-
-function orgInfo(sid){
+getOrgs.queryOrg = function(sid){
   return new Promise(callback => {
     var options = {
       hostname: 'api.dustytavern.com',
@@ -340,6 +339,18 @@ function orgInfo(sid){
     req.end();
   });
 }
+
+getOrgs.getOrgs = function(){
+  return new Promise(callback => {
+    sql = "SELECT sid, members FROM `organizations`;";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      orgs = result;
+      callback();
+    })
+  });
+}
+
 
 function orgPlayers(sid, page){
   return new Promise(callback => {
