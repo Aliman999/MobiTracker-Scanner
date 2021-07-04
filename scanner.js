@@ -135,18 +135,7 @@ init.playerScan = async function(){
 init.orgCrawl = async function(){
   persist(4).then((param) => {
     console.log("[CRAWLER] - SCAN FOR NEW ORGS");
-    getOrgs.getNewOrgs(param).then((result) => {
-      for(var xi = param; xi < newOrgs.length; xi++){
-        var pages = Math.ceil(newOrgs[xi].members/32);
-        for(var xii = 0; xii < pages; xii++){
-          console.log((xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid);
-          orgLimiter.schedule( { id:(xii+1)+"/"+pages+" pages | "+newOrgs[xi].sid }, getNames, newOrgs[xi].sid, xii, xi)
-          .catch((error) => {
-            console.log(error.message);
-          })
-        }
-      }
-    })
+    getOrgs.getNewOrgs(param);
   })
 }
 
@@ -177,7 +166,6 @@ init.orgScan = async function(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-
           saveParam(i, 3);
         }
       })
@@ -235,6 +223,7 @@ getOrgs.getNewOrgs = async function(param){
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
+    
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
