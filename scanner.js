@@ -338,8 +338,8 @@ getOrgs.cacheOrg = function(orgInfo){
       console.log({ old:result.headline, new:orgInfo.headline });
       events.push("Headline Changed");
     }
-    if(result.language != orgInfo.language){
-      console.log({ old:result.language, new:orgInfo.language });
+    if(result.language != orgInfo.fluency){
+      console.log({ old:result.language, new:orgInfo.fluency });
       events.push("Language Changed");
     }
     if(result.logo != orgInfo.logo){
