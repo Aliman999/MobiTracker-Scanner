@@ -94,6 +94,7 @@ con.getConnection(function(err, connection){
   init.playerScan();
   //init.orgScan();
   init.orgCrawl();
+  init.orgScan();
 });
 
 function getKey(i){
