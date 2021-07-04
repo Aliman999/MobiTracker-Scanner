@@ -298,7 +298,7 @@ getOrgs.cacheOrg = function(orgInfo){
   orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
   orgInfo.focus = Object.keys(orgInfo.focus).sort().reduce(
     (obj, key) => {
-      obj[key] = unordered[key];
+      obj[key] = orgInfo.focus[key];
       return obj;
     },
     {}
