@@ -85,7 +85,7 @@ var con = mysql.createPool({
 con.getConnection(function(err, connection){
   if (err) throw err;
   console.log("Connected to database");
-  init();
+  console.log(init);
 });
 
 function getKey(i){
@@ -566,7 +566,6 @@ function cachePlayer(user){
 function finish(){
   saveParam(0, 1);
   console.log("[SYSTEM] - Reached end of player list, restarting.");
-  console.log(init);
 }
 
 Object.size = function(obj) {
