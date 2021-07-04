@@ -566,8 +566,7 @@ function cachePlayer(user){
 function finish(){
   saveParam(0, 1);
   console.log("[SYSTEM] - Reached end of player list, restarting.");
-  init.playerScan();
-  init.orgScan();
+  console.log(init);
 }
 
 Object.size = function(obj) {
