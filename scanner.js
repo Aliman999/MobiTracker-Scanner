@@ -254,7 +254,18 @@ getOrgs.getNewOrgs = async function(param){
           con.query(sql, function(err, sqlResult, fields){
             if(err) console.log(err);
             if(sqlResult.length == 0){
-              getOrgs.queryOrg(org)
+              getOrgs.queryOrg(org).then((result) => {
+                if(result.status == 0){
+                  callback({ status:0, data:result.data, i:i });
+                }else{
+                  result = result.data;
+                  sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+                  con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                    if(err) console.log(err.message);
+                    callback( { status:1, data:"", i:i } );
+                  })
+                }
+              })
             }else{
               getOrgs.cacheOrg(org);
               callback({ status:1, data:sqlResult, i:i });
@@ -273,7 +284,7 @@ getOrgs.getNewOrgs = async function(param){
       }
 
       for(var i = param; i < orgs.length; i++){
-        orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
+        orgScan.schedule({ id:orgs[i]+"test" }, scan, orgs[i], i)
         .catch((error) => {
         })
       }
