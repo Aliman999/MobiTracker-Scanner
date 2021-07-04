@@ -230,7 +230,7 @@ var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param){
   return new Promise(callback => {
-    orgs = null;
+    orgs = [];
     sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
     con.query(sql, function(err, result, fields){
       if(err) throw err;
