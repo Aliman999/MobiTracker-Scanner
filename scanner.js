@@ -487,7 +487,7 @@ function orgPlayers(sid, page){
 }
 
 async function update(param = 0){
-  console.log("Starting at #"+param+" of #"+list.length);
+  console.log("[SYSTEM] - Starting at #"+param+" of #"+list.length);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
