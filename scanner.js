@@ -256,7 +256,8 @@ getOrgs.getNewOrgs = async function(param){
 
     newOrgs = newOrgs.filter(onlyUnique);
     newOrgs.splice( newOrgs.indexOf("N/A"), 1);
-
+    newOrgs.sort();
+    console.log(param);
     for(var i = param; i < newOrgs.length; i++){
       console.log(i);
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
