@@ -112,6 +112,7 @@ function saveParam(val, id){
   })
 }
 
+var init;
 init.playerScan = async function(){
   key = await getKey();
   persist(1).then((param) => {
