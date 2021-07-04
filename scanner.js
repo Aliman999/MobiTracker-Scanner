@@ -319,9 +319,9 @@ function orgInfo(sid){
 function orgPlayers(sid, page){
   return new Promise(callback => {
     var options = {
-      hostname: 'api.starcitizen-api.com',
+      hostname: 'api.dustytavern.com',
       port: 443,
-      path: '/'+key+'/v1/live/organization_members/'+escape(sid)+"?page="+page,
+      path: '/orgMembers/'+escape(sid)+"?page="+page,
       method: 'GET'
     }
     const req = https.request(options, res =>{
