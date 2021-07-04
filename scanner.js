@@ -223,7 +223,7 @@ getOrgs.getNewOrgs = async function(param){
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
   con.query(sql, function(err, result, fields){
     if(err) throw err;
-    
+
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
     }
@@ -240,7 +240,7 @@ getOrgs.getNewOrgs = async function(param){
     newOrgs.sort();
 
     for(var i = param; i < newOrgs.length; i++){
-      orgScan.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
+      orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
       .catch((error) => {
       })
     }
