@@ -135,6 +135,7 @@ init.orgCrawl = async function(){
   persist(4).then((param) => {
     console.log("[CRAWLER] - SCAN FOR NEW ORGS");
     orgScan.schedule({ id:"[CRAWLER] - SCAN FOR NEW ORGS" }, getOrgs.getNewOrgs, param).then((result)=>{
+      console.log("test");
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
