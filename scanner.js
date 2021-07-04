@@ -25,6 +25,27 @@ const orgScan = new Bottleneck({
   minTime: (speed)
 });
 
+const orgPlayers = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: (speed)
+});
+
+orgPlayers.on("failed", async (error, info) => {
+  const id = info.options.id;
+  console.warn(`${id} failed: ${error}`);
+
+  if (info.retryCount < 3) {
+    return speed;
+  }
+});
+
+orgPlayers.on("done", function(info){
+  if(intval(info.args[2]) == (orgs.length-1)){
+    console.log("[SYSTEM] - Reached end of org list, restarting.");
+    init.orgCrawl();
+  }
+});
+
 const orgLimiter = new Bottleneck({
   maxConcurrent: 1,
   minTime: (speed)
@@ -169,12 +190,12 @@ init.orgScan = async function(){
         }
       })
     }
-    await orgPlayers(sid, page).then((result)=>{
+    await getOrgs.orgPlayers(sid, page).then((result)=>{
       if(result.status == 0){
         throw new Error(result.data);
       }else{
         result.data.forEach((item, x) => {
-          orgLimiter.schedule( {id:"[SCANNER] - "+item}, query, item, key, i)
+          orgPlayers.schedule( {id:"[SCANNER] - "+item}, query, item, key, i)
           .catch((error) => {
           });
         });
@@ -429,8 +450,7 @@ getOrgs.getOrgs = function(){
   });
 }
 
-
-function orgPlayers(sid, page){
+getOrgs.orgPlayers = function (sid, page){
   return new Promise(callback => {
     var options = {
       hostname: 'api.dustytavern.com',
