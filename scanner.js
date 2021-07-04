@@ -259,7 +259,6 @@ getOrgs.getNewOrgs = async function(param = 0){
     newOrgs.sort();
 
     for(var i = param; i < newOrgs.length; i++){
-      console.log(i);
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
       .catch((error) => {
       })
@@ -272,7 +271,7 @@ getOrgs.getNewOrgs = async function(param = 0){
       con.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
         console.log("[CRAWLER] - #"+result.i+" of #"+newOrgs.length+" | "+newOrgs[result.i]);
-        saveParam(result.i, 4);
+        saveParam(i, 4);
         getOrgs.queryOrg(org).then((result) => {
           if(sqlResult.length == 0){
             if(result.status == 1){
