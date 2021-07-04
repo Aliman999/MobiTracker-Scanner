@@ -95,7 +95,7 @@ limiter.on("done", function(info){
 
   console.log("[PLAYER]  - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(info.args[2] == (list.length-1)){
-    console.log("[SYSTEM] - Reached end of player list, restarting.");
+    console.log("[SYSTEM]  - Reached end of player list, restarting.");
     saveParam(0, 1);
     init.playerScan();
   }
@@ -505,7 +505,7 @@ getOrgs.orgPlayers = function (sid, page){
 }
 
 async function update(param = 0){
-  console.log("[SYSTEM] - Starting at #"+param+" of #"+list.length);
+  console.log("[SYSTEM]  - Starting at #"+param+" of #"+list.length);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
       saveParam(i, 1);
