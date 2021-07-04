@@ -278,7 +278,7 @@ getOrgs.getNewOrgs = async function(param){
     async function scan(org, i){
       await getInfo(org, i).then((result) => {
         console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
-        saveParam(result.i, 3);
+        saveParam(result.i, 4);
         if(result.status == 0){
           throw new Error(result.data);
         }
