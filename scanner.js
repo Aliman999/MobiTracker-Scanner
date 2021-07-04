@@ -40,7 +40,10 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
-  console.log(info);
+  if(intval(info.args[2]) == (orgs.length-1)){
+    console.log("[SYSTEM] - Reached end of org list, restarting.");
+    init.orgScan(true);
+  }
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -127,9 +130,35 @@ init.playerScan = async function(){
   })
 }
 
+init.orgCrawl = async function(){
+  persist(4).then((param) => {
+    orgScan.schedule({ id:"Get Orgs" }, getOrgs.getNewOrgs, param).then((result)=>{
+      for(var xi = param; xi < orgs.length; xi++){
+        var pages = Math.ceil(orgs[xi].members/32);
+        for(var xii = 0; xii < pages; xii++){
+          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
+          .catch((error) => {
+            console.log(error.message);
+          })
+        }
+      }
+    })
+  })
+}
+
 init.orgScan = async function(){
   persist(3).then((param) => {
-    orgCrawler(param);
+    orgScan.schedule({ id:"Get Orgs" }, getOrgs.getOrgs, param).then((result)=>{
+      for(var xi = param; xi < orgs.length; xi++){
+        var pages = Math.ceil(orgs[xi].members/32);
+        for(var xii = 0; xii < pages; xii++){
+          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
+          .catch((error) => {
+            console.log(error.message);
+          })
+        }
+      }
+    })
   })
 
   var active;
@@ -157,19 +186,6 @@ init.orgScan = async function(){
           .catch((error) => {
           });
         });
-      }
-    })
-  }
-  function orgCrawler(param){
-    orgScan.schedule({ id:"Get Orgs" }, getOrgs, false, param).then(()=>{
-      for(var xi = param; xi < orgs.length; xi++){
-        var pages = Math.ceil(orgs[xi].members/32);
-        for(var xii = 0; xii < pages; xii++){
-          orgScan.schedule( { id:(xii+1)+"/"+pages+" pages | "+orgs[xi].sid }, getNames, orgs[xi].sid, xii, xi)
-          .catch((error) => {
-            console.log(error.message);
-          })
-        }
       }
     })
   }
@@ -207,76 +223,80 @@ function users(param){
   })
 }
 
-function getOrgs(update, param){
-  if(update){
-    sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-    con.query(sql, function(err, result, fields){
-      if(err) throw err;
-      function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-      }
-      var temp;
-      result.forEach((item, i) => {
-        temp = JSON.parse(item.org);
-        temp.forEach((item, i) => {
-          orgs.push(item);
-        });
+var getOrgs = {};
+
+getOrgs.getNewOrgs = async function(param){
+  orgs = null;
+  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+  con.query(sql, function(err, result, fields){
+    if(err) throw err;
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var temp;
+    result.forEach((item, i) => {
+      temp = JSON.parse(item.org);
+      temp.forEach((item, i) => {
+        orgs.push(item);
       });
+    });
 
-      orgs = orgs.filter(onlyUnique);
-      orgs.splice( orgs.indexOf("N/A"), 1);
-      orgs.sort();
+    orgs = orgs.filter(onlyUnique);
+    orgs.splice( orgs.indexOf("N/A"), 1);
+    orgs.sort();
 
-      function getInfo(org, i){
-        return new Promise(callback => {
-          sql = "SELECT sid FROM organizations WHERE sid = '"+org+"';";
-          con.query(sql, function(err, sqlResult, fields){
-            if(err) console.log(err);
-            if(sqlResult.length == 0){
-              orgInfo(org).then((result) => {
-                if(result.status == 0){
-                  callback({ status:0, data:result.data, i:i });
-                }else{
-                  result = result.data;
-                  sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-                  con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
-                    if(err) console.log(err.message);
-                    callback( { status:1, data:"", i:i } );
-                  })
-                }
-              })
-            }else{
-              callback({ status:0, data:"-----Skipped "+org, i:i });
-            }
-          })
-        });
-      }
-      async function scan(org, i){
-        await getInfo(org, i).then((result) => {
-          console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
-          saveParam(result.i, 3);
-          if(result.status == 0){
-            throw new Error(result.data);
+    function getInfo(org, i){
+      return new Promise(callback => {
+        sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
+        con.query(sql, function(err, sqlResult, fields){
+          if(err) console.log(err);
+          if(sqlResult.length == 0){
+            orgInfo(org).then((result) => {
+              if(result.status == 0){
+                callback({ status:0, data:result.data, i:i });
+              }else{
+                result = result.data;
+                sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
+                con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+                  if(err) console.log(err.message);
+                  callback( { status:1, data:"", i:i } );
+                })
+              }
+            })
+          }else{
+            callback({ status:1, data:sqlResult, i:i });
           }
         })
-      }
+      });
+    }
 
-      for(var i = param; i < orgs.length; i++){
-        orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
-        .catch((error) => {
-        })
-      }
-    })
-  }else{
-    return new Promise(callback => {
-      sql = "SELECT sid, members FROM `organizations`;";
-      con.query(sql, function(err, result, fields){
-        if(err) throw err;
-        orgs = result;
-        callback();
+    async function scan(org, i){
+      await getInfo(org, i).then((result) => {
+        console.log("[ORG] - #"+result.i+" of #"+orgs.length+" | "+orgs[result.i]);
+        saveParam(result.i, 3);
+        if(result.status == 0){
+          throw new Error(result.data);
+        }
       })
-    });
-  }
+    }
+
+    for(var i = param; i < orgs.length; i++){
+      orgScan.schedule({ id:orgs[i] }, scan, orgs[i], i)
+      .catch((error) => {
+      })
+    }
+  })
+}
+
+getOrgs.getOrgs = function(){
+  return new Promise(callback => {
+    sql = "SELECT sid, members FROM `organizations`;";
+    con.query(sql, function(err, result, fields){
+      if(err) throw err;
+      orgs = result;
+      callback();
+    })
+  });
 }
 
 function orgInfo(sid){
