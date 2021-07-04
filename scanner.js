@@ -316,8 +316,7 @@ getOrgs.cacheOrg = function(orgInfo){
   sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
   con.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
-    console.log(result);
-    //result = result[0];
+    result = result[0];
     if(result.headline){
       result.headline = JSON.stringify(result.headline);
     }
