@@ -68,7 +68,6 @@ limiter.on("failed", async (error, info) => {
 limiter.on("done", function(info){
 
   console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
-  console.log(info.args[2]+" | "+list.length);
   if(info.args[2] == (list.length-1)){
     finish();
   }
