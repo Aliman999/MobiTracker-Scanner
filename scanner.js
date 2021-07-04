@@ -7,7 +7,6 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 
-var count;
 var list = [], queries = {}, sql, orgs = [];
 var keyType = "Main";
 var offset = 1;
@@ -67,10 +66,10 @@ limiter.on("failed", async (error, info) => {
 });
 
 limiter.on("done", function(info){
-  count++;
+
   console.log("[PLAYER] - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
-  console.log(count+" | "+list.length);
-  if(count == list.length){
+  console.log(info.args[2]+" | "+list.length);
+  if(info.args[2] == (list.length-1)){
     finish();
   }
 });
@@ -131,7 +130,6 @@ async function init(){
       }
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
-          count++;
           throw new Error(result.data);
         }else{
 
@@ -366,7 +364,6 @@ function orgPlayers(sid, page){
 }
 
 async function update(param = 0){
-  count = 0;
   console.log("Starting at #"+param+" of #"+list.length);
   async function query(username, key, i){
     await queryApi(username, key).then((result) => {
