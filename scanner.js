@@ -296,8 +296,6 @@ getOrgs.getNewOrgs = async function(param){
 getOrgs.cacheOrg = function(orgInfo){
   orgInfo = orgInfo.data;
   orgInfo.headline = JSON.stringify(orgInfo.headline.plaintext);
-  //orgInfo.focus = JSON.stringify(orgInfo.focus);
-  //orgInfo.focus = JSON.parse(orgInfo.focus);
 
   if(orgInfo.recruiting){
     orgInfo.recruiting = 1;
@@ -318,14 +316,6 @@ getOrgs.cacheOrg = function(orgInfo){
     result = result[0];
     result.headline = JSON.stringify(result.headline);
     result.focus = JSON.parse(result.focus);
-
-    result.focus = Object.keys(result.focus).sort().reduce(
-      (obj, key) => {
-        obj[key] = result.focus[key];
-        return obj;
-      },
-      {}
-    );
     console.log( { old:result, new:orgInfo });
     if(result.archetype != orgInfo.archetype){
       console.log({ old:result.archetype, new:orgInfo.archetype });
@@ -340,8 +330,14 @@ getOrgs.cacheOrg = function(orgInfo){
       events.push("Commitment Changed");
     }
     if(result.focus != orgInfo.focus){
-      console.log({ old:result.focus, new:orgInfo.focus });
-      events.push("Focus Changed");
+      if(result.focus.primary.name != orgInfo.focus.primary.name){
+        console.log({ old:result.focus.primary, new:orgInfo.focus.primary });
+        events.push("Primary Focus Changed");
+      }
+      if(result.focus.secondary.name != orgInfo.focus.secondary.name){
+        console.log({ old:result.focus.secondary, new:orgInfo.focus.secondary });
+        events.push("Secondary Focus Changed");
+      }
     }
     if(result.headline != orgInfo.headline){
       console.log({ old:result.headline, new:orgInfo.headline });
