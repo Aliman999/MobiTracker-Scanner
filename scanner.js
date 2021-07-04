@@ -561,7 +561,7 @@ function cachePlayer(user){
   }
 }
 
-finish(){
+function finish(){
   saveParam(0, 1);
   console.log("[SYSTEM] - Reached end of player list, restarting.");
 }
