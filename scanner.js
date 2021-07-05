@@ -62,9 +62,7 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", function(info){
-
-  console.log(info);
-  if(intval(info.args[2]) == (newOrgs.length-1)){
+  if(intval(info.args[1]) == (newOrgs.length-1)){
     saveParam(0, 4);
     console.log("[SYSTEM] - Reached end of org list, restarting.");
     init.orgCrawl();
