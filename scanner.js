@@ -363,7 +363,7 @@ getOrgs.cacheOrg = function(orgInfo){
     }
     if(result.logo != orgInfo.logo){
       console.log({ old:result.logo, new:orgInfo.logo });
-      events.push("Language Changed");
+      events.push("Logo Changed");
     }
     if(result.members > orgInfo.members){
       console.log({ old:result.members, new:orgInfo.members });
