@@ -62,7 +62,6 @@ orgLimiter.on("failed", async (error, info) => {
 });
 
 orgLimiter.on("done", async function(info){
-  console.log(info.args[1]+" | "+(newOrgs.length-1));
   if(info.args[1] == (newOrgs.length-1)){
     newOrgs = [];
     saveParam(0, 4);
