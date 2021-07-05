@@ -82,7 +82,9 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
-  console.log(info);
+  if(info.args[2] >= (orgs.length-1)){
+    init.orgScan();
+  }
 });
 
 limiter.on("failed", async (error, info) => {
