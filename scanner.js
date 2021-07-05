@@ -63,6 +63,7 @@ orgLimiter.on("failed", async (error, info) => {
 
 orgLimiter.on("done", function(info){
   if(intval(info.args[2]) == (orgs.length-1)){
+    saveParam(0, 4);
     console.log("[SYSTEM] - Reached end of org list, restarting.");
     init.orgCrawl();
   }
@@ -71,7 +72,7 @@ orgLimiter.on("done", function(info){
 orgScan.on("failed", async (error, info) => {
   const id = info.options.id;
   //console.warn(`${id} failed: ${error}`);
-  
+
   if (info.retryCount < 3) {
     return speed;
   }else{
