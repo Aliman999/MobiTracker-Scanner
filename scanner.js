@@ -137,7 +137,6 @@ db.query = function(statement, extra = [], func, limit = false){
     func = extra;
     extra = [];
   }
-  console.log(extra);
   if(limit){
     db.limiter.schedule(query);
     function query(){
