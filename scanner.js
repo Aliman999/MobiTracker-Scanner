@@ -193,6 +193,7 @@ init.orgScan = async function(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
+          console.log("save "+i);
           saveParam(i, 3);
         }
       })
