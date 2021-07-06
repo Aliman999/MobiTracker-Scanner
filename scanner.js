@@ -133,6 +133,10 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement, extra = [], func, limit = false){
+  if(!Array.isArray(extra)){
+    func = extra;
+    extra = [];
+  }
   console.log(extra);
   if(limit){
     db.limiter.schedule(query);
