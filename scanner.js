@@ -132,9 +132,9 @@ db.con = mysql.createPool({
 db.query = function(statement){
   return new Promise(callback =>{
     var query = function(statement){
-      return new Promise(query =>{
+      return new Promise(sqlCallback =>{
         db.con.query(statement, function (err, result, fields){
-          query(result);
+          sqlCallback(err, result, fields);
         })
       });
     }
