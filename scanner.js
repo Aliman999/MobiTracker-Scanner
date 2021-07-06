@@ -131,9 +131,10 @@ db.con = mysql.createPool({
 
 db.query = function(statement, func){
   return new Promise(callback =>{
-    db.limiter.schedule(query, statement);
-    function query(statement){
-      db.con.query(statement, func());
+    db.limiter.schedule(query, statement, func);
+    function query(statement, func){
+      db.con.query(statement, func()){
+      })
     }
   });
 };
@@ -149,6 +150,7 @@ db.con.getConnection((err, connection)=>{
 
 const debug = "SELECT id, apiKey, count FROM apiKeys;";
 db.query(debug, function(err, result, fields){
+  if(err) throw err;
   console.log(result);
 })
 
