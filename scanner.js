@@ -114,7 +114,7 @@ db.limiter.on("done", function(info){
 
 db.limiter.on("failed", (error, info) => {
   const id = info.options.id;
-
+  console.warn(`${id} failed: ${error}`);
   if (info.retryCount < 3) {
     return (offset*1000);
   }
