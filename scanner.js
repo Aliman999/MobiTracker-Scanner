@@ -138,8 +138,7 @@ db.query = function(statement){
       })
     }
   });
-  db.limiter.submit(query, statement){
-  });
+  db.limiter.submit(query, statement);
 };
 
 db.con.getConnection((err, connection)=>{
