@@ -166,8 +166,10 @@ init.orgCrawl = async function(){
 
 init.orgScan = async function(){
   persist(3).then((param) => {
-    console.log("[SCANNER] - SCAN EXISTING ORGS");
     orgScan.schedule({ id:"[SCANNER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
+
+      console.log("[SCANNER] - Scanning "+orgs.length+" existing orgs.");
+
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
