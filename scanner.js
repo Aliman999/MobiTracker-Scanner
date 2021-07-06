@@ -106,7 +106,7 @@ var db = {};
 
 db.limiter = new Bottleneck({
   maxConcurrent: 3,
-  minTime: 333
+  minTime: speed
 });
 
 db.limiter.on("done", function(info){
