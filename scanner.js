@@ -151,12 +151,12 @@ function getKey(i){
   return new Promise(callback =>{
     var apiKey;
     const sql = "SELECT id, apiKey, count FROM apiKeys WHERE note like '%"+keyType+"%' GROUP BY id, apiKey, count ORDER BY count desc LIMIT 1";
-    con.query(sql, function (err, result, fields){
+    sql.query(sql, function (err, result, fields){
       if(err) throw err;
       apiKey = result[0].apiKey;
       var id = result[0].id;
       const sql = "UPDATE apiKeys SET count = count-1 WHERE id = "+id;
-      con.query(sql, function (err, result, fields){
+      sql.query(sql, function (err, result, fields){
         if(err) throw err;
         callback(apiKey, i);
       })
@@ -166,7 +166,7 @@ function getKey(i){
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
-  con.query(sql, function(err, result, fields){
+  sql.query(sql, function(err, result, fields){
     if(err) throw err;
   })
 }
@@ -245,7 +245,7 @@ init.orgScan = async function(){
 function persist(id){
   return new Promise(callback => {
     sql = "SELECT param FROM persist WHERE id = "+id;
-    con.query(sql, function(err, result, fields){
+    sql.query(sql, function(err, result, fields){
       if(err) throw err;
 
       callback(result[0].param);
@@ -256,7 +256,7 @@ function persist(id){
 function updateQueries(){
   return new Promise(callback => {
     sql = "SELECT id, count FROM apiKeys WHERE note like '%"+keyType+"%'";
-    con.query(sql, function(err, result, fields){
+    sql.query(sql, function(err, result, fields){
       if(err) throw err;
       queries.data = result;
       queries.available = result.length;
@@ -267,7 +267,7 @@ function updateQueries(){
 
 function users(param){
   sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-  con.query(sql, function(err, result, fields){
+  sql.query(sql, function(err, result, fields){
     if(err) throw err;
     list = result;
     update(param);
@@ -279,7 +279,7 @@ var getOrgs = {};
 getOrgs.getNewOrgs = async function(param = 0){
   newOrgs = [];
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-  con.query(sql, function(err, result, fields){
+  sql.query(sql, function(err, result, fields){
     if(err) throw err;
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -309,7 +309,7 @@ getOrgs.getNewOrgs = async function(param = 0){
   async function scan(org, i){
     return new Promise(callback => {
       sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
-      con.query(sql, function(err, sqlResult, fields){
+      sql.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
         console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
         getOrgs.queryOrg(org).then((result) => {
@@ -318,7 +318,7 @@ getOrgs.getNewOrgs = async function(param = 0){
             if(result.status == 1){
               result = result.data;
               sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-              con.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+              sql.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                 if(err) console.log(err.message);
                 callback( { status:1, data:"", i:i } );
               })
@@ -357,7 +357,7 @@ getOrgs.cacheOrg = function(orgInfo){
 
   var events = [];
   sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
-  con.query(sql, function(err, result, fields){
+  sql.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[0];
     if(result.headline){
@@ -415,7 +415,7 @@ getOrgs.cacheOrg = function(orgInfo){
     events = removeDupe(events);
     if(events.length > 0){
       var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');"+"UPDATE organizations SET archetype = '"+orgInfo.archetype+"', banner = '"+orgInfo.banner+"', commitment = '"+orgInfo.commitment+"', focus = '"+JSON.stringify(orgInfo.focus)+"', headline = ?, href = '"+orgInfo.href+"', language = '"+orgInfo.lang+"', logo = '"+orgInfo.logo+"', members = "+orgInfo.members+", name = ?, recruiting = "+orgInfo.recruiting+", roleplay = "+orgInfo.roleplay+", url = '"+orgInfo.url+"';";
-      con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
+      sql.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
         if(err) console.log(err.message+"0987");
       });
     }
@@ -469,7 +469,7 @@ getOrgs.queryOrg = function(sid){
 getOrgs.getOrgs = function(){
   return new Promise(callback => {
     sql = "SELECT sid, members FROM `organizations`;";
-    con.query(sql, function(err, result, fields){
+    sql.query(sql, function(err, result, fields){
       if(err) throw err;
       orgs = result;
       callback();
@@ -594,13 +594,13 @@ var saved = 0;
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
-    con.query(sql, function (err, result, fields) {
+    sql.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(result.length > 0){
         const last = result.length-1;
         if(result[last].event != "Changed Name"){
           const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ( 'Changed Name', "+result[last].cID+", '"+result[last].username+"', ?, '"+result[last].badge+"', '"+result[last].organization+"', '"+result[last].avatar+"' );";
-          con.query(sql, [result[last].bio], function (err, result, fields) {
+          sql.query(sql, [result[last].bio], function (err, result, fields) {
             if(err) throw err;
           });
         }
@@ -646,7 +646,7 @@ function cachePlayer(user){
       check.cID = 0;
       sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
     }
-    con.query(sql, function (err, result, fields) {
+    sql.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(Object.size(result) > 0){
         var data = result[result.length-1];
@@ -702,7 +702,7 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-        con.query(sql, [check.bio], function (err, result, fields) {
+        sql.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
@@ -713,7 +713,7 @@ function cachePlayer(user){
         var eventString = eventUpdate.join(", ");
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        con.query(sql, [check.bio], function (err, result, fields) {
+        sql.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
