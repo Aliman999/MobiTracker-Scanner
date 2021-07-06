@@ -130,19 +130,15 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement){
-  return new Promise(callback =>{
+  return new Promise((sqlErr, sqlResult) =>{
     var query = function(statement){
-      return new Promise((sqlErr, sqlResult, sqlFields) =>{
-        db.con.query(statement, function (err, result, fields){
-          if(err) throw err;
-          sqlResult(result);
-        })
-      });
+      db.con.query(statement, function (err, result, fields){
+        if(err) throw err;
+        sqlResult(result);
+      })
     }
-    db.limiter.schedule(query, statement).then((err, result, fields) => {
+    db.limiter.schedule(query, statement).then((err, result) => {
       if(err) throw err;
-      console.log(result);
-      callback(result);
     })
   });
 };
@@ -157,7 +153,9 @@ db.con.getConnection((err, connection)=>{
 
 
 const debug = "SELECT id, apiKey, count FROM apiKeys;";
-db.query(debug);
+db.query(debug, (err, result)=>{
+  console.log(err);
+});
 
 function getKey(i){
   return new Promise(callback =>{
