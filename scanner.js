@@ -130,14 +130,12 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement){
-  return new Promise((sqlErr, sqlResult) =>{
-    function query(statement){
-      db.con.query(statement, function(err, result, fields){
-        if(err) throw err;
-        console.log(result);
-      })
-    }
-  });
+  return function query(statement){
+    db.con.query(statement, function(err, result, fields){
+      if(err) throw err;
+      console.log(result);
+    })
+  }
   db.limiter.submit(query, statement);
 };
 
