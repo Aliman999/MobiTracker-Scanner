@@ -132,14 +132,14 @@ db.con = mysql.createPool({
   multipleStatements: true
 });
 
-db.query = function(statement, func, limit = false){
+db.query = function(statement, extra = [], func, limit = false){
   if(limit){
-    db.limiter.schedule(query, statement);
-    function query(statement){
-      db.con.query(statement, func);
+    db.limiter.schedule(query);
+    function query(){
+      db.con.query(statement, extra, func);
     }
   }else{
-    db.con.query(statement, func);
+    db.con.query(statement, extra, func);
   }
 };
 
