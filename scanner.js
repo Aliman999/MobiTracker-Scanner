@@ -716,6 +716,7 @@ function cachePlayer(user){
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
         db.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
+          console.log(sql);
         });
       }
     });
