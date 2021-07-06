@@ -79,7 +79,6 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
-  console.log(info);
   if(info.args[2] >= (orgs.length-1)){
     orgs = [];
     init.orgScan();
@@ -166,7 +165,9 @@ init.orgCrawl = async function(){
 }
 
 init.orgScan = async function(){
+  var save = 0;
   persist(3).then((param) => {
+    save = param;
     orgScan.schedule({ id:"[SCANNER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
 
       console.log("[SCANNER] - Scanning "+orgs.length+" cached orgs.");
@@ -193,8 +194,9 @@ init.orgScan = async function(){
         if(result.status == 0){
           throw new Error(result.data);
         }else{
-          console.log("save "+i);
-          saveParam(i, 3);
+          if(i > save){
+            saveParam(i, 3);
+          }
         }
       })
     }
