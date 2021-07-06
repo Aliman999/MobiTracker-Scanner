@@ -151,8 +151,8 @@ db.con.getConnection((err, connection)=>{
 
 
 const debug = "SELECT id, apiKey, count FROM apiKeys;";
-db.query(debug, (err, result)=>{
-  console.log(err);
+db.query(debug).then((result)=>{
+  console.log(result);
 });
 
 function getKey(i){
