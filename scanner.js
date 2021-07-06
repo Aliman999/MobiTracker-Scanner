@@ -92,7 +92,6 @@ limiter.on("failed", async (error, info) => {
 });
 
 limiter.on("done", function(info){
-
   console.log("[PLAYER]  - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(info.args[2] == (list.length-1)){
     console.log("[SYSTEM]  - Reached end of player list, restarting.");
@@ -105,6 +104,23 @@ limiter.on("done", function(info){
 
 var sql = {};
 
+sql.limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: (speed)
+});
+
+sql.limiter.on("done", function(info){
+  console.log(info);
+})
+
+sql.limiter.on("failed", (error, info) => {
+  const id = info.options.id;
+
+  if (info.retryCount < 3) {
+    return (offset*1000);
+  }
+})
+
 sql.con = mysql.createPool({
   host: config.MysqlHost,
   user: config.MysqlUsername,
@@ -113,15 +129,19 @@ sql.con = mysql.createPool({
   multipleStatements: true
 });
 
-sql.getConnection = sql.con.getConnection;
-
-sql.query = sql.con.query;
-
-
+sql.query = function(statement){
+  return new Promise(callback =>{
+    sql.limiter.schedule(sql.con.query, statement).then((err, result, fields) => {
+      if(err) throw err;
+      console.log(result);
+      callback(result);
+    })
+  });
+};
 
 sql.con.getConnection((err, connection)=>{
   if (err) throw err;
-  console.log("Connected to database");
+  console.log("[SYSTEM] - Connected to database");
   init.playerScan();
   init.orgCrawl();
   init.orgScan();
