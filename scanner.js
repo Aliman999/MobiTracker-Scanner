@@ -145,7 +145,7 @@ db.con.getConnection((err, connection)=>{
 })
 
 
-const debug = "SELECT id, apiKey, count FROM apiKeys;";
+const sql = "SELECT id, apiKey, count FROM apiKeys;";
 db.query(sql, function(err, result, fields){
   if(err) throw err;
   console.log(result);
