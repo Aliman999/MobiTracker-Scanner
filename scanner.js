@@ -217,8 +217,7 @@ init.orgScan = async function(){
   var save = 0;
   persist(3).then((param) => {
     save = param;
-    orgScan.schedule({ id:"[SCANNER] - SCAN EXISTING ORGS" }, getOrgs.getOrgs, param).then((result)=>{
-
+    getOrgs.getOrgs(param).then((result)=>{
       console.log("[SCANNER] - Scanning "+orgs.length+" cached orgs.");
 
       for(var xi = param; xi < orgs.length; xi++){
