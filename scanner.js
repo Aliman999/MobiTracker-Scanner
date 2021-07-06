@@ -102,18 +102,18 @@ limiter.on("done", function(info){
 
 //limiter.on("retry", (error, info) => console.log(`Retrying ${info.options.id}`));
 
-var mysql = {};
+var db = {};
 
-mysql.limiter = new Bottleneck({
+db.limiter = new Bottleneck({
   maxConcurrent: 1,
   minTime: (speed)
 });
 
-mysql.limiter.on("done", function(info){
+db.limiter.on("done", function(info){
   console.log(info);
 })
 
-mysql.limiter.on("failed", (error, info) => {
+db.limiter.on("failed", (error, info) => {
   const id = info.options.id;
 
   if (info.retryCount < 3) {
@@ -121,7 +121,7 @@ mysql.limiter.on("failed", (error, info) => {
   }
 })
 
-mysql.con = mysql.createPool({
+db.con = mysql.createPool({
   host: config.MysqlHost,
   user: config.MysqlUsername,
   password: config.MysqlPassword,
@@ -129,9 +129,9 @@ mysql.con = mysql.createPool({
   multipleStatements: true
 });
 
-mysql.query = function(statement){
+db.query = function(statement){
   return new Promise(callback =>{
-    mysql.limiter.schedule(mysql.con.query, statement).then((err, result, fields) => {
+    db.limiter.schedule(db.con.query, statement).then((err, result, fields) => {
       if(err) throw err;
       console.log(result);
       callback(result);
@@ -139,7 +139,7 @@ mysql.query = function(statement){
   });
 };
 
-mysql.con.getConnection((err, connection)=>{
+db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM] - Connected to database");
   init.playerScan();
@@ -151,12 +151,12 @@ function getKey(i){
   return new Promise(callback =>{
     var apiKey;
     const sql = "SELECT id, apiKey, count FROM apiKeys WHERE note like '%"+keyType+"%' GROUP BY id, apiKey, count ORDER BY count desc LIMIT 1";
-    mysql.query(sql, function (err, result, fields){
+    db.query(sql, function (err, result, fields){
       if(err) throw err;
       apiKey = result[0].apiKey;
       var id = result[0].id;
       const sql = "UPDATE apiKeys SET count = count-1 WHERE id = "+id;
-      mysql.query(sql, function (err, result, fields){
+      db.query(sql, function (err, result, fields){
         if(err) throw err;
         callback(apiKey, i);
       })
@@ -166,7 +166,7 @@ function getKey(i){
 
 function saveParam(val, id){
   sql = "UPDATE persist SET param = '"+val+"' WHERE id = "+id+";";
-  mysql.query(sql, function(err, result, fields){
+  db.query(sql, function(err, result, fields){
     if(err) throw err;
   })
 }
@@ -245,7 +245,7 @@ init.orgScan = async function(){
 function persist(id){
   return new Promise(callback => {
     sql = "SELECT param FROM persist WHERE id = "+id;
-    mysql.query(sql, function(err, result, fields){
+    db.query(sql, function(err, result, fields){
       if(err) throw err;
 
       callback(result[0].param);
@@ -256,7 +256,7 @@ function persist(id){
 function updateQueries(){
   return new Promise(callback => {
     sql = "SELECT id, count FROM apiKeys WHERE note like '%"+keyType+"%'";
-    mysql.query(sql, function(err, result, fields){
+    db.query(sql, function(err, result, fields){
       if(err) throw err;
       queries.data = result;
       queries.available = result.length;
@@ -267,7 +267,7 @@ function updateQueries(){
 
 function users(param){
   sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
-  mysql.query(sql, function(err, result, fields){
+  db.query(sql, function(err, result, fields){
     if(err) throw err;
     list = result;
     update(param);
@@ -279,7 +279,7 @@ var getOrgs = {};
 getOrgs.getNewOrgs = async function(param = 0){
   newOrgs = [];
   sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-  mysql.query(sql, function(err, result, fields){
+  db.query(sql, function(err, result, fields){
     if(err) throw err;
     function onlyUnique(value, index, self) {
       return self.indexOf(value) === index;
@@ -309,7 +309,7 @@ getOrgs.getNewOrgs = async function(param = 0){
   async function scan(org, i){
     return new Promise(callback => {
       sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
-      mysql.query(sql, function(err, sqlResult, fields){
+      db.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
         console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
         getOrgs.queryOrg(org).then((result) => {
@@ -318,7 +318,7 @@ getOrgs.getNewOrgs = async function(param = 0){
             if(result.status == 1){
               result = result.data;
               sql = "INSERT INTO organizations (archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ('"+result.archetype+"', '"+result.banner+"', '"+result.commitment+"', '"+JSON.stringify(result.focus)+"', ?, '"+result.href+"', '"+result.lang+"', '"+result.logo+"', "+result.members+", ?, "+result.recruiting+", "+result.roleplay+", '"+result.sid+"', '"+result.url+"');";
-              mysql.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
+              db.query(sql, [result.headline.plaintext, result.name], function(err, sqlResult, fields){
                 if(err) console.log(err.message);
                 callback( { status:1, data:"", i:i } );
               })
@@ -357,7 +357,7 @@ getOrgs.cacheOrg = function(orgInfo){
 
   var events = [];
   sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
-  mysql.query(sql, function(err, result, fields){
+  db.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[0];
     if(result.headline){
@@ -415,7 +415,7 @@ getOrgs.cacheOrg = function(orgInfo){
     events = removeDupe(events);
     if(events.length > 0){
       var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');"+"UPDATE organizations SET archetype = '"+orgInfo.archetype+"', banner = '"+orgInfo.banner+"', commitment = '"+orgInfo.commitment+"', focus = '"+JSON.stringify(orgInfo.focus)+"', headline = ?, href = '"+orgInfo.href+"', language = '"+orgInfo.lang+"', logo = '"+orgInfo.logo+"', members = "+orgInfo.members+", name = ?, recruiting = "+orgInfo.recruiting+", roleplay = "+orgInfo.roleplay+", url = '"+orgInfo.url+"';";
-      mysql.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
+      db.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
         if(err) console.log(err.message+"0987");
       });
     }
@@ -469,7 +469,7 @@ getOrgs.queryOrg = function(sid){
 getOrgs.getOrgs = function(){
   return new Promise(callback => {
     sql = "SELECT sid, members FROM `organizations`;";
-    mysql.query(sql, function(err, result, fields){
+    db.query(sql, function(err, result, fields){
       if(err) throw err;
       orgs = result;
       callback();
@@ -594,13 +594,13 @@ var saved = 0;
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
-    mysql.query(sql, function (err, result, fields) {
+    db.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(result.length > 0){
         const last = result.length-1;
         if(result[last].event != "Changed Name"){
           const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ( 'Changed Name', "+result[last].cID+", '"+result[last].username+"', ?, '"+result[last].badge+"', '"+result[last].organization+"', '"+result[last].avatar+"' );";
-          mysql.query(sql, [result[last].bio], function (err, result, fields) {
+          db.query(sql, [result[last].bio], function (err, result, fields) {
             if(err) throw err;
           });
         }
@@ -646,7 +646,7 @@ function cachePlayer(user){
       check.cID = 0;
       sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
     }
-    mysql.query(sql, function (err, result, fields) {
+    db.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(Object.size(result) > 0){
         var data = result[result.length-1];
@@ -702,7 +702,7 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-        mysql.query(sql, [check.bio], function (err, result, fields) {
+        db.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
@@ -713,7 +713,7 @@ function cachePlayer(user){
         var eventString = eventUpdate.join(", ");
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        mysql.query(sql, [check.bio], function (err, result, fields) {
+        db.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
