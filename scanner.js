@@ -339,59 +339,45 @@ getOrgs.cacheOrg = function(orgInfo){
       result.focus = JSON.parse(result.focus);
     }
     if(result.archetype != orgInfo.archetype){
-      console.log({ old:result.archetype, new:orgInfo.archetype });
       events.push("Archetype Changed");
     }
     if(result.banner != orgInfo.banner){
-      console.log({ old:result.banner, new:orgInfo.banner });
       events.push("Banner Changed");
     }
     if(result.commitment != orgInfo.commitment){
-      console.log({ old:result.commitment, new:orgInfo.commitment });
       events.push("Commitment Changed");
     }
     if(result.focus != orgInfo.focus){
       if(result.focus.primary.name != orgInfo.focus.primary.name){
-        console.log({ old:result.focus.primary, new:orgInfo.focus.primary });
         events.push("Primary Focus Changed");
       }
       if(result.focus.secondary.name != orgInfo.focus.secondary.name){
-        console.log({ old:result.focus.secondary, new:orgInfo.focus.secondary });
         events.push("Secondary Focus Changed");
       }
     }
     if(result.headline != orgInfo.headline){
-      console.log({ old:result.headline, new:orgInfo.headline });
       events.push("Headline Changed");
     }
     if(result.language != orgInfo.lang){
-      console.log({ old:result.language, new:orgInfo.lang });
       events.push("Language Changed");
     }
     if(result.logo != orgInfo.logo){
-      console.log({ old:result.logo, new:orgInfo.logo });
       events.push("Logo Changed");
     }
     if(result.members > orgInfo.members){
-      console.log({ old:result.members, new:orgInfo.members });
       events.push("Lost "+(result.members-orgInfo.members)+" members");
     }else if(result.members < orgInfo.members){
-      console.log({ old:result.members, new:orgInfo.members });
       events.push("Gained "+(orgInfo.members-result.members)+" members");
     }
     if(result.name != orgInfo.name){
-      console.log({ old:result.name, new:orgInfo.name });
       events.push("Name Changed");
     }
     if(result.recruiting > orgInfo.recruiting){
-      console.log({ old:result.recruiting, new:orgInfo.recruiting });
       events.push("Stopped Recruiting");
     }else if (result.recruiting < orgInfo.recruiting) {
-      console.log({ old:result.recruiting, new:orgInfo.recruiting });
       events.push("Started Recruiting");
     }
     if(result.roleplay != orgInfo.roleplay){
-      console.log({ old:result.roleplay, new:orgInfo.roleplay });
       events.push("Roleplay Changed");
     }
 
