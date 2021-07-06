@@ -136,7 +136,7 @@ db.query = function(statement){
       console.log(result);
     })
   }
-  db.limiter.submit(query, statement);
+  db.limiter.schedule(query, statement);
 };
 
 db.con.getConnection((err, connection)=>{
