@@ -160,7 +160,6 @@ init.playerScan = async function(){
 
 init.orgCrawl = async function(){
   persist(4).then((param) => {
-    console.log("[CRAWLER] - SCAN FOR NEW ORGS");
     getOrgs.getNewOrgs(param);
   })
 }
@@ -262,6 +261,8 @@ getOrgs.getNewOrgs = async function(param = 0){
     newOrgs = newOrgs.filter(onlyUnique);
     newOrgs.splice( newOrgs.indexOf("N/A"), 1);
     newOrgs.sort();
+
+    console.log("[CRAWLER] - Crawling "+newOrgs.length+" Orgs");
 
     for(var i = param; i < newOrgs.length; i++){
       orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
