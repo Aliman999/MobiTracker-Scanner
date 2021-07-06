@@ -399,7 +399,7 @@ getOrgs.cacheOrg = function(orgInfo){
       con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name], function(err, result, fields){
         if(err) console.log(err.message+"0987");
         var sql = "UPDATE organizations SET archetype = '"+orgInfo.archetype+"', banner = '"+orgInfo.banner+"', commitment = '"+orgInfo.commitment+"', focus = '"+JSON.stringify(orgInfo.focus)+"', headline = ?, href = '"+orgInfo.href+"', language = '"+orgInfo.lang+"', logo = '"+orgInfo.logo+"', members = "+orgInfo.members+", name = ?, recruiting = "+orgInfo.recruiting+", roleplay = "+orgInfo.roleplay+", url = '"+orgInfo.url+"';";
-        con.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name], function(err, result, fields){
+        con.query(sql, orgInfo.headline, orgInfo.name], function(err, result, fields){
           if(err) console.log(err.message+"12345");
         });
       });
