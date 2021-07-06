@@ -130,13 +130,15 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement){
-  db.limiter.schedule(query, statement);
-  function query(statement){
-    db.con.query(statement, function(err, result, fields){
-      if(err) throw err;
-      console.log(result);
-    })
-  }
+  return new Promise(callback =>{
+    db.limiter.schedule(query, statement);
+    function query(statement){
+      db.con.query(statement, function(err, result, fields){
+        if(err) throw err;
+        callback(result);
+      })
+    }
+  });
 };
 
 db.con.getConnection((err, connection)=>{
