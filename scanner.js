@@ -139,16 +139,9 @@ db.query = function(statement, func){
 db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM] - Connected to database");
-  //init.playerScan();
-  //init.orgCrawl();
-  //init.orgScan();
-})
-
-
-const sql = "SELECT id, apiKey, count FROM apiKeys;";
-db.query(sql, function(err, result, fields){
-  if(err) throw err;
-  console.log(result);
+  init.playerScan();
+  init.orgCrawl();
+  init.orgScan();
 })
 
 function getKey(i){
