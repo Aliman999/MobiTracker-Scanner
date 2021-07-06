@@ -135,7 +135,7 @@ db.query = function(statement){
       return new Promise((sqlErr, sqlResult, sqlFields) =>{
         db.con.query(statement, function (err, result, fields){
           if(err) throw err;
-          result(result);
+          sqlResult(result);
         })
       });
     }
