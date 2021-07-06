@@ -131,10 +131,9 @@ db.con = mysql.createPool({
 
 db.query = function(statement, func){
   return new Promise(callback =>{
-    console.log(func);
-    db.limiter.schedule(query, statement, func);
-    function query(statement, func){
-      db.con.query(statement, func())
+    db.limiter.schedule(query, statement);
+    function query(statement){
+      db.con.query(statement, func)
     }
   });
 };
