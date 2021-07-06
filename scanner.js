@@ -156,7 +156,7 @@ db.con.getConnection((err, connection)=>{
 
 
 const debug = "SELECT id, apiKey, count FROM apiKeys;";
-db.query(sql);
+db.query(debug);
 
 function getKey(i){
   return new Promise(callback =>{
