@@ -129,7 +129,7 @@ sql.con = mysql.createPool({
   multipleStatements: true
 });
 
-sql.query = function(statement){
+sql.query = async function(statement){
   return new Promise(callback =>{
     sql.limiter.schedule(sql.con.query, statement).then((err, result, fields) => {
       if(err) throw err;
