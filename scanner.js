@@ -143,7 +143,7 @@ db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM] - Connected to database");
   init.playerScan();
-  init.orgCrawl();
+  //init.orgCrawl();
   init.orgScan();
 })
 
