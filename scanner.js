@@ -128,9 +128,13 @@ db.con = mysql.createPool({
   multipleStatements: true
 });
 
-db.query = function(statement, func){
-  db.limiter.schedule(query, statement);
-  function query(statement){
+db.query = function(statement, func, limit = false){
+  if(limit){
+    db.limiter.schedule(query, statement);
+    function query(statement){
+      db.con.query(statement, func);
+    }
+  }else{
     db.con.query(statement, func);
   }
 };
@@ -179,8 +183,30 @@ init.playerScan = async function(){
 }
 
 init.orgCrawl = async function(){
-  persist(4).then((param) => {
-    getOrgs.getNewOrgs(param);
+  newOrgs = [];
+  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
+  db.query(sql, function(err, result, fields){
+    if(err) throw err;
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var temp;
+    result.forEach((item, i) => {
+      temp = JSON.parse(item.org);
+      temp.forEach((item, i) => {
+        newOrgs.push(item);
+      });
+    });
+
+    newOrgs = newOrgs.filter(onlyUnique);
+    newOrgs.splice( newOrgs.indexOf("N/A"), 1);
+    newOrgs.sort();
+
+    console.log("[CRAWLER] - Crawling "+newOrgs.length+" Orgs");
+
+    persist(4).then((param) => {
+      getOrgs.getNewOrgs(param);
+    })
   })
 }
 
@@ -273,35 +299,12 @@ function users(param){
 var getOrgs = {};
 
 getOrgs.getNewOrgs = async function(param = 0){
-  newOrgs = [];
-  sql = "SELECT DISTINCT organization->'$**.*.sid' AS org FROM `CACHE players`;";
-  db.query(sql, function(err, result, fields){
-    if(err) throw err;
-    function onlyUnique(value, index, self) {
-      return self.indexOf(value) === index;
-    }
-    var temp;
-    result.forEach((item, i) => {
-      temp = JSON.parse(item.org);
-      temp.forEach((item, i) => {
-        newOrgs.push(item);
-      });
-    });
+  for(var i = param; i < newOrgs.length; i++){
+    orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
+    .catch((error) => {
 
-    newOrgs = newOrgs.filter(onlyUnique);
-    newOrgs.splice( newOrgs.indexOf("N/A"), 1);
-    newOrgs.sort();
-
-    console.log("[CRAWLER] - Crawling "+newOrgs.length+" Orgs");
-
-    for(var i = param; i < newOrgs.length; i++){
-      orgLimiter.schedule({ id:newOrgs[i] }, scan, newOrgs[i], i)
-      .catch((error) => {
-
-      })
-    }
-
-  })
+    })
+  }
   async function scan(org, i){
     return new Promise(callback => {
       sql = "SELECT * FROM organizations WHERE sid = '"+org+"';";
@@ -413,7 +416,7 @@ getOrgs.cacheOrg = function(orgInfo){
       var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');"+"UPDATE organizations SET archetype = '"+orgInfo.archetype+"', banner = '"+orgInfo.banner+"', commitment = '"+orgInfo.commitment+"', focus = '"+JSON.stringify(orgInfo.focus)+"', headline = ?, href = '"+orgInfo.href+"', language = '"+orgInfo.lang+"', logo = '"+orgInfo.logo+"', members = "+orgInfo.members+", name = ?, recruiting = "+orgInfo.recruiting+", roleplay = "+orgInfo.roleplay+", url = '"+orgInfo.url+"';";
       db.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
         if(err) console.log(err.message+"0987");
-      });
+      }, true);
     }
   })
 }
