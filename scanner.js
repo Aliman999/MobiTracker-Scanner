@@ -138,7 +138,7 @@ db.query = function(statement){
         })
       });
     }
-    db.limiter.schedule(db.con.query, statement).then((err, result, fields) => {
+    db.limiter.schedule(query, statement).then((err, result, fields) => {
       if(err) throw err;
       console.log(result);
       callback(result);
