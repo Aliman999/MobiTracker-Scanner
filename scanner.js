@@ -130,11 +130,10 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement){
-  return new Promise(async (sqlErr, sqlResult) =>{
-    await db.limiter.schedule(db.con.query, statement).then((err, result)=>{
-      console.log(err);
+  return new Promise((sqlErr, sqlResult) =>{
+    db.limiter.schedule(db.con.query, statement, function(err, result, fields){
+      if(err) throw err;
       console.log(result);
-      sqlResult(result);
     });
   });
 };
