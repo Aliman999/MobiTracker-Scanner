@@ -133,8 +133,7 @@ db.query = function(statement, func){
   return new Promise(callback =>{
     db.limiter.schedule(query, statement, func);
     function query(statement, func){
-      db.con.query(statement, func()){
-      })
+      db.con.query(statement, func())
     }
   });
 };
