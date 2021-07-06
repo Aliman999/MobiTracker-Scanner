@@ -130,26 +130,33 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement){
-  var query = function(statement){
-    return new Promise(callback =>{
-      db.con.query(statement, function (err, result, fields){
-        callback(result);
-      })
-    });
-  }
-  db.limiter.schedule(db.con.query, statement).then((err, result, fields) => {
-    if(err) throw err;
-    console.log(result);
-  })
+  return new Promise(callback =>{
+    var query = function(statement){
+      return new Promise(query =>{
+        db.con.query(statement, function (err, result, fields){
+          query(result);
+        })
+      });
+    }
+    db.limiter.schedule(db.con.query, statement).then((err, result, fields) => {
+      if(err) throw err;
+      console.log(result);
+      callback(result);
+    })
+  });
 };
 
 db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM] - Connected to database");
-  init.playerScan();
-  init.orgCrawl();
-  init.orgScan();
+  //init.playerScan();
+  //init.orgCrawl();
+  //init.orgScan();
 })
+
+
+const sql = "SELECT id, apiKey, count FROM apiKeys;";
+db.query(sql);
 
 function getKey(i){
   return new Promise(callback =>{
