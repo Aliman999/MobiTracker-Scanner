@@ -134,7 +134,7 @@ db.query = function(statement){
     var query = function(statement){
       return new Promise(sqlCallback =>{
         db.con.query(statement, function (err, result, fields){
-          sqlCallback(err, result, fields);
+          sqlCallback(result);
         })
       });
     }
