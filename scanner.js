@@ -137,9 +137,7 @@ db.query = function(statement){
         sqlResult(result);
       })
     }
-    db.limiter.schedule(query, statement).then((err, result) => {
-      if(err) throw err;
-    })
+    db.limiter.schedule(query, statement);
   });
 };
 
