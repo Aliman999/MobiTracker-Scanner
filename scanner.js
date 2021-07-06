@@ -103,7 +103,9 @@ limiter.on("done", function(info){
 
 //limiter.on("retry", (error, info) => console.log(`Retrying ${info.options.id}`));
 
-var con = mysql.createPool({
+var sql = {};
+
+sql.con = mysql.createPool({
   host: config.MysqlHost,
   user: config.MysqlUsername,
   password: config.MysqlPassword,
@@ -111,13 +113,17 @@ var con = mysql.createPool({
   multipleStatements: true
 });
 
-con.getConnection(function(err, connection){
+sql.getConnection = sql.con.getConnection;
+
+sql.query = sql.con.query;
+
+sql.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("Connected to database");
   init.playerScan();
   init.orgCrawl();
   init.orgScan();
-});
+})
 
 function getKey(i){
   return new Promise(callback =>{
