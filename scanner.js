@@ -117,7 +117,9 @@ sql.getConnection = sql.con.getConnection;
 
 sql.query = sql.con.query;
 
-sql.getConnection((err, connection)=>{
+
+
+sql.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("Connected to database");
   init.playerScan();
