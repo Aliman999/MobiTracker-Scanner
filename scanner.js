@@ -42,10 +42,6 @@ orgPlayers.on("failed", async (error, info) => {
 
 orgPlayers.on("done", function(info){
   console.log(info);
-  if(intval(info.args[2]) == (orgs.length-1)){
-    console.log("[SYSTEM] - Reached end of org list, restarting.");
-    init.orgScan();
-  }
 });
 
 const orgLimiter = new Bottleneck({
@@ -84,6 +80,7 @@ orgScan.on("failed", async (error, info) => {
 
 orgScan.on("done", function(info){
   if(info.args[2] >= (orgs.length-1)){
+    orgs = [];
     init.orgScan();
   }
 });
