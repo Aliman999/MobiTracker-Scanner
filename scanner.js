@@ -131,7 +131,7 @@ db.con = mysql.createPool({
 
 db.query = function(statement){
   db.limiter.schedule(query, statement);
-  return function query(statement){
+  function query(statement){
     db.con.query(statement, function(err, result, fields){
       if(err) throw err;
       console.log(result);
