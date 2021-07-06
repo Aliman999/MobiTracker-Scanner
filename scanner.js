@@ -131,7 +131,7 @@ db.con = mysql.createPool({
 
 db.query = function(statement){
   return new Promise((sqlErr, sqlResult) =>{
-    db.limiter.schedule(db.con.query, statement, function(err, result, fields){
+    db.limiter.submit(db.con.query, statement, function(err, result, fields){
       if(err) throw err;
       console.log(result);
     });
