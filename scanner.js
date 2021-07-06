@@ -41,7 +41,7 @@ orgPlayers.on("failed", async (error, info) => {
 });
 
 orgPlayers.on("done", function(info){
-  console.log(info);
+  //console.log(info);
 });
 
 const orgLimiter = new Bottleneck({
