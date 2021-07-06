@@ -61,8 +61,8 @@ orgLimiter.on("done", async function(info){
   if(info.args[1] == (newOrgs.length-1)){
     newOrgs = [];
     saveParam(0, 4);
-    console.log("[SYSTEM] - Reached end of org list, restarting.");
-    init.orgCrawl();
+    console.log("[SYSTEM] - Reached end of org crawl.");
+    init.orgScan();
   }
 });
 
@@ -78,6 +78,10 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
+  console.log(info);
+  if(false){
+    init.orgCrawl();
+  }
 });
 
 limiter.on("failed", async (error, info) => {
@@ -144,7 +148,6 @@ db.con.getConnection((err, connection)=>{
   console.log("[SYSTEM] - Connected to database");
   init.playerScan();
   init.orgCrawl();
-  init.orgScan();
 })
 
 function getKey(i){
