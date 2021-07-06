@@ -133,6 +133,7 @@ db.con = mysql.createPool({
 });
 
 db.query = function(statement, extra = [], func, limit = false){
+  console.log(extra);
   if(limit){
     db.limiter.schedule(query);
     function query(){
