@@ -41,6 +41,10 @@ orgPlayers.on("failed", async (error, info) => {
 });
 
 orgPlayers.on("done", function(info){
+  console.log(info);
+  if(false){
+    init.orgCrawl();
+  }
 });
 
 const orgLimiter = new Bottleneck({
@@ -78,10 +82,6 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
-  console.log(info);
-  if(false){
-    init.orgCrawl();
-  }
 });
 
 limiter.on("failed", async (error, info) => {
