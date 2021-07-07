@@ -40,11 +40,8 @@ orgPlayers.on("failed", async (error, info) => {
   }
 });
 
-orgPlayers.on("done", function(info){
-  console.log(info);
-  if(false){
-    init.orgCrawl();
-  }
+orgPlayers.on("idle", function(info){
+  init.orgCrawl();
 });
 
 const orgLimiter = new Bottleneck({
@@ -261,7 +258,7 @@ init.orgScan = async function(){
         throw new Error(result.data);
       }else{
         result.data.forEach((item, x) => {
-          orgPlayers.schedule( {id:"[SCANNER] - "+item}, query, item, key, i)
+          orgPlayers.schedule( {id:"[SCANNER] - "+item}, query, item, key, i )
           .catch((error) => {
           });
         });
