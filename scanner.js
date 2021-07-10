@@ -362,64 +362,66 @@ getOrgs.cacheOrg = function(orgInfo){
   db.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[result.length-1];
-    if(result.headline){
-      result.headline = JSON.stringify(result.headline);
-    }
-    if(result.focus){
-      result.focus = JSON.parse(result.focus);
-    }
-    if(result.archetype != orgInfo.archetype){
-      events.push("Archetype Changed");
-    }
-    if(result.banner != orgInfo.banner){
-      events.push("Banner Changed");
-    }
-    if(result.commitment != orgInfo.commitment){
-      events.push("Commitment Changed");
-    }
-    if(result.focus != orgInfo.focus){
-      if(result.focus.primary.name != orgInfo.focus.primary.name){
-        events.push("Primary Focus Changed");
+    if(result){
+      if(result.headline){
+        result.headline = JSON.stringify(result.headline);
       }
-      if(result.focus.secondary.name != orgInfo.focus.secondary.name){
-        events.push("Secondary Focus Changed");
+      if(result.focus){
+        result.focus = JSON.parse(result.focus);
       }
-    }
-    if(result.headline != orgInfo.headline){
-      events.push("Headline Changed");
-    }
-    if(result.language != orgInfo.lang){
-      events.push("Language Changed");
-    }
-    if(result.logo != orgInfo.logo){
-      events.push("Logo Changed");
-    }
-    if(result.members > orgInfo.members){
-      events.push("Lost "+(result.members-orgInfo.members)+" members");
-    }else if(result.members < orgInfo.members){
-      events.push("Gained "+(orgInfo.members-result.members)+" members");
-    }
-    if(result.name != orgInfo.name){
-      events.push("Name Changed");
-    }
-    if(result.recruiting > orgInfo.recruiting){
-      events.push("Stopped Recruiting");
-    }else if (result.recruiting < orgInfo.recruiting) {
-      events.push("Started Recruiting");
-    }
-    if(result.roleplay != orgInfo.roleplay){
-      events.push("Roleplay Changed");
-    }
+      if(result.archetype != orgInfo.archetype){
+        events.push("Archetype Changed");
+      }
+      if(result.banner != orgInfo.banner){
+        events.push("Banner Changed");
+      }
+      if(result.commitment != orgInfo.commitment){
+        events.push("Commitment Changed");
+      }
+      if(result.focus != orgInfo.focus){
+        if(result.focus.primary.name != orgInfo.focus.primary.name){
+          events.push("Primary Focus Changed");
+        }
+        if(result.focus.secondary.name != orgInfo.focus.secondary.name){
+          events.push("Secondary Focus Changed");
+        }
+      }
+      if(result.headline != orgInfo.headline){
+        events.push("Headline Changed");
+      }
+      if(result.language != orgInfo.lang){
+        events.push("Language Changed");
+      }
+      if(result.logo != orgInfo.logo){
+        events.push("Logo Changed");
+      }
+      if(result.members > orgInfo.members){
+        events.push("Lost "+(result.members-orgInfo.members)+" members");
+      }else if(result.members < orgInfo.members){
+        events.push("Gained "+(orgInfo.members-result.members)+" members");
+      }
+      if(result.name != orgInfo.name){
+        events.push("Name Changed");
+      }
+      if(result.recruiting > orgInfo.recruiting){
+        events.push("Stopped Recruiting");
+      }else if (result.recruiting < orgInfo.recruiting) {
+        events.push("Started Recruiting");
+      }
+      if(result.roleplay != orgInfo.roleplay){
+        events.push("Roleplay Changed");
+      }
 
-    function removeDupe(data){
-      return data.filter((value, index) => data.indexOf(value) === index)
-    }
-    events = removeDupe(events);
-    if(events.length > 0){
-      var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
-      db.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
-        if(err) console.log(err.message+"0987");
-      }, true);
+      function removeDupe(data){
+        return data.filter((value, index) => data.indexOf(value) === index)
+      }
+      events = removeDupe(events);
+      if(events.length > 0){
+        var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
+        db.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
+          if(err) console.log(err.message+"0987");
+        }, true);
+      }
     }
   })
 }
