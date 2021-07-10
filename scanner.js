@@ -358,10 +358,10 @@ getOrgs.cacheOrg = function(orgInfo){
   }
 
   var events = [];
-  sql = "SELECT * FROM organizations WHERE sid = '"+orgInfo.sid+"';";
+  sql = "SELECT * FROM `CACHE organizations` WHERE sid = '"+orgInfo.sid+"';";
   db.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
-    result = result[0];
+    result = result[result.length-1];
     if(result.headline){
       result.headline = JSON.stringify(result.headline);
     }
