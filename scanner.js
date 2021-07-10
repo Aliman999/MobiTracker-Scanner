@@ -362,7 +362,12 @@ getOrgs.cacheOrg = function(orgInfo){
   db.query(sql, function(err, result, fields){
     if(err) console.log(err.message);
     result = result[result.length-1];
-    if(result){
+    if(!result){
+      var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
+      db.query(sql, ['First Entry', orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
+        if(err) console.log(err.message+"12345");
+      }, true);
+    }else{
       if(result.headline){
         result.headline = JSON.stringify(result.headline);
       }
@@ -419,7 +424,7 @@ getOrgs.cacheOrg = function(orgInfo){
       if(events.length > 0){
         var sql = "INSERT INTO `CACHE organizations` (event, archetype, banner, commitment, focus, headline, href, language, logo, members, name, recruiting, roleplay, sid, url) VALUES ( ?, '"+orgInfo.archetype+"', '"+orgInfo.banner+"', '"+orgInfo.commitment+"', '"+JSON.stringify(orgInfo.focus)+"', ?, '"+orgInfo.href+"', '"+orgInfo.lang+"', '"+orgInfo.logo+"', "+orgInfo.members+", ?, "+orgInfo.recruiting+", "+orgInfo.roleplay+", '"+orgInfo.sid+"', '"+orgInfo.url+"');";
         db.query(sql, [events.join(", "), orgInfo.headline, orgInfo.name, orgInfo.headline, orgInfo.name], function(err, result, fields){
-          if(err) console.log(err.message+"0987");
+          if(err) console.log(err.message+"67890");
         }, true);
       }
     }
