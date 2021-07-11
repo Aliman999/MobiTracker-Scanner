@@ -151,19 +151,14 @@ db.con.getConnection((err, connection)=>{
   init.orgCrawl();
 })
 
-function getKey(i){
+function getKey(){
   return new Promise(callback =>{
     var apiKey;
-    const sql = "SELECT id, apiKey, count FROM apiKeys WHERE note like '%"+keyType+"%' GROUP BY id, apiKey, count ORDER BY count desc LIMIT 1";
-    db.query(sql, function (err, result, fields){
+    const sql = "SELECT id, apiKey, count FROM apiKeys WHERE note like '%main%' GROUP BY id, apiKey, count ORDER BY count desc LIMIT 1";
+    con.query(sql, function (err, result, fields){
       if(err) throw err;
       apiKey = result[0].apiKey;
-      var id = result[0].id;
-      const sql = "UPDATE apiKeys SET count = count-1 WHERE id = "+id;
-      db.query(sql, function (err, result, fields){
-        if(err) throw err;
-        callback(apiKey, i);
-      })
+      callback(apiKey);
     });
   })
 }
