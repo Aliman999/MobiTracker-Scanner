@@ -379,10 +379,10 @@ getOrgs.cacheOrg = function(orgInfo){
         events.push("Commitment Changed");
       }
       if(result.focus != orgInfo.focus){
-        if(result.focus.?primary.name != orgInfo.focus.?primary.name){
+        if(?result.focus.primary.name != ?orgInfo.focus.primary.name){
           events.push("Primary Focus Changed");
         }
-        if(result.focus.?secondary.name != orgInfo.focus.?secondary.name){
+        if(?result.focus.secondary.name != ?orgInfo.focus.secondary.name){
           events.push("Secondary Focus Changed");
         }
       }
