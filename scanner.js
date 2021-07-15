@@ -387,7 +387,7 @@ getOrgs.cacheOrg = function(orgInfo){
             events.push("Secondary Focus Changed");
           }
         }catch{
-          console.log(orgInfo.focus);
+          console.log(orgInfo);
           process.exit(1);
         }
       }
