@@ -388,6 +388,7 @@ getOrgs.cacheOrg = function(orgInfo){
           }
         }catch{
           console.log(result.focus);
+          process.exit(1);
         }
       }
       if(result.headline != orgInfo.headline){
