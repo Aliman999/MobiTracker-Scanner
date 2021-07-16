@@ -60,13 +60,15 @@ orgLimiter.on("failed", async (error, info) => {
   }
 });
 
+orgLimiter.on("idle", function(info){
+  newOrgs = [];
+  saveParam(0, 4);
+  console.log("[SYSTEM] - Reached end of org crawl.");
+  init.orgScan();
+})
+
 orgLimiter.on("done", async function(info){
-  if(info.args[1] == (newOrgs.length-1)){
-    newOrgs = [];
-    saveParam(0, 4);
-    console.log("[SYSTEM] - Reached end of org crawl.");
-    init.orgScan();
-  }
+  socket.send();
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -96,13 +98,14 @@ limiter.on("failed", async (error, info) => {
 
 limiter.on("done", function(info){
   console.log("[PLAYER]  - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
-  if (info.args[2] == (list.length - 1)) {
-    console.log("[SYSTEM]  - Reached end of player list, restarting.");
-    saveParam(0, 1);
-    setTimeout(() => {
-      init.playerScan();
-    }, 3000);
-  }
+});
+
+limiter.on("idle", function(info){
+  console.log("[SYSTEM]  - Reached end of player list, restarting.");
+  saveParam(0, 1);
+  setTimeout(() => {
+    init.playerScan();
+  }, 3000);
 });
 
 //limiter.on("retry", (error, info) => console.log(`Retrying ${info.options.id}`));
@@ -178,7 +181,8 @@ var init = {};
 
 init.playerScan = async function(){
   key = await getKey();
-  await persist(1).then((param) => {
+  persist(1).then((param) => {
+    socket.status.player = param;
     list = [];
     updateQueries().then(()=>{
       users(parseInt(param));
@@ -207,8 +211,8 @@ init.orgCrawl = async function(){
     newOrgs.sort();
 
     console.log("[CRAWLER] - Crawling "+newOrgs.length+" Orgs");
-
     persist(4).then((param) => {
+      socket.status.crawler = { current:param, max:newOrgs.length };
       getOrgs.getNewOrgs(param);
     })
   })
@@ -221,6 +225,8 @@ init.orgScan = async function(){
     getOrgs.getOrgs(param).then((result)=>{
       console.log("[SCANNER] - Scanning "+orgs.length+" cached orgs.");
 
+      socket.status.scanner = { current: param, max:orgs.length };
+      
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
@@ -757,50 +763,53 @@ Object.size = function(obj) {
 };
 
 //Client to API for Admin Panel.
-function socket() {
-  var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), user: "Scanner" }, config.Secret, { algorithm: 'HS256' });
-  var message;
+var socket = {
+  ws:null,
+  init:()=>{
+    this.ws = new WebSocket("wss://ws.mobitracker.co:2599");
 
-  var ws = new WebSocket("wss://ws.mobitracker.co:2599");
+    this.ws.onopen = function () {
+      console.log("Connected to Internal API");
+      var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), user: "Scanner" }, config.Secret, { algorithm: 'HS256' });
+      var message = {
+        type: "progress",
+        token: payload
+      };
+      socket.ws.send(JSON.stringify(message));
+      socket.heartbeat();
+    }
 
-  ws.onopen = function () {
-    console.log("Connected to Internal API");
-    message = {
-      type: "progress",
-      token: payload
+    this.ws.onerror = function (err) {
+    }
+
+    this.ws.onclose = function () {
+      console.log("Lost Connection to Internal API");
+      setTimeout(socket, 3000);
     };
-    ws.send(JSON.stringify(message));
-    heartbeat();
-  }
 
-  ws.onerror = function (err) {
-  }
-
-  ws.onclose = function () {
-    console.log("Lost Connection to Internal API");
-    setTimeout(socket, 3000);
-  };
-
-  ws.onmessage = function (response) {
-    response = JSON.parse(response.data);
-    console.log(response);
-    send({ type:"system", data:"started" });
-  }
-
-  function heartbeat() {
+    this.ws.onmessage = function (response) {
+      response = JSON.parse(response.data);
+      console.log(response);
+    }
+  },
+  heartbeat:()=>{
     if (!ws) return;
     if (ws.readyState !== 1) return;
     ws.send(JSON.stringify({ type: "ping" }));
     setTimeout(heartbeat, 3000);
-  }
-
-  function send(message) {
-    message = {
+  },
+  send: (message) => {
+    var message = {
       type: "update",
       data: message
     }
-    ws.send(JSON.stringify(message));
+    this.ws.send(JSON.stringify(message));
+  },
+  status:{
+    player:null,
+    crawler:null,
+    scanner:null
   }
 }
 
-socket();
+socket.init();
