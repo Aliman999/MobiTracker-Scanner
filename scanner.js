@@ -185,7 +185,6 @@ var init = {};
 init.playerScan = async function(){
   key = await getKey();
   persist(1).then((param) => {
-    socket.status.player = param;
     list = [];
     updateQueries().then(()=>{
       users(parseInt(param));
@@ -304,6 +303,7 @@ function users(param){
   db.query(sql, function(err, result, fields){
     if(err) throw err;
     list = result;
+    socket.status.player = { current: param, max: list.length };
     update(param);
   })
 }
