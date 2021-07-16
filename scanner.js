@@ -226,7 +226,7 @@ init.orgScan = async function(){
       console.log("[SCANNER] - Scanning "+orgs.length+" cached orgs.");
 
       socket.status.scanner = { current: param, max:orgs.length };
-      
+
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
         for(var xii = 0; xii < pages; xii++){
@@ -766,9 +766,9 @@ Object.size = function(obj) {
 var socket = {
   ws:null,
   init:()=>{
-    this.ws = new WebSocket("wss://ws.mobitracker.co:2599");
+    socket.ws = new WebSocket("wss://ws.mobitracker.co:2599");
 
-    this.ws.onopen = function () {
+    socket.ws.onopen = function () {
       console.log("Connected to Internal API");
       var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), user: "Scanner" }, config.Secret, { algorithm: 'HS256' });
       var message = {
@@ -779,15 +779,15 @@ var socket = {
       socket.heartbeat();
     }
 
-    this.ws.onerror = function (err) {
+    socket.ws.onerror = function (err) {
     }
 
-    this.ws.onclose = function () {
+    socket.ws.onclose = function () {
       console.log("Lost Connection to Internal API");
       setTimeout(socket, 3000);
     };
 
-    this.ws.onmessage = function (response) {
+    socket.ws.onmessage = function (response) {
       response = JSON.parse(response.data);
       console.log(response);
     }
@@ -795,7 +795,7 @@ var socket = {
   heartbeat:()=>{
     if (!ws) return;
     if (ws.readyState !== 1) return;
-    ws.send(JSON.stringify({ type: "ping" }));
+    socket.ws.send(JSON.stringify({ type: "ping" }));
     setTimeout(heartbeat, 3000);
   },
   send: (message) => {
@@ -803,7 +803,7 @@ var socket = {
       type: "update",
       data: message
     }
-    this.ws.send(JSON.stringify(message));
+    socket.ws.send(JSON.stringify(message));
   },
   status:{
     player:null,
