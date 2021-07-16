@@ -807,7 +807,6 @@ var socket = {
     setTimeout(socket.heartbeat, 3000);
   },
   send:()=>{
-    console.log(socket.status);
     socket.ws.send(JSON.stringify({ type: "update", data: socket.status }));
   },
   status:{
