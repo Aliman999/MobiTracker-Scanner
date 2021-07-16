@@ -784,7 +784,7 @@ var socket = {
 
     socket.ws.onopen = function () {
       console.log("Connected to Internal API");
-      var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), user: "Scanner" }, config.Secret, { algorithm: 'HS256' });
+      var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), username: "Scanner" }, config.Secret, { algorithm: 'HS256' });
       var message = {
         type: "progress",
         token: payload
