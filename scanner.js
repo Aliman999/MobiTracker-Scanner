@@ -760,7 +760,7 @@ Object.size = function(obj) {
 function socket() {
   var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5) }, config.Secret, { algorithm: 'HS256' });
   var message;
-  ws = new WebSocket("wss://ws.mobitracker.co:2599");
+  var ws = new WebSocket("wss://ws.mobitracker.co:2599");
   ws.onopen = function () {
     console.log("Connected to Internal API");
     message = {
