@@ -8,6 +8,7 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 var jwt = require('jsonwebtoken');
+const WebSocket = require('ws');
 
 var list, queries = {}, sql, orgs = [], newOrgs = [];
 var keyType = "Main";
@@ -755,7 +756,7 @@ Object.size = function(obj) {
   return size;
 };
 
-//Client to API for Admin Panel
+//Client to API for Admin Panel.
 function socket() {
   var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5) }, config.Secret, { algorithm: 'HS256' });
   var message;
