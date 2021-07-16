@@ -8,7 +8,7 @@ const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
 
-var list = [], queries = {}, sql, orgs = [], newOrgs = [];
+var list, queries = {}, sql, orgs = [], newOrgs = [];
 var keyType = "Main";
 var offset = 1;
 var offsetMul = 3;
@@ -176,6 +176,7 @@ var init = {};
 init.playerScan = async function(){
   key = await getKey();
   persist(1).then((param) => {
+    list = [];
     updateQueries().then(()=>{
       users(parseInt(param));
     })
