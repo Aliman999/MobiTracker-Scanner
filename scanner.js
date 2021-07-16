@@ -155,7 +155,7 @@ db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM]  - Connected to database");
   setTimeout(() => {
-    socket.status;
+    console.log(socket.status);
   }, 1000);
   init.playerScan();
   init.orgCrawl();
