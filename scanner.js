@@ -802,9 +802,9 @@ var socket = {
     socket.ws.send(JSON.stringify(socket.status));
   },
   status:{
-    player:{},
-    crawler:{},
-    scanner:{}
+    player:{ current:0, max:0 },
+    crawler:{ current: 0, max: 0 },
+    scanner:{ current: 0, max: 0 }
   }
 }
 
