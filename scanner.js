@@ -68,7 +68,6 @@ orgLimiter.on("idle", function(info){
 })
 
 orgLimiter.on("done", async function(info){
-  console.log(info);
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -250,6 +249,7 @@ init.orgScan = async function(){
       if(active != orgs[i].sid){
         active = orgs[i].sid;
         console.log("[SCANNER] - "+orgs[i].members+" Members | "+orgs[i].sid);
+        socket.status.scanner.current = i;
       }
       await queryApi(username, key).then(async (result) => {
         if(result.status == 0){
@@ -327,6 +327,7 @@ getOrgs.getNewOrgs = async function(param = 0){
       db.query(sql, function(err, sqlResult, fields){
         if(err) console.log(err);
         console.log("[CRAWLER] - #"+i+" of #"+newOrgs.length+" | "+newOrgs[i]);
+        socket.status.crawler.current = i;
         getOrgs.queryOrg(org).then((result) => {
           saveParam(i, 4);
           if(sqlResult.length == 0){
