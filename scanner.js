@@ -754,7 +754,7 @@ Object.size = function(obj) {
   return size;
 };
 
-//Client to API for progress tracker.
+//Client to API for Admin Panel.
 const config = require('./config');
 var jwt = require('jsonwebtoken');
 const WebSocket = require('ws');
