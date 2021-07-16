@@ -154,6 +154,9 @@ db.query = function(statement, extra = [], func, limit = false){
 db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM]  - Connected to database");
+  setTimeout(() => {
+    socket.status;
+  }, 10000);
   init.playerScan();
   init.orgCrawl();
 })
