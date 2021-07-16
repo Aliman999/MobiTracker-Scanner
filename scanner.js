@@ -397,17 +397,12 @@ getOrgs.cacheOrg = function(orgInfo){
       if(result.commitment != orgInfo.commitment){
         events.push("Commitment Changed");
       }
-      if(result.focus != orgInfo.focus){
-        try{
-          if(result.focus.primary.name != orgInfo.focus.primary.name){
-            events.push("Primary Focus Changed");
-          }
-          if(result.focus.secondary.name != orgInfo.focus.secondary.name){
-            events.push("Secondary Focus Changed");
-          }
-        }catch{
-          console.log(orgInfo);
-          process.exit(1);
+      if(result.focus != orgInfo.focus && (orgInfo.focus)){
+        if(result.focus.primary.name != orgInfo.focus.primary.name){
+          events.push("Primary Focus Changed");
+        }
+        if(result.focus.secondary.name != orgInfo.focus.secondary.name){
+          events.push("Secondary Focus Changed");
         }
       }
       if(result.headline != orgInfo.headline){
