@@ -758,9 +758,11 @@ Object.size = function(obj) {
 
 //Client to API for Admin Panel.
 function socket() {
-  var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5) }, config.Secret, { algorithm: 'HS256' });
+  var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5), user: "Scanner" }, config.Secret, { algorithm: 'HS256' });
   var message;
+
   var ws = new WebSocket("wss://ws.mobitracker.co:2599");
+
   ws.onopen = function () {
     console.log("Connected to Internal API");
     message = {
@@ -770,8 +772,10 @@ function socket() {
     ws.send(JSON.stringify(message));
     heartbeat();
   }
+
   ws.onerror = function (err) {
   }
+
   ws.onclose = function () {
     console.log("Lost Connection to Internal API");
     setTimeout(socket, 3000);
