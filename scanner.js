@@ -175,7 +175,7 @@ var init = {};
 
 init.playerScan = async function(){
   key = await getKey();
-  persist(1).then((param) => {
+  await persist(1).then((param) => {
     list = [];
     updateQueries().then(()=>{
       users(parseInt(param));
