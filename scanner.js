@@ -784,7 +784,7 @@ function socket() {
   ws.onmessage = function (response) {
     response = JSON.parse(response.data);
     console.log(response);
-    send("test");
+    send({ type:"system", data:"started" });
   }
 
   function heartbeat() {
