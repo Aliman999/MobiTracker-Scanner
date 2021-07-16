@@ -793,8 +793,8 @@ var socket = {
     }
   },
   heartbeat:()=>{
-    if (!ws) return;
-    if (ws.readyState !== 1) return;
+    if (!socket.ws) return;
+    if (socket.ws.readyState !== 1) return;
     socket.ws.send(JSON.stringify({ type: "ping" }));
     setTimeout(heartbeat, 3000);
   },
