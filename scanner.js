@@ -216,7 +216,7 @@ init.orgCrawl = async function(){
 
     console.log("[CRAWLER] - Crawling "+newOrgs.length+" Orgs");
     persist(4).then((param) => {
-      socket.status.crawler = { current: intval(param), max:newOrgs.length };
+      socket.status.crawler = { current: parseInt(param), max:newOrgs.length };
       getOrgs.getNewOrgs(param);
     })
   })
