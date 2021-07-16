@@ -546,6 +546,7 @@ async function update(param = 0){
       }
     })
   }
+  console.log(i+" | "+list.length);
   for(var i = param; i < list.length; i++){
     limiter.schedule( {id:list[i].username}, query, list[i].username, key, i)
     .catch((error) => {
