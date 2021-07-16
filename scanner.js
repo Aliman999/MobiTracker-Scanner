@@ -798,17 +798,13 @@ var socket = {
     socket.ws.send(JSON.stringify({ type: "ping" }));
     setTimeout(socket.heartbeat, 3000);
   },
-  send: (message) => {
-    var message = {
-      type: "update",
-      data: message
-    }
-    socket.ws.send(JSON.stringify(message));
+  send:()=>{
+    socket.ws.send(JSON.stringify(socket.status));
   },
   status:{
-    player:null,
-    crawler:null,
-    scanner:null
+    player:{},
+    crawler:{},
+    scanner:{}
   }
 }
 
