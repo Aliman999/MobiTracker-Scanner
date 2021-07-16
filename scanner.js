@@ -43,6 +43,7 @@ orgPlayers.on("failed", async (error, info) => {
 });
 
 orgPlayers.on("idle", function(info){
+  socket.status.scanner = {current: 0, max: 0}
   init.orgCrawl();
 });
 
