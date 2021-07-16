@@ -92,11 +92,12 @@ limiter.on("failed", async (error, info) => {
   }
 });
 
-limiter.on("done", function(info){
+limiter.on("done", async function(info){
   console.log("[PLAYER]  - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
   if(info.args[2] == (list.length-1)){
     console.log("[SYSTEM]  - Reached end of player list, restarting.");
-    saveParam(0, 1);
+    await saveParam(0, 1);
+    list = [];
     init.playerScan();
   }
 });
