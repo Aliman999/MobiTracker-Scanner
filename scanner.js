@@ -159,8 +159,14 @@ db.con.getConnection((err, connection)=>{
   setInterval(() => {
     socket.send();
   }, 10000);
+  persist(5).then((param)=>{
+    if(param){
+      init.orgScan();
+    }else{
+      init.orgCrawl();
+    }
+  })
   init.playerScan();
-  init.orgCrawl();
 })
 
 
