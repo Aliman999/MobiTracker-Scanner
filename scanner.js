@@ -755,11 +755,6 @@ Object.size = function(obj) {
 };
 
 //Client to API for Admin Panel.
-const config = require('./config');
-var jwt = require('jsonwebtoken');
-const WebSocket = require('ws');
-const fs = require('fs');
-
 function socket() {
   var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5) }, config.Secret, { algorithm: 'HS256' });
   var message;
