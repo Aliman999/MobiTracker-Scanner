@@ -68,7 +68,7 @@ orgLimiter.on("idle", function(info){
 })
 
 orgLimiter.on("done", async function(info){
-  socket.send();
+  console.log(info);
 });
 
 orgScan.on("failed", async (error, info) => {
@@ -83,6 +83,7 @@ orgScan.on("failed", async (error, info) => {
 });
 
 orgScan.on("done", function(info){
+  console.log(info);
 });
 
 limiter.on("failed", async (error, info) => {
@@ -98,6 +99,7 @@ limiter.on("failed", async (error, info) => {
 
 limiter.on("done", function(info){
   console.log("[PLAYER]  - #"+info.args[2]+" of #"+list.length+" | "+info.args[0]);
+  socket.status.player.current = info.args[2];
 });
 
 limiter.on("idle", function(info){
@@ -229,7 +231,7 @@ init.orgScan = async function(){
     getOrgs.getOrgs(param).then((result)=>{
       console.log("[SCANNER] - Scanning "+orgs.length+" cached orgs.");
 
-      socket.status.scanner = { current: param, max:orgs.length };
+      socket.status.scanner = { current: parseInt(param), max:orgs.length };
 
       for(var xi = param; xi < orgs.length; xi++){
         var pages = Math.ceil(orgs[xi].members/32);
