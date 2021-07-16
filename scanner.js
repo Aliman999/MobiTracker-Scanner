@@ -805,7 +805,7 @@ var socket = {
   },
   send:()=>{
     console.log(socket.status);
-    socket.ws.send(JSON.stringify(socket.status));
+    socket.ws.send(JSON.stringify({ type: "update", data: socket.status }));
   },
   status:{
     player:{ current:0, max:0 },
