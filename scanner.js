@@ -783,6 +783,7 @@ function socket() {
 
   ws.onmessage = function (response) {
     console.log(response);
+    send("test");
   }
 
   function heartbeat() {
@@ -801,6 +802,5 @@ function socket() {
     ws.send(JSON.stringify(message));
   }
 }
-
 
 socket();
