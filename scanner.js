@@ -44,6 +44,8 @@ orgPlayers.on("failed", async (error, info) => {
 
 orgPlayers.on("idle", function(info){
   socket.status.scanner = { current: 0, max: 0 }
+  saveParam(0, 3);
+  console.log("[SYSTEM] - Reached end of org scan.");
   init.orgCrawl();
 });
 
