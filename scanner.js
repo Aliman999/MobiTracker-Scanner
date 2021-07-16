@@ -753,3 +753,53 @@ Object.size = function(obj) {
   }
   return size;
 };
+
+//Client to API for progress tracker.
+const config = require('./config');
+var jwt = require('jsonwebtoken');
+const WebSocket = require('ws');
+const fs = require('fs');
+
+function socket() {
+  var payload = jwt.sign({ iat: Math.floor(Date.now() / 1000) + (60 * 5) }, config.Secret, { algorithm: 'HS256' });
+  var message;
+  ws = new WebSocket("wss://ws.mobitracker.co:2599");
+  ws.onopen = function () {
+    console.log("Connected to Internal API");
+    message = {
+      type: "progress",
+      token: payload
+    };
+    ws.send(JSON.stringify(message));
+    heartbeat();
+  }
+  ws.onerror = function (err) {
+  }
+  ws.onclose = function () {
+    console.log("Lost Connection to Internal API");
+    setTimeout(socket, 3000);
+  };
+
+  ws.onmessage = function (response) {
+    console.log(response);
+  }
+
+  function heartbeat() {
+    if (!ws) return;
+    if (ws.readyState !== 1) return;
+    ws.send(JSON.stringify({ type: "ping" }));
+    setTimeout(heartbeat, 3000);
+  }
+
+  function send(message) {
+    message = {
+      type: "update",
+      data: message
+    }
+    console.log(message);
+    ws.send(JSON.stringify(message));
+  }
+}
+
+
+socket();
