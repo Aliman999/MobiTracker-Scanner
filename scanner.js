@@ -796,7 +796,7 @@ var socket = {
     if (!socket.ws) return;
     if (socket.ws.readyState !== 1) return;
     socket.ws.send(JSON.stringify({ type: "ping" }));
-    setTimeout(heartbeat, 3000);
+    setTimeout(socket.heartbeat, 3000);
   },
   send: (message) => {
     var message = {
