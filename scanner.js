@@ -782,6 +782,7 @@ function socket() {
   };
 
   ws.onmessage = function (response) {
+    response = JSON.parse(response.data);
     console.log(response);
     send("test");
   }
@@ -798,7 +799,6 @@ function socket() {
       type: "update",
       data: message
     }
-    console.log(message);
     ws.send(JSON.stringify(message));
   }
 }
