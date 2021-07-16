@@ -787,7 +787,7 @@ var socket = {
 
     socket.ws.onclose = function () {
       console.log("Lost Connection to Internal API");
-      setTimeout(socket, 3000);
+      setTimeout(socket.init, 3000);
     };
 
     socket.ws.onmessage = function (response) {
