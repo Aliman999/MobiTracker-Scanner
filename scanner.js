@@ -154,12 +154,14 @@ db.query = function(statement, extra = [], func, limit = false){
 db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM]  - Connected to database");
-  setTimeout(() => {
-    console.log(socket.status);
-  }, 1000);
   init.playerScan();
   init.orgCrawl();
 })
+
+
+setTimeout(() => {
+  console.log(socket.status);
+}, 1000);
 
 function getKey(){
   return new Promise(callback =>{
