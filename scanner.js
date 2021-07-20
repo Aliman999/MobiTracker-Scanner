@@ -64,7 +64,8 @@ orgLimiter.on("failed", async (error, info) => {
   }
 });
 
-orgLimiter.on("idle", function(info){
+orgLimiter.on("idle", function (info) {
+  socket.status.scanner = { current: 0, max: 0 }
   newOrgs = [];
   saveParam(0, 4);
   saveParam(1, 5);
