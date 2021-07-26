@@ -159,10 +159,10 @@ db.query = function(statement, extra = [], func, limit = false){
 db.con.getConnection((err, connection)=>{
   if (err) throw err;
   console.log("[SYSTEM]  - Connected to database");
-  setInterval(() => {
-    socket.send();
-  }, 10000);
-  persist(5).then((param)=>{
+  persist(5).then((param) => {
+    setInterval(() => {
+      socket.send();
+    }, 10000);
     if(param == 1){
       init.orgScan();
     }else{
