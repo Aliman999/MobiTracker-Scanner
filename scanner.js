@@ -18,9 +18,6 @@ var offsetMul = 3;
 var speed = 1000;
 var key;
 
-
-download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "JamesDusky"+"-"+Date.now()+".png");
-
 const limiter = new Bottleneck({
   maxConcurrent: offset*offsetMul,
   minTime: (speed)
@@ -770,7 +767,7 @@ var download = function (uri, filename, callback) {
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
 };
-
+download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "JamesDusky" + "-" + Date.now() + ".png");
 
 //Client to API for Admin Panel.
 var socket = {
