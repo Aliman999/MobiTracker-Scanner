@@ -629,13 +629,13 @@ var saved = 0;
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
-    db.query(sql, function (err, result, fields) {
+    con.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(result.length > 0){
         const last = result.length-1;
         if(result[last].event != "Changed Name"){
           const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ( 'Changed Name', "+result[last].cID+", '"+result[last].username+"', ?, '"+result[last].badge+"', '"+result[last].organization+"', '"+result[last].avatar+"' );";
-          db.query(sql, [result[last].bio], function (err, result, fields) {
+          con.query(sql, [result[last].bio], function (err, result, fields) {
             if(err) throw err;
           });
         }
@@ -651,7 +651,7 @@ function cachePlayer(user){
                   avatar: ''
                 };
     check.cID = parseInt(user.profile.id.substring(1));
-    check.bio = JSON.stringify(user.profile.bio); // DO NOT CHANGE IT IS WORKING PROPERLY. USE JSON.PARSE ON EXTRACTION.
+    check.bio = JSON.stringify(user.profile.bio);
     if(!check.bio){
       check.bio = "";
     }
@@ -681,7 +681,7 @@ function cachePlayer(user){
       check.cID = 0;
       sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
     }
-    db.query(sql, function (err, result, fields) {
+    con.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(Object.size(result) > 0){
         var data = result[result.length-1];
@@ -710,9 +710,11 @@ function cachePlayer(user){
           update = true;
           eventUpdate.push("Obtained ID");
         }
-        if(data.username !== check.username){
-          update = true;
-          eventUpdate.push("Changed Name");
+        if(check.cID){
+          if (data.username !== check.username) {
+            update = true;
+            eventUpdate.push("Changed Name");
+          }
         }
         if(data.badge.title !== check.badge.title){
           update = true;
@@ -737,7 +739,7 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-        db.query(sql, [check.bio], function (err, result, fields) {
+        con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
@@ -745,12 +747,12 @@ function cachePlayer(user){
         check.bio = JSON.stringify(check.bio);
         check.badge = JSON.stringify(check.badge);
         check.organization = JSON.stringify(Object.assign({}, check.organization));
-        var eventString = eventUpdate.join(", ");
 
+        var eventString = eventUpdate.join(", ");
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        db.query(sql, [check.bio], function (err, result, fields) {
+        con.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
-          console.log(sql);
+          
         });
       }
     });
