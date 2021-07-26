@@ -767,7 +767,7 @@ var download = function (uri, filename, callback) {
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
 };
-download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "../JamesDusky" + "-" + Date.now() + ".png", function(){
+download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "/var/www/html/src/JamesDusky" + "-" + Date.now() + ".png", function(){
   console.log("Downloaded image");
 });
 
