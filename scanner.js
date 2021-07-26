@@ -702,7 +702,10 @@ function cachePlayer(user){
       }
       if(data.avatar !== check.avatar){
         update = true;
-        download(check.avatar, check.username+"-"+Date.now());
+        var stamp = Date.now();
+        download(check.avatar, "/var/www/html/src/"+check.username+"-"+stamp+".png", function () {
+          check.avatar = "https://mobitracker.co/src/"+check.username+"-"+stamp+".png";
+        });
         eventUpdate.push("Avatar Changed");
       }
       if(data.bio !== check.bio){
@@ -767,9 +770,6 @@ var download = function (uri, filename, callback) {
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
 };
-download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "/var/www/html/src/JamesDusky" + "-" + Date.now() + ".png", function(){
-  console.log("Downloaded image");
-});
 
 //Client to API for Admin Panel.
 var socket = {
