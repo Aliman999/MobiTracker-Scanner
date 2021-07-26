@@ -629,13 +629,13 @@ var saved = 0;
 function cachePlayer(user){
   if(typeof user === 'string'){
     const sql = "SELECT * FROM `CACHE players` WHERE username = '"+user+"'";
-    con.query(sql, function (err, result, fields) {
+    db.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(result.length > 0){
         const last = result.length-1;
         if(result[last].event != "Changed Name"){
           const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ( 'Changed Name', "+result[last].cID+", '"+result[last].username+"', ?, '"+result[last].badge+"', '"+result[last].organization+"', '"+result[last].avatar+"' );";
-          con.query(sql, [result[last].bio], function (err, result, fields) {
+          db.query(sql, [result[last].bio], function (err, result, fields) {
             if(err) throw err;
           });
         }
@@ -681,7 +681,7 @@ function cachePlayer(user){
       check.cID = 0;
       sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
     }
-    con.query(sql, function (err, result, fields) {
+    db.query(sql, function (err, result, fields) {
       if(err) throw err;
       if(Object.size(result) > 0){
         var data = result[result.length-1];
@@ -738,7 +738,7 @@ function cachePlayer(user){
         check.organization = JSON.stringify(Object.assign({}, check.organization));
 
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
-        con.query(sql, [check.bio], function (err, result, fields) {
+        db.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
         });
       }
@@ -749,7 +749,7 @@ function cachePlayer(user){
 
         var eventString = eventUpdate.join(", ");
         const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
-        con.query(sql, [check.bio], function (err, result, fields) {
+        db.query(sql, [check.bio], function (err, result, fields) {
           if(err) throw err;
           
         });
