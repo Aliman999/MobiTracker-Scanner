@@ -623,6 +623,14 @@ const queryApi = function(username, key){
 var saved = 0;
 
 function cachePlayer(user){
+  var download = function (uri, filename, callback) {
+    request.head(uri, function (err, res, body) {
+      console.log('content-type:', res.headers['content-type']);
+      console.log('content-length:', res.headers['content-length']);
+
+      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+  };
   var update = false;
   var eventUpdate = new Array();
   var check = { cID:0,
@@ -760,15 +768,6 @@ Object.size = function(obj) {
       if (obj.hasOwnProperty(key)) size++;
   }
   return size;
-};
-
-var download = function (uri, filename, callback) {
-  request.head(uri, function (err, res, body) {
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
 };
 
 //Client to API for Admin Panel.
