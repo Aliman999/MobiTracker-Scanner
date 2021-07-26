@@ -695,10 +695,12 @@ function cachePlayer(user){
           }
         }
       }
-      if(data.cID > check.cID){
+      /*
+      if (check.cID > data.cID){
         update = true;
         eventUpdate.push("Obtained ID");
       }
+      */
       if (data.username !== check.username) {
         console.log(data.username + " | " + check.username);
         update = true;
