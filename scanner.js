@@ -392,9 +392,6 @@ getOrgs.cacheOrg = function(orgInfo){
         if(err) console.log(err.message+"12345");
       }, true);
     }else{
-      if(result.headline){
-        result.headline = JSON.stringify(result.headline);
-      }
       if(result.focus){
         result.focus = JSON.parse(result.focus);
       }
