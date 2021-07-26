@@ -4,6 +4,7 @@ const Bottleneck = require('bottleneck');
 const https = require('https');
 const mysql = require('mysql');
 const fs = require('fs');
+const request = require('request');
 const schedule = require('node-schedule');
 const countdown = require('countdown');
 const log = require('single-line-log').stdout;
@@ -701,6 +702,7 @@ function cachePlayer(user){
       }
       if(data.avatar !== check.avatar){
         update = true;
+        download(check.avatar, check.username+"-"+Date.now());
         eventUpdate.push("Avatar Changed");
       }
       if(data.bio !== check.bio){
@@ -756,6 +758,16 @@ Object.size = function(obj) {
   }
   return size;
 };
+
+var download = function (uri, filename, callback) {
+  request.head(uri, function (err, res, body) {
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
+
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
+
 
 //Client to API for Admin Panel.
 var socket = {
