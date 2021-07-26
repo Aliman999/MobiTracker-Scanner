@@ -70,7 +70,6 @@ orgLimiter.on("idle", function (info) {
   saveParam(0, 4);
   saveParam(1, 5);
   console.log("[SYSTEM] - Reached end of org crawl.");
-  console.log("my stuffs bugged");
   init.orgScan();
 })
 
@@ -165,7 +164,7 @@ db.con.getConnection((err, connection)=>{
   }, 10000);
   persist(5).then((param)=>{
     console.log(param);
-    if(param){
+    if(param == 1){
       init.orgScan();
     }else{
       init.orgCrawl();
