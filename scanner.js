@@ -710,11 +710,10 @@ function cachePlayer(user){
           update = true;
           eventUpdate.push("Obtained ID");
         }
-        if(check.cID){
-          if (data.username !== check.username) {
-            update = true;
-            eventUpdate.push("Changed Name");
-          }
+        if (data.username !== check.username) {
+          console.log(data.username + " | " + check.username);
+          update = true;
+          eventUpdate.push("Changed Name");
         }
         if(data.badge.title !== check.badge.title){
           update = true;
