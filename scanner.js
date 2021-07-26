@@ -695,7 +695,7 @@ function cachePlayer(user){
           }
         }
       }
-      if(data.cID !== check.cID){
+      if(data.cID > check.cID){
         update = true;
         eventUpdate.push("Obtained ID");
       }
