@@ -70,6 +70,7 @@ orgLimiter.on("idle", function (info) {
   saveParam(0, 4);
   saveParam(1, 5);
   console.log("[SYSTEM] - Reached end of org crawl.");
+  console.log("my stuffs bugged");
   init.orgScan();
 })
 
