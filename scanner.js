@@ -416,7 +416,7 @@ getOrgs.cacheOrg = function(orgInfo){
         }
       }
       if(result.headline != orgInfo.headline){
-        console.log(result.headline+" | "+orgInfo.headline);
+        console.log({old: result.headline, new:orgInfo.headline});
         events.push("Headline Changed");
       }
       if(result.language != orgInfo.lang){
