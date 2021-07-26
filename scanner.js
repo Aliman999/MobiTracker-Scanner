@@ -18,6 +18,9 @@ var offsetMul = 3;
 var speed = 1000;
 var key;
 
+
+download("https://robertsspaceindustries.com/media/yghlu2ruwolagr/heap_infobox/Avatar.png", "JamesDusky"+"-"+Date.now()+".png");
+
 const limiter = new Bottleneck({
   maxConcurrent: offset*offsetMul,
   minTime: (speed)
