@@ -163,6 +163,7 @@ db.con.getConnection((err, connection)=>{
     socket.send();
   }, 10000);
   persist(5).then((param)=>{
+    console.log(param);
     if(param){
       init.orgScan();
     }else{
