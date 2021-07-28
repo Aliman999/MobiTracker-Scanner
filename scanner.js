@@ -314,7 +314,7 @@ function updateQueries(){
 }
 
 function users(param){
-  sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry';";
+  sql = "SELECT username FROM `CACHE players` WHERE event = 'First Entry' OR event = 'Changed Name';";
   db.query(sql, function(err, result, fields){
     if(err) throw err;
     list = result;
