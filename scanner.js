@@ -675,12 +675,6 @@ function cachePlayer(user) {
   }
   db.query(sql, async function (err, result, fields) {
     if (err) throw err;
-    var y = 0;
-    result.forEach((item, i) => {
-      if (item.event === "Avatar Changed") {
-        y = i;
-      }
-    });
     if(Object.size(result) > 0){
       var data = result[result.length-1];
       data.organization = JSON.parse(data.organization);
@@ -722,7 +716,11 @@ function cachePlayer(user) {
       if(data.avatar !== check.avatar){
         update = true;
         var stamp = Date.now();
-
+        console.log({ old_before: data.avatar, new_before: check.avatar });
+        await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png").then(() => {
+          check.savedAvatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
+          console.log({ old: data.savedAvatar, new: check.savedAvatar });
+        });
 
         eventUpdate.push("Avatar Changed");
       }
@@ -748,12 +746,6 @@ function cachePlayer(user) {
       check.bio = JSON.stringify(check.bio);
       check.badge = JSON.stringify(check.badge);
       check.organization = JSON.stringify(Object.assign({}, check.organization));
-
-      console.log({ old_Avatar: data.avatar, new_Avatar: check.avatar });
-      await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(() => {
-        check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + y + ".png";
-        console.log({ old_Avatar: data.avatar, new_Avatar: check.avatar });
-      });
 
       var eventString = eventUpdate.join(", ");
       const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
