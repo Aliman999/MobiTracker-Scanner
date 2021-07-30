@@ -722,7 +722,7 @@ function cachePlayer(user) {
       if(data.avatar !== check.avatar){
         update = true;
         var stamp = Date.now();
-        download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(() => {
+        await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(() => {
           check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + y + ".png";
           console.log({ old_Avatar: data.avatar, new_Avatar: check.avatar });
         })
