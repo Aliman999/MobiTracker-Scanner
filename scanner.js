@@ -716,10 +716,10 @@ function cachePlayer(user) {
       if(data.avatar !== check.avatar){
         update = true;
         var stamp = Date.now();
-        await download(check.avatar, "/var/www/html/src/avatars/"+check.username+"-"+stamp+".png", function () {
-          check.avatar = "https://mobitracker.co/src/avatars/"+check.username+"-"+stamp+".png";
-        });
-        console.log({ old: data.avatar, new: check.avatar });
+        download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(() => {
+          check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + y + ".png";
+        })
+        console.log({ old_Avatar: data.avatar, new_Avatar: check.avatar });
 
         var y = 0;
         result.forEach((item, i) => {
@@ -742,9 +742,6 @@ function cachePlayer(user) {
       check.bio = JSON.stringify(check.bio);
       check.badge = JSON.stringify(check.badge);
       check.organization = JSON.stringify(Object.assign({}, check.organization));
-      download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(()=>{
-        check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + y + ".png";
-      })
 
       const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
       db.query(sql, [check.bio], function (err, result, fields) {
@@ -755,9 +752,6 @@ function cachePlayer(user) {
       check.bio = JSON.stringify(check.bio);
       check.badge = JSON.stringify(check.badge);
       check.organization = JSON.stringify(Object.assign({}, check.organization));
-      download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + y + ".png").then(() => {
-        check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + y + ".png";
-      })
 
       var eventString = eventUpdate.join(", ");
       const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
