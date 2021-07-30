@@ -622,7 +622,8 @@ const queryApi = function(username, key){
 
 var saved = 0;
 
-function cachePlayer(user){
+function cachePlayer(user) {
+  var stamp = Date.now();
   var download = function (uri, filename, callback) {
     request.head(uri, function (err, res, body) {
       console.log('content-type:', res.headers['content-type']);
@@ -721,7 +722,6 @@ function cachePlayer(user){
       }
       if(data.bio !== check.bio){
         update = true;
-        console.log({old: data.bio, new: check.bio});
         eventUpdate.push("Bio Changed");
       }
       function removeDupe(data){
@@ -732,6 +732,10 @@ function cachePlayer(user){
       check.bio = JSON.stringify(check.bio);
       check.badge = JSON.stringify(check.badge);
       check.organization = JSON.stringify(Object.assign({}, check.organization));
+      await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png", function () {
+        check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
+      });
+      console.log({ old: data.avatar, new: check.avatar });
 
       const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('First Entry', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"' );";
       db.query(sql, [check.bio], function (err, result, fields) {
@@ -742,6 +746,10 @@ function cachePlayer(user){
       check.bio = JSON.stringify(check.bio);
       check.badge = JSON.stringify(check.badge);
       check.organization = JSON.stringify(Object.assign({}, check.organization));
+      await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png", function () {
+        check.avatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
+      });
+      console.log({ old: data.avatar, new: check.avatar });
 
       var eventString = eventUpdate.join(", ");
       const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
