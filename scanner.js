@@ -712,11 +712,11 @@ function cachePlayer(user){
       }
       if(data.avatar !== check.avatar){
         update = true;
-        console.log({ old: data.avatar, new: check.avatar });
         var stamp = Date.now();
         await download(check.avatar, "/var/www/html/src/avatars/"+check.username+"-"+stamp+".png", function () {
           check.avatar = "https://mobitracker.co/src/avatars/"+check.username+"-"+stamp+".png";
         });
+        console.log({ old: data.avatar, new: check.avatar });
         eventUpdate.push("Avatar Changed");
       }
       if(data.bio !== check.bio){
