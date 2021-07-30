@@ -670,7 +670,7 @@ function cachePlayer(user){
     check.cID = 0;
     sql = "SELECT cID, username, bio, badge, organization, avatar FROM `CACHE players` WHERE username = '"+user.profile.handle+"';";
   }
-  db.query(sql, function (err, result, fields) {
+  db.query(sql, async function (err, result, fields) {
     if(err) throw err;
     if(Object.size(result) > 0){
       var data = result[result.length-1];
@@ -713,7 +713,7 @@ function cachePlayer(user){
       if(data.avatar !== check.avatar){
         update = true;
         var stamp = Date.now();
-        download(check.avatar, "/var/www/html/src/avatars/"+check.username+"-"+stamp+".png", function () {
+        await download(check.avatar, "/var/www/html/src/avatars/"+check.username+"-"+stamp+".png", function () {
           check.avatar = "https://mobitracker.co/src/avatars/"+check.username+"-"+stamp+".png";
         });
         eventUpdate.push("Avatar Changed");
