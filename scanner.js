@@ -676,6 +676,15 @@ function cachePlayer(user) {
   db.query(sql, async function (err, result, fields) {
     if (err) throw err;
     if(Object.size(result) > 0){
+
+      var stamp = Date.now();
+      console.log("Pre Download");
+      await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png").then(() => {
+        check.savedAvatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
+        console.log("Finished Downloading");
+      });
+      console.log("Post Download");
+
       var data = result[result.length-1];
       data.organization = JSON.parse(data.organization);
       data.organization = Object.values(data.organization);
@@ -715,12 +724,6 @@ function cachePlayer(user) {
       }
       if(data.avatar !== check.avatar){
         update = true;
-        var stamp = Date.now();
-        console.log({ old_before: data.avatar, new_before: check.avatar });
-        await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png").then(() => {
-          check.savedAvatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
-          console.log({ old: data.savedAvatar, new: check.savedAvatar });
-        });
 
         eventUpdate.push("Avatar Changed");
       }
