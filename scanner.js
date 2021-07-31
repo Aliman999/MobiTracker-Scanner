@@ -650,6 +650,7 @@ function cachePlayer(user) {
   check.badge.title = user.profile.badge;
   check.badge.src = user.profile.badge_image;
   check.avatar = user.profile.image;
+  check.savedAvatar = null;
 
   if(Object.size(user.affiliation) > 0){
     user.orgLength = Object.size(user.affiliation) + 1;
@@ -676,15 +677,6 @@ function cachePlayer(user) {
   db.query(sql, async function (err, result, fields) {
     if (err) throw err;
     if(Object.size(result) > 0){
-
-      var stamp = Date.now();
-      console.log("Pre Download");
-      await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png").then(() => {
-        check.savedAvatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
-        console.log("Finished Downloading");
-      });
-      console.log("Post Download");
-
       var data = result[result.length-1];
       data.organization = JSON.parse(data.organization);
       data.organization = Object.values(data.organization);
@@ -725,6 +717,11 @@ function cachePlayer(user) {
       if(data.avatar !== check.avatar){
         update = true;
 
+        var stamp = Date.now();
+        await download(check.avatar, "/var/www/html/src/avatars/" + check.username + "-" + stamp + ".png").then(() => {
+          check.savedAvatar = "https://mobitracker.co/src/avatars/" + check.username + "-" + stamp + ".png";
+        });
+
         eventUpdate.push("Avatar Changed");
       }
       if(data.bio !== check.bio){
@@ -751,7 +748,7 @@ function cachePlayer(user) {
       check.organization = JSON.stringify(Object.assign({}, check.organization));
 
       var eventString = eventUpdate.join(", ");
-      const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"');";
+      const sql = "INSERT INTO `CACHE players` (event, cID, username, bio, badge, organization, avatar, savedAvatar) VALUES ('"+eventString+"', "+check.cID+", '"+check.username+"', ?, '"+check.badge+"', '"+check.organization+"', '"+check.avatar+"', '"+check.savedAvatar+"');";
       db.query(sql, [check.bio], function (err, result, fields) {
         if(err) throw err;
         
